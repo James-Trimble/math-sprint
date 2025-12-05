@@ -1,0 +1,389 @@
+/* --- Global Variables & Resets --- */
+:root {
+  --bg-color: #f5f5f5;
+  --text-color: #222;
+  --card-bg: white;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --primary-color: #007bff;
+  --primary-text: white;
+  --border-light: #ddd;
+  --border-focus: #007acc;
+  --border-focus-contrast: yellow;
+  --button-disabled-bg: #ccc;
+  --button-disabled-text: #888;
+}
+
+body {
+  font-family: sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  padding: 2rem;
+  text-align: center;
+  margin: 0;
+}
+
+/* --- High Contrast Mode --- */
+body.high-contrast {
+  --bg-color: black;
+  --text-color: white;
+  --card-bg: #111;
+  --shadow-color: rgba(255, 255, 255, 0.2);
+  --primary-color: yellow;
+  --primary-text: black;
+  --border-light: #555;
+  --border-focus: yellow;
+  --button-disabled-bg: #555;
+  --button-disabled-text: #aaa;
+}
+
+/* --- Base Layout & Screens --- */
+main {
+  max-width: 450px;
+  margin: auto;
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px var(--shadow-color);
+  position: relative; /* For back button positioning */
+}
+
+.screen {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.hidden {
+  display: none;
+  opacity: 0;
+}
+
+/* Screen reader only utility class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* --- Buttons & Inputs --- */
+input[type="tel"],
+input[type="range"],
+button {
+  font-size: 1.1rem;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  width: 100%;
+  box-sizing: border-box; /* Makes width 100% behave */
+  border-radius: 5px;
+  border: 1px solid var(--border-light);
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+button {
+  background: var(--primary-color);
+  color: var(--primary-text);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: var(--button-disabled-bg);
+  color: var(--button-disabled-text);
+  cursor: not-allowed;
+}
+
+button:not(:disabled):hover {
+  filter: brightness(1.1);
+}
+
+button:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* Focus styles for accessibility */
+button:focus,
+input:focus {
+  outline: 3px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+body.high-contrast button:focus,
+body.high-contrast input:focus,
+body.high-contrast input[type="range"]:focus {
+  outline-color: var(--border-focus-contrast);
+}
+
+/* --- Game Screen --- */
+#feedback {
+  margin-top: 1rem;
+  font-weight: bold;
+  min-height: 1.5em;
+}
+
+#score,
+#timer {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+
+.glow {
+  animation: glow 0.5s ease-in-out;
+}
+
+@keyframes glow {
+  0% {
+    background-color: yellow;
+    color: black;
+  }
+  100% {
+    background-color: transparent;
+    color: var(--text-color);
+  }
+}
+
+/* --- Game Over Screen --- */
+#score-breakdown {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+}
+
+body.high-contrast #score-breakdown {
+  background-color: #333;
+}
+
+#score-breakdown p {
+  margin: 0.5rem 0;
+}
+
+/* --- NEW v0.5.0 STYLES --- */
+
+/* Countdown Overlay */
+#countdown-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  color: white;
+  font-size: 10rem;
+  font-weight: bold;
+}
+
+/* Settings Dialog & What's New Popup (Modal Styles) */
+#settings-screen,
+#whats-new-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  width: 90%;
+  max-width: 500px;
+  text-align: left;
+}
+
+#whats-new-popup {
+  text-align: center;
+}
+
+/* Overlay for modals */
+body.modal-open::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+}
+
+/* Back Button (Top Left) */
+.back-button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: auto;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Tabbed Interface */
+.tab-list {
+  display: flex;
+  border-bottom: 2px solid var(--border-light);
+  margin-bottom: 1.5rem;
+}
+
+.tab-list button {
+  background: none;
+  color: var(--text-color);
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 0.75rem 1rem;
+  margin: 0 0.5rem 0 0;
+  font-size: 1rem;
+  font-weight: normal;
+  width: auto;
+  border-radius: 5px 5px 0 0;
+}
+
+.tab-list button[aria-selected="true"] {
+  font-weight: bold;
+  border-bottom-color: var(--primary-color);
+}
+
+.tab-list button:focus {
+  outline-offset: -2px;
+}
+
+body.high-contrast .tab-list button[aria-selected="true"] {
+  border-bottom-color: var(--border-focus-contrast);
+}
+
+/* Setting Groups */
+.setting-group,
+fieldset.setting-group {
+  margin-bottom: 1.5rem;
+  border: none;
+  padding: 0;
+}
+
+.setting-group label,
+fieldset.setting-group legend {
+  font-weight: bold;
+  font-size: 1.1rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Checkbox/Toggle Styles */
+input[type="checkbox"] {
+  width: auto;
+  margin-right: 0.5rem;
+  transform: scale(1.5);
+}
+
+input[type="checkbox"] + label {
+  font-weight: normal;
+  display: inline;
+  font-size: 1rem;
+}
+
+/* Range Slider Styles */
+input[type="range"] {
+  padding: 0;
+  margin-top: 0.5rem;
+}
+
+/* --- Footer --- */
+footer {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+footer a {
+  color: var(--primary-color);
+}
+/* --- New Stats Layout --- */
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Hide lives by default (toggle visible in JS for Endless Mode) */
+#lives.hidden {
+  display: none;
+}
+
+/* Subtitle for buttons (e.g. "60 Seconds") */
+.btn-subtitle {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: normal;
+  opacity: 0.9;
+}
+
+/* --- Gabriel The Cat (Mascot) --- */
+#gabriel-container {
+  height: 120px; /* Adjust based on how big you want him */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+#gabriel-sprite {
+  width: 100px;  /* Estimated width of one frame */
+  height: 100px; /* Estimated height of one frame */
+  background-image: url('./img/gabriel.png'); 
+  background-size: 200% 200%; /* Since it is a 2x2 grid */
+  background-position: 0 0;
+  border-radius: 50%; /* Optional: Makes the square JPG look like a token/circle */
+}
+
+/* The Running Animation */
+/* This moves the background image to show the 4 different frames */
+@keyframes gabrielRun {
+  0% { background-position: 0 0; }       /* Top Left */
+  25% { background-position: 100% 0; }   /* Top Right */
+  50% { background-position: 0 100%; }   /* Bottom Left */
+  75% { background-position: 100% 100%; }/* Bottom Right */
+  100% { background-position: 0 0; }
+}
+
+/* Class to trigger running */
+.running {
+  animation: gabrielRun 0.6s steps(1) infinite;
+}
+
+/* Make him run faster as you streak! */
+.running.fast {
+  animation-duration: 0.3s;
+}
+/* --- Winter Holiday Theme (v0.6.0) --- */
+:root {
+  --bg-color: #e3f2fd; /* Ice Blue */
+  --primary-color: #d32f2f; /* Santa Red */
+  --border-focus: #0288d1; /* Deep Ice Blue */
+}
+
+/* Add a snowflake hint to the ready screen */
+#ready-screen::before {
+  content: "❄️"; 
+  display: block;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+/* Give Gabriel a subtle winter border */
+#gabriel-sprite {
+  border: 4px solid white;
+  box-shadow: 0 0 10px rgba(0, 150, 255, 0.3);
+}
+
+/* Keep High Contrast override safe */
+body.high-contrast {
+  --bg-color: black;
+  --primary-color: yellow;
+}

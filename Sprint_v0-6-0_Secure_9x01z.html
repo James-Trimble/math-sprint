@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Sprint</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#007bff">
+<link rel="apple-touch-icon" href="img/gabriel.png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.39/Tone.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+<main id="ready-screen" class="screen" role="region" aria-labelledby="ready-heading">
+  <h1 id="ready-heading">Math Sprint</h1>
+  <button id="begin-btn">Click to Begin</button>
+</main>
+
+<main id="main-menu" class="screen hidden" role="region" aria-labelledby="main-menu-heading">
+  <h1 id="main-menu-heading">Math Sprint</h1>
+  <p>Select a Game Mode:</p>
+  
+  <button id="sprint-mode-btn">
+    Sprint Mode
+    <span class="btn-subtitle">(60 Seconds)</span>
+  </button>
+  
+  <button id="endless-mode-btn">
+    Endless Mode
+    <span class="btn-subtitle">(3 Strikes)</span>
+  </button>
+  
+  <button id="survival-mode-btn" disabled>Survival Mode (Coming Soon!)</button>
+  <button id="settings-btn">Settings</button>
+</main>
+
+<main id="game-screen" class="screen hidden" role="region" aria-labelledby="game-heading">
+  
+  <div id="countdown-overlay" class="hidden" role="alert" aria-live="assertive">
+    <span id="countdown-text">3</span>
+  </div>
+
+  <form id="game-form" class="game-container">
+    <h1 id="game-heading" class="sr-only">Game</h1>
+    
+    <div id="gabriel-container" aria-hidden="true">
+        <div id="gabriel-sprite"></div>
+    </div>
+
+    <div id="problem" aria-live="polite"></div>
+    <label for="answer" id="answer-label">Your answer:</label>
+    <input type="tel" id="answer" inputmode="numeric" aria-labelledby="answer-label" required />
+    <button id="submit">Submit</button>
+    
+    <div id="feedback" role="alert" style="min-height: 1.5em;"></div>
+    <div class="stats-row">
+        <div id="score">Score: 0</div>
+        <div id="timer">Time: 60s</div>
+        <div id="lives" class="hidden">Lives: 3</div>
+    </div>
+  </form>
+</main>
+
+<main id="game-over-screen" class="screen hidden" role="region" aria-labelledby="game-over-heading">
+  <h1 id="game-over-heading">Time's Up!</h1>
+  <p>Your Final Score:</p>
+  <h2 id="final-score">0</h2>
+  <div id="score-breakdown">
+    <p>Problems Answered: <span id="problems-answered">0</span></p>
+    <p>Correct Answers: <span id="correct-answers">0</span></p>
+    <p>Accuracy: <span id="accuracy">0%</span></p>
+  </div>
+  <button id="play-again-btn">Play Again</button>
+  <button id="main-menu-game-over-btn">Main Menu</button>
+</main>
+
+<main id="high-score-screen" class="screen hidden" role="region" aria-labelledby="high-score-heading">
+  <h1 id="high-score-heading">New High Score!</h1>
+  <p>Congratulations!</p>
+  <h2 id="new-high-score">0</h2>
+  <button id="play-again-high-score-btn">Play Again</button>
+  <button id="main-menu-high-score-btn">Main Menu</button>
+  <button id="score-breakdown-btn">See Score Breakdown</button>
+</main>
+
+<main id="settings-screen" class="screen hidden" 
+      role="dialog" 
+      aria-modal="true" 
+      aria-labelledby="settings-heading">
+  
+  <button id="back-to-menu-btn" class="back-button" aria-label="Back to Main Menu">&larr; Back</button>
+  
+  <h1 id="settings-heading">Settings</h1>
+
+  <div class="tab-list" role="tablist" aria-labelledby="settings-heading">
+    <button id="tab-audio" role="tab" aria-selected="true" aria-controls="tabpanel-audio">Audio</button>
+    <button id="tab-gameplay" role="tab" aria-selected="false" aria-controls="tabpanel-gameplay">Gameplay</button>
+    <button id="tab-accessibility" role="tab" aria-selected="false" aria-controls="tabpanel-accessibility">Accessibility</button>
+  </div>
+
+  <div id="tabpanel-audio" role="tabpanel" aria-labelledby="tab-audio">
+    <h2>Audio Settings</h2>
+    <div class="setting-group">
+      <label for="master-volume">Master Volume</label>
+      <input type="range" id="master-volume" min="0" max="100" value="100">
+    </div>
+    <div class="setting-group">
+      <label for="music-volume">Music Volume</label>
+      <input type="range" id="music-volume" min="0" max="100" value="100">
+    </div>
+    <div class="setting-group">
+      <label for="sfx-volume">SFX Volume</label>
+      <input type="range" id="sfx-volume" min="0" max="100" value="100">
+    </div>
+  </div>
+
+  <div id="tabpanel-gameplay" role="tabpanel" aria-labelledby="tab-gameplay" class="hidden">
+    <h2>Gameplay Settings</h2>
+    <fieldset class="setting-group">
+      <legend>Math Operations (At least one required)</legend>
+      <input type="checkbox" id="op-addition" checked>
+      <label for="op-addition">Addition (+)</label>
+      <br>
+      <input type="checkbox" id="op-subtraction">
+      <label for="op-subtraction">Subtraction (-)</label>
+      <br>
+      <input type="checkbox" id="op-multiplication">
+      <label for="op-multiplication">Multiplication (×)</label>
+      <br>
+      <input type="checkbox" id="op-division">
+      <label for="op-division">Division (÷)</label>
+    </fieldset>
+    
+    <div class="setting-group">
+      <h3>Game Feel</h3>
+      <input type="checkbox" id="disable-countdown">
+      <label for="disable-countdown">Disable "3, 2, 1" Start Countdown</label>
+    </div>
+
+  </div>
+
+  <div id="tabpanel-accessibility" role="tabpanel" aria-labelledby="tab-accessibility" class="hidden">
+    <h2>Accessibility Settings</h2>
+    <div class="setting-group">
+      <button id="contrast-toggle-settings">Toggle High Contrast</button>
+    </div>
+  </div>
+</main>
+
+<main id="whats-new-popup" class="screen hidden" 
+      role="dialog" 
+      aria-modal="true" 
+      aria-labelledby="whats-new-heading">
+  
+  <div class="popup-content">
+    <h1 id="whats-new-heading">What's New in v0.5.0</h1>
+    <p>Welcome to a much more polished Math Sprint!</p>
+    <ul>
+      <li>Full Settings Overhaul with tabs and volume sliders.</li>
+      <li>Choose Your Challenge: Toggle on new math operations!</li>
+      <li>"3, 2, 1, SPRINT!" countdown before every game.</li>
+      <li>Score breakdown is now available on the high score screen.</li>
+      <li>Fixed a critical focus bug for screen reader users.</li>
+    </ul>
+    <button id="close-popup-btn">Got it!</button>
+  </div>
+</main>
+
+
+<footer>
+  <p>&copy; <span id="copyright-year">2025</span> James Trimble. All rights reserved.</p>
+  <p>Music generated by <a href="https://producer.ai/" target="_blank">Producer.ai</a></p>
+  <p id="version-number">v0.0.0</p>
+</footer>
+
+<script src="js/main.js" type="module"></script>
+
+</body>
+</html>

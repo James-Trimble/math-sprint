@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Sprint - Coming Soon</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#007bff">
+  <link rel="apple-touch-icon" href="img/gabriel.png">
+  
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #e3f2fd; /* Winter Blue */
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      padding: 2rem;
+    }
+    h1 { font-size: 3rem; margin-bottom: 1rem; }
+    p { font-size: 1.5rem; max-width: 600px; line-height: 1.5; }
+    
+    /* Button Style */
+    button#login-btn {
+        margin-top: 3rem;
+        background: white;
+        border: 2px solid #0288d1; 
+        padding: 15px 30px;
+        color: #0288d1;
+        font-size: 1.2rem;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    button#login-btn:hover, button#login-btn:focus {
+        background: #0288d1;
+        color: white;
+        outline: 3px solid #ffab00;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Math Sprint</h1>
+    <p>The next generation of accessible, audio-first web gaming is currently in private Alpha testing.</p>
+    <p><strong>Coming Publicly in 2026.</strong></p>
+    
+    <button id="login-btn">Alpha Access Login</button>
+
+    <script>
+      // --- CONFIGURATION (Update this every version) ---
+      const CURRENT_GAME_FILE = "Sprint_v0-6-0_Secure_9x01z.html";
+      const PASSWORD = "gabriel";
+
+      // --- AUTO-REDIRECT LOGIC ---
+      // If the user has successfully logged in before, skip the gate.
+      if (localStorage.getItem("mathSprintAlphaAccess") === "true") {
+          // Use 'replace' so the back button doesn't get stuck in a loop
+          window.location.replace(CURRENT_GAME_FILE);
+      }
+
+      // --- MANUAL LOGIN LOGIC ---
+      document.getElementById('login-btn').addEventListener('click', () => {
+        const userInput = prompt("Please enter the Alpha Access Code:");
+        
+        if (userInput && userInput.toLowerCase().trim() === PASSWORD) {
+            // Success! Save the "cookie" so they don't have to type it again.
+            localStorage.setItem("mathSprintAlphaAccess", "true");
+            
+            // Redirect
+            window.location.href = CURRENT_GAME_FILE;
+        } else if (userInput) {
+            alert("Access Denied. Hint: Who is the new mascot?");
+        }
+      });
+    </script>
+  </main>
+</body>
+</html>
