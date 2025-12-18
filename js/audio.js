@@ -6,12 +6,10 @@ const reverb = new Tone.Reverb(0.4).toDestination();
 
 // --- Audio Loading State ---
 let audioLoadedCount = 0;
-// We allow the game to start early (after 3 files), but we handle late files gracefully now.
 const MIN_LOAD_THRESHOLD = 3; 
 
 const onAudioLoaded = () => {
   audioLoadedCount++;
-  console.log(`Audio Loaded: ${audioLoadedCount}`);
   if (beginBtn && audioLoadedCount >= MIN_LOAD_THRESHOLD) { 
     beginBtn.disabled = false;
     beginBtn.textContent = "Click to Begin";
@@ -19,7 +17,6 @@ const onAudioLoaded = () => {
 };
 
 // --- Music Players ---
-
 export const backgroundMusicMainMenu = new Tone.Player({
   url: "./music/mathsprintmainmenu.mp3",
   loop: true,
@@ -100,40 +97,39 @@ const gabrielSynth = new Tone.DuoSynth({
     voice1: { oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 } }
 }).connect(reverb);
 
-// --- Audio Logos ---
+// --- AUDIO LOGOS ---
+
 const logoSynth = new Tone.PolySynth(Tone.Synth, {
   oscillator: { type: "sawtooth" }, 
   envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 1 }
 }).connect(reverb);
 
-const holidaySynth = new Tone.PolySynth(Tone.Synth, {
-    oscillator: { type: "square" },
-    volume: -5, 
-    envelope: { attack: 0.01, decay: 0.2, sustain: 0.2, release: 0.5 }
-}).toDestination();
+// HOLIDAY LOGO (Updated Volume)
+const holidaySynth = new Tone.PolySynth(Tone.FMSynth, {
+    maxPolyphony: 6, 
+    voice: {
+        harmonicity: 3.01,
+        modulationIndex: 10,
+        oscillator: { type: "sine" },
+        modulation: { type: "square" },
+        envelope: { attack: 0.001, decay: 0.5, sustain: 0, release: 1 },
+        modulationEnvelope: { attack: 0.001, decay: 0.2, sustain: 0, release: 0.5 }
+    },
+    volume: 0 // <--- MAX VOLUME (Was -6)
+}).connect(reverb);
 
 
 // --- Functions ---
 
 export function playMainMenuMusic() {
     if (settings.musicVolume <= 0) return;
-
-    // CHECK 1: Is it already playing?
     if (backgroundMusicMainMenu.state === "started") return;
 
-    // CHECK 2: Is the file actually loaded yet?
     if (backgroundMusicMainMenu.loaded) {
-        console.log("Starting Main Menu Music...");
         backgroundMusicMainMenu.start();
     } else {
-        console.warn("Main Menu Music not loaded yet. Retrying in 1s...");
-        // RETRY LOGIC: Wait 1 second and try again
         setTimeout(() => {
-             if (backgroundMusicMainMenu.loaded) {
-                 backgroundMusicMainMenu.start();
-             } else {
-                 console.error("Main Menu Music still failed to load.");
-             }
+             if (backgroundMusicMainMenu.loaded) backgroundMusicMainMenu.start();
         }, 1000);
     }
 }
@@ -141,18 +137,25 @@ export function playMainMenuMusic() {
 export function playAudioLogo(isChristmas) {
   const now = Tone.now();
   if (isChristmas) {
+      // JINGLE BELLS
       holidaySynth.triggerAttackRelease("E5", "8n", now);
       holidaySynth.triggerAttackRelease("E5", "8n", now + 0.2);
       holidaySynth.triggerAttackRelease("E5", "4n", now + 0.4);
+      
       holidaySynth.triggerAttackRelease("E5", "8n", now + 0.8);
       holidaySynth.triggerAttackRelease("E5", "8n", now + 1.0);
       holidaySynth.triggerAttackRelease("E5", "4n", now + 1.2);
+      
       holidaySynth.triggerAttackRelease("E5", "8n", now + 1.6);
       holidaySynth.triggerAttackRelease("G5", "8n", now + 1.8);
       holidaySynth.triggerAttackRelease("C5", "8n", now + 2.0);
       holidaySynth.triggerAttackRelease("D5", "8n", now + 2.2);
       holidaySynth.triggerAttackRelease("E5", "2n", now + 2.4);
+      
+      // Bass Note
+      holidaySynth.triggerAttackRelease("C4", "1n", now + 1.6);
   } else {
+      // STANDARD
       logoSynth.triggerAttackRelease("G4", "16n", now);       
       logoSynth.triggerAttackRelease("C5", "16n", now + 0.1); 
       logoSynth.triggerAttackRelease("E5", "16n", now + 0.2); 
@@ -168,7 +171,6 @@ export function initializeTensionLoop() {
 }
 
 export function stopAllMusic(tensionLoop) {
-  // IMPORTANT: Stop everything
   if(backgroundMusicMainMenu.state === "started") backgroundMusicMainMenu.stop();
   if(backgroundMusicSprint.state === "started") backgroundMusicSprint.stop();
   if(backgroundMusicEndless.state === "started") backgroundMusicEndless.stop();
@@ -203,7 +205,6 @@ export function applyVolumeSettings() {
   highScoreMusicSurvival.volume.value = musicDb;
 }
 
-// SFX Exports
 export function playCorrectTone() { if (settings.sfxVolume > 0) gameSynth.triggerAttackRelease("E5", "8n"); }
 export function playIncorrectTone() { if (settings.sfxVolume > 0) gameSynth.triggerAttackRelease("C4", "8n"); }
 export function playStreakTone() { if (settings.sfxVolume > 0) streakSynth.triggerAttackRelease("G5", "8n", "+0.1"); }

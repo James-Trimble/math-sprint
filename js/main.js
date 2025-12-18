@@ -35,7 +35,13 @@ ui.beginBtn.addEventListener("click", () => {
   ui.beginBtn.disabled = true; 
   
   Tone.start().then(() => {
+    // 1. Play the correct logo
     audio.playAudioLogo(window.isChristmasMode);
+    
+    // 2. Calculate how long to wait
+    // Christmas Logo = ~3.5s total duration including decay. 
+    // We want a 0.5s gap. So we wait 4000ms total.
+    const logoWaitTime = window.isChristmasMode ? 4000 : 1500;
     
     setTimeout(() => {
       const lastSeenVersion = localStorage.getItem("mathSprintLastVersion");
@@ -47,10 +53,10 @@ ui.beginBtn.addEventListener("click", () => {
         ui.showScreen("main-menu");
       }
       
-      // *** START MENU MUSIC ***
+      // 3. Start Music
       audio.playMainMenuMusic();
       
-    }, 1200); 
+    }, logoWaitTime); 
   });
 });
 
@@ -97,14 +103,12 @@ ui.backToMenuShopBtn.addEventListener("click", () => {
 ui.cashOutCloseBtn.addEventListener("click", () => {
     audio.playUIClickSound();
     ui.showScreen("main-menu");
-    // Ensure music continues or restarts if stopped
     audio.playMainMenuMusic();
 });
 
 ui.closePopupBtn.addEventListener("click", () => { 
     localStorage.setItem("mathSprintLastVersion", state.GAME_VERSION); 
     ui.showScreen("main-menu"); 
-    // Ensure music starts after closing 'What's New'
     audio.playMainMenuMusic();
 });
 

@@ -4,7 +4,7 @@
 export const GAME_DURATION = 60; 
 export const SURVIVAL_START_TIME = 30; 
 export const STARTING_LIVES = 3; 
-export const GAME_VERSION = "v0.7.0-alpha"; 
+export const GAME_VERSION = "v0.7.1-alpha"; 
 
 // --- Game Variables ---
 export let gameMode = 'sprint'; 
