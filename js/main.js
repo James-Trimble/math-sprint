@@ -2,228 +2,185 @@ import * as state from './state.js';
 import * as ui from './ui.js';
 import * as audio from './audio.js';
 import { startGame, goToMainMenu, handleAnswerSubmit } from './game.js';
-import { getModalFocusableElements } from './ui.js'; 
-import { VERSION_INFO } from './whatsnew.js'; // Ensure this matches your filename
+import { VERSION_INFO } from './whatsnew.js';
 
-// --- Event Listeners ---
-
-// 1. Ready Screen (Click to Init Audio context)
-ui.beginBtn.addEventListener("click", () => {
-  ui.beginBtn.disabled = true; 
-
-  // Initialize Tone.js
-  Tone.start().then(() => {
-    audio.playAudioLogo();
-    
-    // Artificial delay to let the logo play out
-    setTimeout(() => {
-      const lastSeenVersion = localStorage.getItem("mathSprintLastVersion");
-      
-      // Check if this is a new update
-      if (lastSeenVersion !== state.GAME_VERSION) {
-        
-        // Populate Heading
-        const headingEl = document.getElementById("whats-new-heading");
-        if(headingEl) headingEl.textContent = VERSION_INFO.heading;
-
-        // Populate Tagline (Optional, assumes you have a <p> in the popup)
-        const contentP = document.querySelector("#whats-new-popup .popup-content p");
-        if(contentP) contentP.textContent = VERSION_INFO.tagline;
-        
-        // Populate List
-        const listContainer = document.querySelector("#whats-new-popup ul");
-        if (listContainer) {
-            listContainer.innerHTML = ""; // Clear old items
-            VERSION_INFO.notes.forEach(note => {
-                const li = document.createElement("li");
-                li.textContent = note;
-                listContainer.appendChild(li);
-            });
-        }
-
-        ui.showScreen("whats-new-popup", true);
-      } else {
-        // No update, go straight to menu
-        ui.showScreen("main-menu");
-      }
-    }, 1200); 
-  });
-});
-
-// 2. "What's New" Popup Close
-ui.closePopupBtn.addEventListener("click", () => {
-  localStorage.setItem("mathSprintLastVersion", state.GAME_VERSION);
-  ui.showScreen("main-menu");
-});
-
-// 3. Main Menu Navigation
-ui.sprintModeBtn.addEventListener("click", () => startGame('sprint'));
-ui.endlessModeBtn.addEventListener("click", () => startGame('endless'));
-
-ui.settingsBtn.addEventListener("click", () => {
-  audio.playUIClickSound(); 
-  ui.showScreen("settings-screen", true);
-});
-
-// 4. Gameplay Form
-ui.gameForm.addEventListener("submit", (e) => {
-  e.preventDefault(); 
-  if (!ui.submitBtn.disabled) {
-    handleAnswerSubmit();
-  }
-});
-
-// 5. Game Over & High Score Actions
-ui.playAgainBtn.addEventListener("click", () => startGame(state.gameMode));
-ui.mainMenuGameOverBtn.addEventListener("click", goToMainMenu);
-
-ui.playAgainHighScoreBtn.addEventListener("click", () => startGame(state.gameMode));
-ui.mainMenuHighScoreBtn.addEventListener("click", goToMainMenu);
-
-ui.scoreBreakdownBtn.addEventListener("click", () => {
-  const gameOverHeading = document.getElementById("game-over-heading");
-  if (gameOverHeading) {
-    gameOverHeading.textContent = "Score Breakdown";
-  }
-  ui.finalScoreEl.textContent = state.score; 
-  ui.displayScoreBreakdown(state.problemsAnswered, state.correctAnswers);
-  ui.showScreen("game-over-screen");
-});
-
-// --- Settings Dialog Listeners ---
-
-ui.backToMenuBtn.addEventListener("click", () => {
-  audio.playUIBackSound();
-  goToMainMenu();
-});
-
-// Tab switching
-ui.tabs.forEach(tab => {
-  tab.addEventListener("click", (e) => {
-    audio.playUIClickSound();
-    
-    ui.tabPanels.forEach(panel => {
-      panel.classList.add("hidden");
-    });
-    ui.tabs.forEach(t => {
-      t.setAttribute("aria-selected", "false");
-    });
-
-    const targetPanelId = e.target.getAttribute("aria-controls");
-    document.getElementById(targetPanelId).classList.remove("hidden");
-    e.target.setAttribute("aria-selected", "true");
-  });
-});
-
-// Volume Controls
-ui.masterVolumeSlider.addEventListener("input", (e) => {
-  state.settings.masterVolume = parseInt(e.target.value, 10);
-  // audio.playUIToggleOnSound(); // Optional: Removed to reduce spam while sliding
-  audio.applyVolumeSettings();
-  state.saveSettings();
-});
-
-ui.musicVolumeSlider.addEventListener("input", (e) => {
-  state.settings.musicVolume = parseInt(e.target.value, 10);
-  audio.applyVolumeSettings();
-  state.saveSettings();
-});
-
-ui.sfxVolumeSlider.addEventListener("input", (e) => {
-  state.settings.sfxVolume = parseInt(e.target.value, 10);
-  audio.applyVolumeSettings();
-  state.saveSettings();
-});
-
-// Operation Toggles
-ui.operationCheckboxes.forEach(checkbox => {
-  checkbox.addEventListener("change", (e) => {
-    const checkedCount = ui.operationCheckboxes.filter(cb => cb.checked).length;
-    if (checkedCount === 0) {
-      audio.playUIErrorSound();
-      checkbox.checked = true; // Force re-check
-    } else {
-      if (e.target.checked) audio.playUIToggleOnSound();
-      else audio.playUIToggleOffSound();
-      
-      state.settings.operations.addition = ui.opAddition.checked;
-      state.settings.operations.subtraction = ui.opSubtraction.checked;
-      state.settings.operations.multiplication = ui.opMultiplication.checked;
-      state.settings.operations.division = ui.opDivision.checked;
-      state.saveSettings();
-    }
-    ui.validateOperationToggles();
-  });
-});
-
-// Misc Settings
-ui.disableCountdownToggle.addEventListener("change", (e) => {
-  if (e.target.checked) audio.playUIToggleOnSound();
-  else audio.playUIToggleOffSound();
-  
-  state.settings.disableCountdown = e.target.checked;
-  state.saveSettings();
-});
-
-ui.contrastBtn.addEventListener("click", () => {
-  if (document.body.classList.contains("high-contrast")) {
-    audio.playUIToggleOffSound(); 
-  } else {
-    audio.playUIToggleOnSound(); 
-  }
-  
-  document.body.classList.toggle("high-contrast");
-  localStorage.setItem(
-    "mathSprintHighContrast",
-    document.body.classList.contains("high-contrast")
-  );
-});
-
-// --- Initial Setup ---
+// --- INITIALIZATION ---
 window.addEventListener("load", () => {
   ui.copyrightYearEl.textContent = new Date().getFullYear();
   ui.versionNumberEl.textContent = state.GAME_VERSION; 
-  
   ui.beginBtn.disabled = true;
   ui.beginBtn.textContent = "Loading Audio...";
 
   state.loadSettings();
   audio.initializeTensionLoop();
   audio.applyVolumeSettings();
-  
   ui.applySettingsToUI(state.settings);
   ui.validateOperationToggles(); 
+
+  // SEASONAL CHECK
+  const now = new Date();
+  const month = now.getMonth(); 
+  const date = now.getDate();
+  const isWinter = (month === 11 || month === 0 || month === 1);
+  const isChristmas = (month === 11 && date <= 25);
   
+  ui.applySeasonalVisuals(isWinter, isChristmas);
+  window.isChristmasMode = isChristmas;
+
   ui.showScreen("ready-screen"); 
 });
 
-// --- Modal Focus Management ---
-function handleModalKeydown(e) {
-  if (!state.currentModalId) return; // Not in a modal
+// --- AUDIO START ---
+ui.beginBtn.addEventListener("click", () => {
+  ui.beginBtn.disabled = true; 
+  
+  Tone.start().then(() => {
+    audio.playAudioLogo(window.isChristmasMode);
+    
+    setTimeout(() => {
+      const lastSeenVersion = localStorage.getItem("mathSprintLastVersion");
+      
+      if (lastSeenVersion !== state.GAME_VERSION) {
+        populateWhatsNew();
+        ui.showScreen("whats-new-popup", true);
+      } else {
+        ui.showScreen("main-menu");
+      }
+      
+      // *** START MENU MUSIC ***
+      audio.playMainMenuMusic();
+      
+    }, 1200); 
+  });
+});
 
-  if (e.key === 'Escape') {
-    audio.playUIBackSound();
-    goToMainMenu();
-    return;
-  }
-
-  if (e.key !== 'Tab') return;
-
-  const focusableElements = getModalFocusableElements(state.currentModalId);
-  if (focusableElements.length === 0) return;
-
-  const first = focusableElements[0];
-  const last = focusableElements[focusableElements.length - 1];
-
-  if (document.activeElement === last && !e.shiftKey) {
-    // On last, pressing Tab: go to first
-    e.preventDefault();
-    first.focus();
-  } else if (document.activeElement === first && e.shiftKey) {
-    // On first, pressing Shift+Tab: go to last
-    e.preventDefault();
-    last.focus();
-  }
+function populateWhatsNew() {
+    const headingEl = document.getElementById("whats-new-heading");
+    if(headingEl) headingEl.textContent = VERSION_INFO.heading;
+    
+    const contentP = document.querySelector("#whats-new-popup .popup-content p");
+    if(contentP) contentP.textContent = VERSION_INFO.tagline;
+    
+    const listContainer = document.querySelector("#whats-new-popup ul");
+    if (listContainer) {
+        listContainer.innerHTML = "";
+        VERSION_INFO.notes.forEach(note => {
+            const li = document.createElement("li");
+            li.textContent = note;
+            listContainer.appendChild(li);
+        });
+    }
 }
 
-document.addEventListener('keydown', handleModalKeydown);
+// --- MAIN MENU LISTENERS ---
+ui.sprintModeBtn.addEventListener("click", () => startGame('sprint'));
+ui.endlessModeBtn.addEventListener("click", () => startGame('endless'));
+ui.survivalModeBtn.addEventListener("click", () => startGame('survival')); 
+
+ui.settingsBtn.addEventListener("click", () => {
+  audio.playUIClickSound(); 
+  ui.showScreen("settings-screen", true);
+});
+
+ui.shopBtn.addEventListener("click", () => {
+    audio.playUIClickSound();
+    ui.walletBalanceEl.textContent = state.sparksWallet;
+    ui.showScreen("shop-screen", true);
+});
+
+ui.backToMenuShopBtn.addEventListener("click", () => {
+    audio.playUIBackSound();
+    ui.showScreen("main-menu");
+});
+
+// --- POPUP CLOSERS ---
+ui.cashOutCloseBtn.addEventListener("click", () => {
+    audio.playUIClickSound();
+    ui.showScreen("main-menu");
+    // Ensure music continues or restarts if stopped
+    audio.playMainMenuMusic();
+});
+
+ui.closePopupBtn.addEventListener("click", () => { 
+    localStorage.setItem("mathSprintLastVersion", state.GAME_VERSION); 
+    ui.showScreen("main-menu"); 
+    // Ensure music starts after closing 'What's New'
+    audio.playMainMenuMusic();
+});
+
+// --- GAMEPLAY LISTENERS ---
+ui.gameForm.addEventListener("submit", (e) => {
+  e.preventDefault(); 
+  if (!ui.submitBtn.disabled) handleAnswerSubmit();
+});
+
+ui.playAgainBtn.addEventListener("click", () => startGame(state.gameMode));
+ui.mainMenuGameOverBtn.addEventListener("click", goToMainMenu);
+ui.playAgainHighScoreBtn.addEventListener("click", () => startGame(state.gameMode));
+ui.mainMenuHighScoreBtn.addEventListener("click", goToMainMenu);
+
+ui.scoreBreakdownBtn.addEventListener("click", () => {
+  ui.finalScoreEl.textContent = state.score; 
+  ui.displayScoreBreakdown(state.problemsAnswered, state.correctAnswers);
+  ui.showScreen("game-over-screen");
+});
+
+// --- SETTINGS LISTENERS ---
+ui.backToMenuBtn.addEventListener("click", () => {
+  audio.playUIBackSound();
+  goToMainMenu();
+});
+
+ui.masterVolumeSlider.addEventListener("input", (e) => { 
+    state.settings.masterVolume = e.target.value; 
+    audio.applyVolumeSettings(); 
+    state.saveSettings(); 
+});
+ui.musicVolumeSlider.addEventListener("input", (e) => { 
+    state.settings.musicVolume = e.target.value; 
+    audio.applyVolumeSettings(); 
+    state.saveSettings(); 
+});
+ui.sfxVolumeSlider.addEventListener("input", (e) => { 
+    state.settings.sfxVolume = e.target.value; 
+    audio.applyVolumeSettings(); 
+    state.saveSettings(); 
+});
+
+ui.disableCountdownToggle.addEventListener("change", (e) => { 
+    state.settings.disableCountdown = e.target.checked; 
+    state.saveSettings(); 
+});
+
+[ui.opAddition, ui.opSubtraction, ui.opMultiplication, ui.opDivision].forEach(checkbox => {
+  checkbox.addEventListener("change", () => {
+    state.settings.operations.addition = ui.opAddition.checked;
+    state.settings.operations.subtraction = ui.opSubtraction.checked;
+    state.settings.operations.multiplication = ui.opMultiplication.checked;
+    state.settings.operations.division = ui.opDivision.checked;
+    ui.validateOperationToggles();
+    state.saveSettings();
+  });
+});
+
+ui.tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    const targetId = tab.getAttribute("aria-controls");
+    ui.tabs.forEach(t => {
+      t.setAttribute("aria-selected", "false");
+      t.classList.remove("active");
+    });
+    tab.setAttribute("aria-selected", "true");
+    tab.classList.add("active");
+    ui.tabPanels.forEach(panel => {
+      panel.classList.add("hidden");
+    });
+    document.getElementById(targetId).classList.remove("hidden");
+    audio.playUIClickSound();
+  });
+});
+
+ui.contrastBtn.addEventListener("click", () => { 
+    document.body.classList.toggle("high-contrast"); 
+    localStorage.setItem("mathSprintHighContrast", document.body.classList.contains("high-contrast")); 
+});

@@ -53,14 +53,13 @@
     <button id="login-btn">Alpha Access Login</button>
 
     <script>
-      // --- CONFIGURATION (Update this every version) ---
-      const CURRENT_GAME_FILE = "Sprint_v0-6-0_Secure_9x01z.html";
-      const PASSWORD = "gabriel";
+      // --- CONFIGURATION ---
+      // Renamed to remove "Arcade" branding
+      const CURRENT_GAME_FILE = "Sprint_v0-7-0_Overdrive.html";
+      const PASSWORD = "overdrive";
 
       // --- AUTO-REDIRECT LOGIC ---
-      // If the user has successfully logged in before, skip the gate.
       if (localStorage.getItem("mathSprintAlphaAccess") === "true") {
-          // Use 'replace' so the back button doesn't get stuck in a loop
           window.location.replace(CURRENT_GAME_FILE);
       }
 
@@ -69,13 +68,10 @@
         const userInput = prompt("Please enter the Alpha Access Code:");
         
         if (userInput && userInput.toLowerCase().trim() === PASSWORD) {
-            // Success! Save the "cookie" so they don't have to type it again.
             localStorage.setItem("mathSprintAlphaAccess", "true");
-            
-            // Redirect
             window.location.href = CURRENT_GAME_FILE;
         } else if (userInput) {
-            alert("Access Denied. Hint: Who is the new mascot?");
+            alert("Access Denied. Hint: What happens when you go too fast?");
         }
       });
     </script>

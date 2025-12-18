@@ -1,20 +1,18 @@
+// js/ui.js
 import { setCurrentModalId } from './state.js';
 
 // --- HTML Element References ---
 export const allScreens = document.querySelectorAll(".screen");
-export const readyScreen = document.getElementById("ready-screen");
 export const mainMenuScreen = document.getElementById("main-menu");
 export const gameScreen = document.getElementById("game-screen");
-export const gameOverScreen = document.getElementById("game-over-screen");
-export const highScoreScreen = document.getElementById("high-score-screen");
-export const settingsScreen = document.getElementById("settings-screen");
-export const whatsNewPopup = document.getElementById("whats-new-popup");
 
 // Buttons & Inputs
 export const beginBtn = document.getElementById("begin-btn");
 export const sprintModeBtn = document.getElementById("sprint-mode-btn");
-export const endlessModeBtn = document.getElementById("endless-mode-btn"); // NEW
+export const endlessModeBtn = document.getElementById("endless-mode-btn");
+export const survivalModeBtn = document.getElementById("survival-mode-btn"); // New
 export const settingsBtn = document.getElementById("settings-btn");
+export const shopBtn = document.getElementById("shop-btn"); // New
 export const gameForm = document.getElementById("game-form");
 export const problemEl = document.getElementById("problem");
 export const answerEl = document.getElementById("answer");
@@ -24,13 +22,16 @@ export const feedbackEl = document.getElementById("feedback");
 // Stats & Visuals
 export const scoreEl = document.getElementById("score");
 export const timerEl = document.getElementById("timer");
-export const livesEl = document.getElementById("lives"); // NEW
-export const gabrielContainer = document.getElementById("gabriel-container"); // NEW
-export const gabrielSprite = document.getElementById("gabriel-sprite"); // NEW
+export const livesEl = document.getElementById("lives");
+export const gabrielContainer = document.getElementById("gabriel-container");
+export const gabrielSprite = document.getElementById("gabriel-sprite");
 
 // Overlays
 export const countdownOverlay = document.getElementById("countdown-overlay");
 export const countdownText = document.getElementById("countdown-text");
+export const cashOutOverlay = document.getElementById("cash-out-popup"); // New
+export const cashOutSparks = document.getElementById("cash-out-sparks");
+export const cashOutCloseBtn = document.getElementById("cash-out-close");
 
 // End Game Elements
 export const finalScoreEl = document.getElementById("final-score");
@@ -43,6 +44,10 @@ export const newHighScoreEl = document.getElementById("new-high-score");
 export const playAgainHighScoreBtn = document.getElementById("play-again-high-score-btn");
 export const mainMenuHighScoreBtn = document.getElementById("main-menu-high-score-btn");
 export const scoreBreakdownBtn = document.getElementById("score-breakdown-btn");
+
+// Shop Elements
+export const walletBalanceEl = document.getElementById("wallet-balance"); 
+export const backToMenuShopBtn = document.getElementById("back-to-menu-shop-btn");
 
 // Settings Elements
 export const backToMenuBtn = document.getElementById("back-to-menu-btn");
@@ -64,15 +69,6 @@ export const versionNumberEl = document.getElementById("version-number");
 
 // --- UI Functions ---
 
-export function getModalFocusableElements(modalId) {
-    const modal = document.getElementById(modalId);
-    if (!modal) return [];
-    
-    const focusableSelector = 'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
-    return Array.from(modal.querySelectorAll(focusableSelector))
-        .filter(el => el.offsetParent !== null);
-}
-
 export function showScreen(screenId, isModal = false) {
   allScreens.forEach(screen => {
     screen.classList.add("hidden");
@@ -81,44 +77,46 @@ export function showScreen(screenId, isModal = false) {
   });
 
   const targetScreen = document.getElementById(screenId);
-  targetScreen.classList.remove("hidden");
-  targetScreen.setAttribute("aria-hidden", "false");
-  targetScreen.inert = false;
+  if (targetScreen) {
+    targetScreen.classList.remove("hidden");
+    targetScreen.setAttribute("aria-hidden", "false");
+    targetScreen.inert = false;
+  }
 
   if (isModal) {
     document.body.classList.add("modal-open");
-    mainMenuScreen.inert = true;
-    gameScreen.inert = true;
+    if(mainMenuScreen) mainMenuScreen.inert = true;
+    if(gameScreen) gameScreen.inert = true;
   } else {
     document.body.classList.remove("modal-open");
   }
 
   setCurrentModalId(isModal ? screenId : null);
-
-  let focusableElement;
-  if (screenId === "settings-screen") {
-    focusableElement = backToMenuBtn;
-  } else if (screenId === "game-screen") {
-    focusableElement = answerEl;
-  } else if (screenId === "whats-new-popup") {
-    focusableElement = closePopupBtn;
-  } else {
-    focusableElement = targetScreen.querySelector('h1');
-    if (!focusableElement) {
-      focusableElement = targetScreen.querySelector('button');
-    }
-  }
-
-  if (focusableElement) {
-    setTimeout(() => {
-      focusableElement.focus();
-    }, 50);
-  }
 }
 
-// NEW: Toggle UI elements based on Sprint vs Endless
+// Seasonal Visuals
+export function applySeasonalVisuals(isWinter, isChristmas) {
+    if (isWinter) {
+        document.body.classList.add("theme-winter");
+    }
+    if (isChristmas && gabrielSprite) {
+        gabrielSprite.classList.add("santa-hat");
+    }
+}
+
+// Overdrive Visuals
+export function toggleOverdriveVisuals(isActive) {
+    if (isActive) {
+        document.body.classList.add("overdrive-active");
+        scoreEl.classList.add("overdrive-text");
+    } else {
+        document.body.classList.remove("overdrive-active");
+        scoreEl.classList.remove("overdrive-text");
+    }
+}
+
 export function configureGameUI(mode) {
-    if (mode === 'sprint') {
+    if (mode === 'sprint' || mode === 'survival') {
         timerEl.classList.remove("hidden");
         livesEl.classList.add("hidden");
     } else {
@@ -141,6 +139,8 @@ export function updateScoreDisplay(newScore) {
 
 export function updateTimerDisplay(newTime) {
   timerEl.textContent = `Time left: ${newTime}s`;
+  if (newTime < 10) timerEl.classList.add("danger");
+  else timerEl.classList.remove("danger");
 }
 
 export function updateLivesDisplay(lives) {
@@ -161,32 +161,22 @@ export function glowScore() {
   setTimeout(() => scoreEl.classList.remove("glow"), 500);
 }
 
-// NEW: Gabriel Animation Control
 export function setGabrielState(state) {
-    // state can be 'idle', 'running', 'fast'
     gabrielSprite.classList.remove("running", "fast");
-    
-    if (state === 'running') {
-        gabrielSprite.classList.add("running");
-    } else if (state === 'fast') {
-        gabrielSprite.classList.add("running", "fast");
-    }
+    if (state === 'running') gabrielSprite.classList.add("running");
+    else if (state === 'fast') gabrielSprite.classList.add("running", "fast");
 }
 
-// --- Settings UI ---
-
+// Settings UI Updates
 export function applySettingsToUI(settings) {
   masterVolumeSlider.value = settings.masterVolume;
   musicVolumeSlider.value = settings.musicVolume;
   sfxVolumeSlider.value = settings.sfxVolume;
-  
   opAddition.checked = settings.operations.addition;
   opSubtraction.checked = settings.operations.subtraction;
   opMultiplication.checked = settings.operations.multiplication;
   opDivision.checked = settings.operations.division;
-  
   disableCountdownToggle.checked = settings.disableCountdown;
-  
   if (localStorage.getItem("mathSprintHighContrast") === "true") {
     document.body.classList.add("high-contrast");
   }
@@ -194,7 +184,6 @@ export function applySettingsToUI(settings) {
 
 export function validateOperationToggles() {
   const checkedCount = operationCheckboxes.filter(cb => cb.checked).length;
-  
   if (checkedCount === 1) {
     const onlyChecked = operationCheckboxes.find(cb => cb.checked);
     onlyChecked.disabled = true;
