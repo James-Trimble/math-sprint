@@ -1,80 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Math Sprint - Coming Soon</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#007bff">
-  <link rel="apple-touch-icon" href="img/gabriel.png">
-  
-  <style>
-    body {
-      font-family: sans-serif;
-      background-color: #e3f2fd; /* Winter Blue */
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      text-align: center;
-      padding: 2rem;
-    }
-    h1 { font-size: 3rem; margin-bottom: 1rem; }
-    p { font-size: 1.5rem; max-width: 600px; line-height: 1.5; }
-    
-    /* Button Style */
-    button#login-btn {
-        margin-top: 3rem;
-        background: white;
-        border: 2px solid #0288d1; 
-        padding: 15px 30px;
-        color: #0288d1;
-        font-size: 1.2rem;
-        font-weight: bold;
-        cursor: pointer;
-        border-radius: 8px;
-    }
-    button#login-btn:hover, button#login-btn:focus {
-        background: #0288d1;
-        color: white;
-        outline: 3px solid #ffab00;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Sprint | Official Release</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Landing Page Specific Overrides */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            background: #121212; /* Matches game dark theme */
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        .hero-container {
+            max-width: 600px;
+            padding: 2rem;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #4ecdc4; /* Game's accent teal */
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 3rem;
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            letter-spacing: 0.5px;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #4ecdc4, #556270);
+            color: white;
+            padding: 18px 50px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.6);
+        }
+
+        .play-btn:active {
+            transform: scale(0.98);
+        }
+
+        .footer-links {
+            margin-top: 3rem;
+            font-size: 0.95rem;
+            color: #888;
+        }
+
+        .footer-links a {
+            color: #999;
+            text-decoration: none;
+            margin: 0 15px;
+            transition: color 0.2s, border-color 0.2s;
+            border-bottom: 1px dotted #666;
+        }
+
+        .footer-links a:hover {
+            color: #4ecdc4;
+            border-bottom-color: #4ecdc4;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        /* Accessibility */
+        .play-btn:focus {
+            outline: 3px solid #4ecdc4;
+            outline-offset: 2px;
+        }
+    </style>
 </head>
 <body>
-  <main>
-    <h1>Math Sprint</h1>
-    <p>The next generation of accessible, audio-first web gaming is currently in private Alpha testing.</p>
-    <p><strong>Coming Publicly in 2026.</strong></p>
-    
-    <button id="login-btn">Alpha Access Login</button>
-
-    <script>
-      // --- CONFIGURATION ---
-      // Renamed to remove "Arcade" branding
-      const CURRENT_GAME_FILE = "Sprint_v0-7-0_Overdrive.html";
-      const PASSWORD = "overdrive";
-
-      // --- AUTO-REDIRECT LOGIC ---
-      if (localStorage.getItem("mathSprintAlphaAccess") === "true") {
-          window.location.replace(CURRENT_GAME_FILE);
-      }
-
-      // --- MANUAL LOGIN LOGIC ---
-      document.getElementById('login-btn').addEventListener('click', () => {
-        const userInput = prompt("Please enter the Alpha Access Code:");
+    <div class="hero-container">
+        <h1>MATH SPRINT</h1>
+        <div class="subtitle">v0.8.0 Itemized Overdrive</div>
         
-        if (userInput && userInput.toLowerCase().trim() === PASSWORD) {
-            localStorage.setItem("mathSprintAlphaAccess", "true");
-            window.location.href = CURRENT_GAME_FILE;
-        } else if (userInput) {
-            alert("Access Denied. Hint: What happens when you go too fast?");
-        }
-      });
-    </script>
-  </main>
+        <div class="status-badge">Public Release • 2026</div>
+
+        <br>
+
+        <a href="play.html" class="play-btn">ENTER ARCADE</a>
+
+        <div class="footer-links">
+            <a href="https://github.com/James-Trimble/math-sprint" target="_blank">View Source Code</a>
+            <a href="https://github.com/James-Trimble" target="_blank">Created by James Trimble</a>
+        </div>
+    </div>
 </body>
 </html>
