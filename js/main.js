@@ -1,6 +1,7 @@
 import * as state from './state.js';
 import * as ui from './ui.js';
 import * as audio from './audio.js';
+import * as shop from './shop.js';
 import { startGame, goToMainMenu, handleAnswerSubmit } from './game.js';
 import { VERSION_INFO } from './whatsnew.js';
 
@@ -16,6 +17,7 @@ window.addEventListener("load", () => {
   audio.applyVolumeSettings();
   ui.applySettingsToUI(state.settings);
   ui.validateOperationToggles(); 
+  ui.walletBalanceEl.textContent = state.sparksWallet;
 
   // SEASONAL CHECK
   const now = new Date();
@@ -91,6 +93,7 @@ ui.settingsBtn.addEventListener("click", () => {
 ui.shopBtn.addEventListener("click", () => {
     audio.playUIClickSound();
     ui.walletBalanceEl.textContent = state.sparksWallet;
+  shop.renderShopItems();
     ui.showScreen("shop-screen", true);
 });
 

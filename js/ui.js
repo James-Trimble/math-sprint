@@ -18,6 +18,8 @@ export const problemEl = document.getElementById("problem");
 export const answerEl = document.getElementById("answer");
 export const submitBtn = document.getElementById("submit");
 export const feedbackEl = document.getElementById("feedback");
+export const itemLiveEl = document.getElementById("item-live");
+export const quickUseBar = document.getElementById("quick-use-bar");
 
 // Stats & Visuals
 export const scoreEl = document.getElementById("score");
@@ -47,6 +49,8 @@ export const scoreBreakdownBtn = document.getElementById("score-breakdown-btn");
 
 // Shop Elements
 export const walletBalanceEl = document.getElementById("wallet-balance"); 
+export const shopGridEl = document.getElementById("shop-grid");
+export const shopLiveEl = document.getElementById("shop-live");
 export const backToMenuShopBtn = document.getElementById("back-to-menu-shop-btn");
 
 // Settings Elements
@@ -96,12 +100,13 @@ export function showScreen(screenId, isModal = false) {
 
 // Seasonal Visuals
 export function applySeasonalVisuals(isWinter, isChristmas) {
-    if (isWinter) {
-        document.body.classList.add("theme-winter");
-    }
-    if (isChristmas && gabrielSprite) {
-        gabrielSprite.classList.add("santa-hat");
-    }
+  if (isWinter) document.body.classList.add("theme-winter");
+  else document.body.classList.remove("theme-winter");
+
+  if (gabrielSprite) {
+    if (isChristmas) gabrielSprite.classList.add("santa-hat");
+    else gabrielSprite.classList.remove("santa-hat");
+  }
 }
 
 // Overdrive Visuals
@@ -154,6 +159,59 @@ export function updateProblemDisplay(problemString) {
 export function updateFeedbackDisplay(text, color) {
   feedbackEl.textContent = text;
   feedbackEl.style.color = color;
+}
+
+// --- Item & Shop Announcements ---
+export function announceShop(message) {
+  if (shopLiveEl) shopLiveEl.textContent = message;
+}
+
+export function announceItem(message) {
+  if (itemLiveEl) itemLiveEl.textContent = message;
+}
+
+export function showItemToast(message) {
+  const toast = document.createElement("div");
+  toast.className = "item-feedback-toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 1800);
+}
+
+// --- Quick Use Buttons ---
+export function renderQuickUseButtons(items, inventoryLookup, onClick) {
+  if (!quickUseBar) return;
+  quickUseBar.innerHTML = "";
+  items.forEach(item => {
+    const count = inventoryLookup(item.id) || 0;
+    const btn = document.createElement("button");
+    btn.className = "item-button";
+    btn.dataset.itemId = item.id;
+    btn.type = "button";
+    btn.disabled = count === 0;
+    btn.setAttribute("aria-label", `${item.name}, ${count} available`);
+    btn.innerHTML = `<span class="icon">${item.icon}</span><span class="label">${item.name}</span><span class="count">(${count})</span>`;
+    btn.addEventListener("click", () => onClick && onClick(item.id));
+    quickUseBar.appendChild(btn);
+  });
+}
+
+export function updateQuickUseCount(itemId, count) {
+  if (!quickUseBar) return;
+  const btn = quickUseBar.querySelector(`[data-item-id="${itemId}"]`);
+  if (btn) {
+    const countEl = btn.querySelector(".count");
+    if (countEl) countEl.textContent = `(${count})`;
+    btn.disabled = count === 0;
+  }
+}
+
+export function setQuickUseActive(itemId, active) {
+  if (!quickUseBar) return;
+  const btn = quickUseBar.querySelector(`[data-item-id="${itemId}"]`);
+  if (btn) {
+    btn.classList.toggle("item-active", !!active);
+  }
 }
 
 export function glowScore() {

@@ -44,20 +44,12 @@
 <main id="shop-screen" class="screen hidden" role="region" aria-labelledby="shop-heading">
     <h1 id="shop-heading">The Shop</h1>
     
-    <div class="currency-display">
-        ⚡ <span id="wallet-balance">0</span> Sparks
-    </div>
+  <div class="currency-display">
+    ⚡ <span id="wallet-balance">0</span> Sparks
+  </div>
+  <div id="shop-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
     
-    <div class="shop-grid">
-        <div class="shop-item">
-            <strong>Gold Gabriel</strong><br>
-            <span style="font-size:0.8rem">Coming v0.8.0</span>
-        </div>
-        <div class="shop-item">
-            <strong>Matrix Theme</strong><br>
-            <span style="font-size:0.8rem">Coming v0.8.0</span>
-        </div>
-    </div>
+  <div class="shop-grid" id="shop-grid" aria-label="Shop items"></div>
     
     <button id="back-to-menu-shop-btn">Back to Menu</button>
 </main>
@@ -79,8 +71,10 @@
     <label for="answer" id="answer-label" class="sr-only">Your answer:</label>
     <input type="tel" id="answer" inputmode="numeric" aria-labelledby="answer-label" required />
     <button id="submit">Submit</button>
+    <div id="quick-use-bar" class="quick-use-bar" aria-label="Quick use items"></div>
     
     <div id="feedback" role="alert" style="min-height: 1.5em;"></div>
+    <div id="item-live" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
     
     <div class="stats-row">
         <div id="score">Score: 0</div>

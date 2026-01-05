@@ -361,29 +361,148 @@ footer a {
 .running.fast {
   animation-duration: 0.3s;
 }
-/* --- Winter Holiday Theme (v0.6.0) --- */
-:root {
+/* --- Winter Holiday Theme (v0.6.0, scoped) --- */
+body.theme-winter {
   --bg-color: #e3f2fd; /* Ice Blue */
   --primary-color: #d32f2f; /* Santa Red */
   --border-focus: #0288d1; /* Deep Ice Blue */
 }
 
-/* Add a snowflake hint to the ready screen */
-#ready-screen::before {
+body.theme-winter #ready-screen::before {
   content: "❄️"; 
   display: block;
   font-size: 3rem;
   margin-bottom: 1rem;
 }
 
-/* Give Gabriel a subtle winter border */
-#gabriel-sprite {
+body.theme-winter #gabriel-sprite {
   border: 4px solid white;
   box-shadow: 0 0 10px rgba(0, 150, 255, 0.3);
 }
 
-/* Keep High Contrast override safe */
 body.high-contrast {
   --bg-color: black;
   --primary-color: yellow;
+}
+
+/* Santa hat marker */
+.santa-hat {
+  position: relative;
+}
+
+.santa-hat::after {
+  content: "🎅";
+  position: absolute;
+  top: -18px;
+  right: -12px;
+  font-size: 1.6rem;
+}
+
+/* Overdrive visual pulse */
+body.overdrive-active {
+  box-shadow: inset 0 0 0 9999px rgba(255, 0, 0, 0.08);
+}
+
+.overdrive-text {
+  color: #d32f2f;
+  text-shadow: 0 0 8px rgba(211, 47, 47, 0.6);
+}
+
+/* Shop grid + items */
+.currency-display {
+  margin: 1rem 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.shop-item {
+  background: var(--card-bg);
+  border: 2px solid var(--border-light);
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px var(--shadow-color);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.shop-item .item-icon {
+  font-size: 2rem;
+}
+
+.shop-item .item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.shop-item .item-cost {
+  font-weight: bold;
+}
+
+.shop-item .buy-btn {
+  width: auto;
+  min-width: 80px;
+  padding: 0.5rem 0.75rem;
+}
+
+.shop-item .item-owned {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.shop-item .item-description {
+  font-size: 0.95rem;
+  color: #444;
+}
+
+/* Quick use bar */
+.quick-use-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.item-button {
+  width: auto;
+  padding: 0.5rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+}
+
+.item-button .count {
+  font-weight: bold;
+}
+
+.item-button.item-active {
+  box-shadow: 0 0 10px rgba(0, 150, 255, 0.6);
+}
+
+/* Toast-style feedback */
+.item-feedback-toast {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  z-index: 2000;
+  animation: slideIn 0.25s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }

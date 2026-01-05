@@ -4,7 +4,7 @@
 export const GAME_DURATION = 60; 
 export const SURVIVAL_START_TIME = 30; 
 export const STARTING_LIVES = 3; 
-export const GAME_VERSION = "v0.7.1-alpha"; 
+export const GAME_VERSION = "v0.8.0"; 
 
 // --- Game Variables ---
 export let gameMode = 'sprint'; 
@@ -114,6 +114,14 @@ export function addSparks(amount) {
     sparksWallet += amount;
     sessionSparks += amount; 
     localStorage.setItem("mathSprintSparks", sparksWallet);
+}
+
+export function deductSparks(amount) {
+    if (!amount || amount <= 0) return false;
+    if (sparksWallet < amount) return false;
+    sparksWallet -= amount;
+    localStorage.setItem("mathSprintSparks", sparksWallet);
+    return true;
 }
 
 export function clearSessionSparks() { sessionSparks = 0; }

@@ -97,6 +97,20 @@ const gabrielSynth = new Tone.DuoSynth({
     voice1: { oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 } }
 }).connect(reverb);
 
+const purchaseSuccessSynth = new Tone.PolySynth(Tone.Synth, {
+  envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.8 }
+}).toDestination();
+
+const purchaseFailSynth = new Tone.Synth({
+  oscillator: { type: 'sawtooth' },
+  envelope: { attack: 0.01, decay: 0.3, sustain: 0, release: 0.2 }
+}).toDestination();
+
+const itemActivationSynth = new Tone.PolySynth(Tone.Synth, {
+  maxPolyphony: 8,
+  envelope: { attack: 0.01, decay: 0.3, sustain: 0.1, release: 0.5 }
+}).toDestination();
+
 // --- AUDIO LOGOS ---
 
 const logoSynth = new Tone.PolySynth(Tone.Synth, {
@@ -220,3 +234,74 @@ export function playCountdownBeep() { if (settings.sfxVolume > 0) countdownSynth
 export function playCountdownGoBeep() { if (settings.sfxVolume > 0) countdownSynth.triggerAttackRelease("C5", "8n"); }
 export function playGabrielHappy() { if (settings.sfxVolume > 0) gabrielSynth.triggerAttackRelease("C6", "16n"); }
 export function playGabrielSassy() { if (settings.sfxVolume > 0) gabrielSynth.triggerAttackRelease("G3", "8n"); }
+
+export function playPurchaseSuccessSFX(category) {
+  if (settings.sfxVolume <= 0) return;
+  const now = Tone.now();
+  switch (category) {
+    case 'time':
+      purchaseSuccessSynth.triggerAttackRelease(["G5", "E5", "C5"], "16n", now);
+      break;
+    case 'score':
+      purchaseSuccessSynth.triggerAttackRelease(["C5", "E5", "G5", "C6"], "16n", now);
+      break;
+    case 'survival':
+      purchaseSuccessSynth.triggerAttackRelease(["C4", "E4", "G4"], "8n", now);
+      break;
+    case 'challenge':
+    default:
+      purchaseSuccessSynth.triggerAttackRelease(["E5", "G5"], "32n", now);
+      break;
+  }
+}
+
+export function playPurchaseFailSFX() {
+  if (settings.sfxVolume <= 0) return;
+  const now = Tone.now();
+  purchaseFailSynth.triggerAttackRelease("F#2", "8n", now);
+  purchaseFailSynth.triggerAttackRelease("F2", "8n", now + 0.1);
+}
+
+export function playItemActivationSFX(soundType) {
+  if (settings.sfxVolume <= 0) return;
+  const now = Tone.now();
+  switch (soundType) {
+    case 'freeze':
+      itemActivationSynth.triggerAttackRelease(["C5", "A4", "F4", "C4"], "16n", now);
+      break;
+    case 'rewind':
+      for (let i = 0; i < 6; i++) {
+        itemActivationSynth.triggerAttackRelease(Tone.Frequency(76 - i * 2, 'midi'), '64n', now + i * 0.05);
+      }
+      break;
+    case 'slow':
+      itemActivationSynth.triggerAttackRelease("C3", "1n", now);
+      break;
+    case 'boost':
+      itemActivationSynth.triggerAttackRelease(["C4", "E4", "G4", "C5"], "16n", now);
+      break;
+    case 'bonus':
+      itemActivationSynth.triggerAttackRelease(["C5", "E5", "G5", "B5", "D6"], "8n", now);
+      break;
+    case 'shield':
+      itemActivationSynth.triggerAttackRelease("C6", "32n", now);
+      break;
+    case 'life':
+      itemActivationSynth.triggerAttackRelease(["C5", "G5", "C6"], "16n", now);
+      break;
+    case 'revive':
+      itemActivationSynth.triggerAttackRelease("A5", "2n", now);
+      break;
+    case 'easy':
+    case 'modify':
+    default:
+      itemActivationSynth.triggerAttackRelease("E5", "16n", now);
+      break;
+  }
+}
+
+export function playShieldBlockSFX() {
+  if (settings.sfxVolume <= 0) return;
+  const now = Tone.now();
+  itemActivationSynth.triggerAttackRelease(["G5", "E5"], "32n", now);
+}

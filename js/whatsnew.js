@@ -1,13 +1,12 @@
 export const VERSION_INFO = {
-    version: "v0.7.0-alpha",
-    heading: "v0.7.0: The Overdrive Update",
-    tagline: "Survival Mode is open. Can you beat the clock?",
+    version: "v0.8.0",
+    heading: "v0.8.0: Itemized Overdrive",
+    tagline: "10 new consumable items, fresh sounds, and cleaner seasons.",
     notes: [
-        "New Mode: Survival. The grey button is finally active! Race against a ticking clock.",
-        "New Mechanic: Overdrive. Answer 3 questions fast to trigger it. Screen glows red, points double.",
-        "Adaptive Difficulty. Survival Mode evolves. It starts with Addition and unlocks harder math as you survive.",
-        "The Shop. You now earn 'Sparks' ⚡ based on your score. Check your wallet!",
-        "Audio Upgrade. High-energy Techno for the menu + Survival Mode.",
-        "Seasonal: A frosty winter theme and Jingle Bells startup (until Dec 26)."
+        "Shop unlocked: 10 usable items with quick-use buttons and wallet spending.",
+        "Item sounds: distinct purchase/activation tones and error feedback.",
+        "Accessibility: ARIA live announcements for purchases, activations, and auto-saves.",
+        "Seasonal fix: winter/Christmas visuals now cleanly toggle off after the holidays.",
+        "Modular code: items, inventory, and effects split for easier maintenance."
     ]
 };

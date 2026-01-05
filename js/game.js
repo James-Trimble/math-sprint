@@ -2,6 +2,9 @@ import * as state from './state.js';
 import * as ui from './ui.js';
 import * as audio from './audio.js';
 import * as shop from './shop.js'; 
+import * as inventory from './inventory.js';
+import * as itemEffects from './item-effects.js';
+import { getQuickUseList } from './item-effects.js';
 
 // --- Navigation ---
 
@@ -30,6 +33,7 @@ export function startGame(mode = 'sprint') {
   // Ensure menu music stops before game music starts
   audio.stopAllMusic(state.tensionLoop);
   ui.toggleOverdriveVisuals(false);
+  itemEffects.resetEffects();
   
   state.setGameMode(mode);
   state.setScore(0);
@@ -57,6 +61,12 @@ export function startGame(mode = 'sprint') {
   ui.submitBtn.disabled = false;
   ui.answerEl.disabled = false;
   ui.answerEl.value = "";
+
+  ui.renderQuickUseButtons(
+    getQuickUseList(),
+    (id) => inventory.getItemCount(id),
+    (id) => handleQuickUse(id)
+  );
   
   ui.setGabrielState('running');
   ui.showScreen("game-screen");
@@ -110,8 +120,12 @@ function startRound() {
 // --- Loop ---
 
 function gameTick() {
-  state.setTimeLeft(state.timeLeft - 1);
-  ui.updateTimerDisplay(state.timeLeft);
+  itemEffects.handleTick();
+  const timeDelta = itemEffects.getTimeDelta();
+  if (state.gameMode !== 'endless') {
+    state.setTimeLeft(state.timeLeft - timeDelta);
+    ui.updateTimerDisplay(Math.ceil(state.timeLeft));
+  }
 
   // Overdrive Decay
   if (state.overdriveActive) {
@@ -124,13 +138,15 @@ function gameTick() {
   }
 
   // Tension Loop
-  if (state.timeLeft === 10 && state.settings.sfxVolume > 0) {
+  if (state.gameMode !== 'endless' && state.timeLeft <= 10 && state.timeLeft > 0 && state.settings.sfxVolume > 0) {
     Tone.Transport.start();
     state.tensionLoop.start(0);
   }
   
-  if (state.timeLeft <= 0) {
-    gameOver();
+  if (state.gameMode !== 'endless' && state.timeLeft <= 0) {
+    if (!itemEffects.handleSecondChanceIfReady()) {
+      gameOver();
+    }
   }
 }
 
@@ -183,6 +199,12 @@ function gameOver() {
 
 function generateProblem(feedbackPrefix = "") {
   let availableOps = [];
+  const forcedOps = itemEffects.getForcedOps();
+  const disabledOps = itemEffects.getDisabledOps();
+  
+  if (forcedOps && forcedOps.length > 0) {
+    availableOps = [...forcedOps];
+  } else {
   if (state.gameMode === 'survival') {
       availableOps.push("+"); 
       if (state.score > 20) availableOps.push("-");
@@ -193,6 +215,11 @@ function generateProblem(feedbackPrefix = "") {
       if (state.settings.operations.subtraction) availableOps.push("-");
       if (state.settings.operations.multiplication) availableOps.push("×");
       if (state.settings.operations.division) availableOps.push("÷");
+  }
+  }
+
+  if (disabledOps.length > 0) {
+    availableOps = availableOps.filter(op => !disabledOps.includes(op));
   }
   
   if (availableOps.length === 0) availableOps.push("+");
@@ -244,8 +271,9 @@ function generateProblem(feedbackPrefix = "") {
 }
 
 function updateScore(points) {
-  const multiplier = state.overdriveActive ? 2 : 1;
-  const finalPoints = points * multiplier;
+  const itemMultiplier = itemEffects.getScoreMultiplier();
+  const overdriveMultiplier = state.overdriveActive ? 2 : 1;
+  const finalPoints = points * itemMultiplier * overdriveMultiplier;
   
   const oldScore = state.score;
   state.setScore(state.score + finalPoints);
@@ -305,6 +333,12 @@ export function handleAnswerSubmit() {
     state.setOverdriveTimer(0);
     ui.toggleOverdriveVisuals(false);
     audio.playIncorrectTone();
+
+    if (itemEffects.shouldBlockPenalty()) {
+        ui.updateFeedbackDisplay("🛡️ Shield blocked it", "blue");
+        generateProblem("Shield active. ");
+        return;
+    }
     
     if (state.gameMode === 'survival') {
         state.setTimeLeft(state.timeLeft - 10);
@@ -329,5 +363,15 @@ export function handleAnswerSubmit() {
     ui.updateProblemDisplay("Incorrect! " + state.currentProblemString);
     ui.answerEl.value = "";
     ui.answerEl.focus();
+  }
+}
+
+function handleQuickUse(itemId) {
+  const result = itemEffects.activateItem(itemId);
+  const count = inventory.getItemCount(itemId);
+  ui.updateQuickUseCount(itemId, count);
+  if (!result.success) {
+    audio.playUIErrorSound();
+    ui.updateFeedbackDisplay(result.message, "red");
   }
 }
