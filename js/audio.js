@@ -6,15 +6,74 @@ const reverb = new Tone.Reverb(0.4).toDestination();
 
 // --- Audio Loading State ---
 let audioLoadedCount = 0;
-const MIN_LOAD_THRESHOLD = 3; 
+const MIN_LOAD_THRESHOLD = 9;
+const AUDIO_LOAD_TIMEOUT = 10000; // 10 seconds
+let audioTimeoutTriggered = false;
+let audioLoadError = false;
+let audioLoadTimeoutId = null;
 
 const onAudioLoaded = () => {
   audioLoadedCount++;
   if (beginBtn && audioLoadedCount >= MIN_LOAD_THRESHOLD) { 
+    clearTimeout(audioLoadTimeoutId);
+    audioTimeoutTriggered = false;
+    beginBtn.disabled = false;
+    beginBtn.textContent = "Click to Begin";
+    hideAudioLoadingIndicator();
+  }
+};
+
+const onAudioError = () => {
+  audioLoadError = true;
+  audioLoadedCount++;
+  if (audioLoadedCount >= MIN_LOAD_THRESHOLD) {
+    clearTimeout(audioLoadTimeoutId);
+    if (beginBtn) {
+      beginBtn.disabled = false;
+      beginBtn.textContent = "Click to Begin";
+    }
+    hideAudioLoadingIndicator();
+  }
+};
+
+const enableButtonOnTimeout = () => {
+  audioTimeoutTriggered = true;
+  if (beginBtn) {
     beginBtn.disabled = false;
     beginBtn.textContent = "Click to Begin";
   }
+  showAudioLoadingFallback();
 };
+
+export function startAudioLoadTimeout() {
+  audioLoadTimeoutId = setTimeout(enableButtonOnTimeout, AUDIO_LOAD_TIMEOUT);
+}
+
+export function isAudioReady() {
+  return audioLoadedCount >= MIN_LOAD_THRESHOLD;
+}
+
+export function isAudioTimeoutTriggered() {
+  return audioTimeoutTriggered;
+}
+
+function showAudioLoadingFallback() {
+  const banner = document.getElementById('audio-loading-banner');
+  if (banner) {
+    banner.classList.remove('hidden');
+    // Mark that we've shown this notification
+    if (!localStorage.getItem('audioLoadingFallbackShown')) {
+      localStorage.setItem('audioLoadingFallbackShown', 'true');
+    }
+  }
+}
+
+function hideAudioLoadingIndicator() {
+  const spinner = document.getElementById('audio-loading-spinner');
+  if (spinner) {
+    spinner.classList.add('hidden');
+  }
+}
 
 // --- Music Players ---
 export const backgroundMusicMainMenu = new Tone.Player({
@@ -22,6 +81,7 @@ export const backgroundMusicMainMenu = new Tone.Player({
   loop: true,
   volume: -2,
   onload: onAudioLoaded,
+  onerror: onAudioError,
 }).toDestination();
 
 export const backgroundMusicSprint = new Tone.Player({
@@ -29,6 +89,7 @@ export const backgroundMusicSprint = new Tone.Player({
   loop: true,
   volume: -2,
   onload: onAudioLoaded,
+  onerror: onAudioError,
 }).toDestination();
 
 export const backgroundMusicEndless = new Tone.Player({
@@ -36,6 +97,7 @@ export const backgroundMusicEndless = new Tone.Player({
   loop: true,
   volume: -2,
   onload: onAudioLoaded,
+  onerror: onAudioError,
 }).toDestination();
 
 export const backgroundMusicSurvival = new Tone.Player({
@@ -43,6 +105,7 @@ export const backgroundMusicSurvival = new Tone.Player({
   loop: true,
   volume: -2,
   onload: onAudioLoaded,
+  onerror: onAudioError,
 }).toDestination();
 
 export const gameOverMusicPlayer = new Tone.Player({
@@ -50,12 +113,14 @@ export const gameOverMusicPlayer = new Tone.Player({
   loop: true,
   loopEnd: 44,
   onload: onAudioLoaded,
+  onerror: onAudioError,
 }).toDestination();
 
 export const gameOverMusicSurvival = new Tone.Player({
   url: "./music/mathsprintgameoversurvival.mp3", 
   loop: false,
   onload: onAudioLoaded,
+  onerror: onAudioError,
 }).toDestination();
 
 export const highScoreMusicSprint = new Tone.Player({
@@ -63,18 +128,21 @@ export const highScoreMusicSprint = new Tone.Player({
   loop: true,
   loopEnd: 48,
   onload: onAudioLoaded,
+  onerror: onAudioError,
 }).toDestination();
 
 export const highScoreMusicEndless = new Tone.Player({
   url: "./music/mathsprinthighscoreendless.mp3",
   loop: true,
   onload: onAudioLoaded,
+  onerror: onAudioError,
 }).toDestination();
 
 export const highScoreMusicSurvival = new Tone.Player({
   url: "./music/mathsprinthighscoresurvival.mp3", 
   loop: true,
   onload: onAudioLoaded,
+  onerror: onAudioError,
 }).toDestination();
 
 // --- SFX Synths ---
@@ -146,6 +214,42 @@ export function playMainMenuMusic() {
              if (backgroundMusicMainMenu.loaded) backgroundMusicMainMenu.start();
         }, 1000);
     }
+}
+
+export function canPlayMainMenuMusic() {
+  return backgroundMusicMainMenu.loaded || audioTimeoutTriggered;
+}
+
+export function canPlaySprintMusic() {
+  return backgroundMusicSprint.loaded || audioTimeoutTriggered;
+}
+
+export function canPlayEndlessMusic() {
+  return backgroundMusicEndless.loaded || audioTimeoutTriggered;
+}
+
+export function canPlaySurvivalMusic() {
+  return backgroundMusicSurvival.loaded || audioTimeoutTriggered;
+}
+
+export function canPlayGameOverMusic() {
+  return gameOverMusicPlayer.loaded || audioTimeoutTriggered;
+}
+
+export function canPlayGameOverSurvivalMusic() {
+  return gameOverMusicSurvival.loaded || audioTimeoutTriggered;
+}
+
+export function canPlayHighScoreSprintMusic() {
+  return highScoreMusicSprint.loaded || audioTimeoutTriggered;
+}
+
+export function canPlayHighScoreEndlessMusic() {
+  return highScoreMusicEndless.loaded || audioTimeoutTriggered;
+}
+
+export function canPlayHighScoreSurvivalMusic() {
+  return highScoreMusicSurvival.loaded || audioTimeoutTriggered;
 }
 
 export function playAudioLogo(isChristmas) {

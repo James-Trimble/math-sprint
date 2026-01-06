@@ -13,6 +13,15 @@ window.addEventListener("load", () => {
   ui.beginBtn.textContent = "Loading Audio...";
 
   state.loadSettings();
+  
+  // 0.9.0 Update: Give bonus sparks and mark feature as seen
+  const lastVersion = localStorage.getItem("mathSprintLastVersion");
+  if (lastVersion !== state.GAME_VERSION) {
+    if (!localStorage.getItem("securityUpdateBonusGiven")) {
+      state.addSparks(300);
+      localStorage.setItem("securityUpdateBonusGiven", "true");
+    }
+  }
   audio.initializeTensionLoop();
   audio.applyVolumeSettings();
   ui.applySettingsToUI(state.settings);
@@ -29,7 +38,10 @@ window.addEventListener("load", () => {
   ui.applySeasonalVisuals(isWinter, isChristmas);
   window.isChristmasMode = isChristmas;
 
-  ui.showScreen("ready-screen"); 
+  ui.showScreen("ready-screen");
+  
+  // Start the audio loading timeout
+  audio.startAudioLoadTimeout();
 });
 
 // --- AUDIO START ---
@@ -48,15 +60,21 @@ ui.beginBtn.addEventListener("click", () => {
     setTimeout(() => {
       const lastSeenVersion = localStorage.getItem("mathSprintLastVersion");
       
-      if (lastSeenVersion !== state.GAME_VERSION) {
+      // Show audio feature notification if audio is in fallback mode and not shown before
+      if (audio.isAudioTimeoutTriggered() && !localStorage.getItem("audioFeatureNotificationShown")) {
+        localStorage.setItem("audioFeatureNotificationShown", "true");
+        ui.showScreen("audio-feature-popup", true);
+      } else if (lastSeenVersion !== state.GAME_VERSION) {
         populateWhatsNew();
         ui.showScreen("whats-new-popup", true);
       } else {
         ui.showScreen("main-menu");
       }
       
-      // 3. Start Music
-      audio.playMainMenuMusic();
+      // 3. Start Music (only if audio is ready)
+      if (audio.canPlayMainMenuMusic()) {
+        audio.playMainMenuMusic();
+      }
       
     }, logoWaitTime); 
   });
@@ -108,6 +126,21 @@ ui.cashOutCloseBtn.addEventListener("click", () => {
     ui.showScreen("main-menu");
     audio.playMainMenuMusic();
 });
+
+// Audio feature notification closer
+const audioFeatureCloseBtn = document.getElementById("audio-feature-close-btn");
+if (audioFeatureCloseBtn) {
+  audioFeatureCloseBtn.addEventListener("click", () => {
+    const lastSeenVersion = localStorage.getItem("mathSprintLastVersion");
+    if (lastSeenVersion !== state.GAME_VERSION) {
+      populateWhatsNew();
+      ui.showScreen("whats-new-popup", true);
+    } else {
+      ui.showScreen("main-menu");
+    }
+    audio.playMainMenuMusic();
+  });
+}
 
 ui.closePopupBtn.addEventListener("click", () => { 
     localStorage.setItem("mathSprintLastVersion", state.GAME_VERSION); 

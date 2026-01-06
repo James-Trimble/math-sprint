@@ -6,6 +6,15 @@ import * as inventory from './inventory.js';
 import * as itemEffects from './item-effects.js';
 import { getQuickUseList } from './item-effects.js';
 
+// --- Anti-cheat: Answer Hashing ---
+function hashAnswer(answer) {
+  return (answer * 7919) % 999983;
+}
+
+function verifyAnswer(userAnswer, hashedAnswer) {
+  return hashAnswer(userAnswer) === hashedAnswer;
+}
+
 // --- Navigation ---
 
 export function goToMainMenu() {
@@ -42,6 +51,10 @@ export function startGame(mode = 'sprint') {
   state.setOverdriveTimer(0);
   state.setProblemsAnswered(0);
   state.setCorrectAnswers(0);
+  
+  // Anti-cheat: Track timing data
+  window.gameStartTime = performance.now();
+  window.lastSubmissionTime = performance.now();
   
   ui.configureGameUI(mode);
   
@@ -104,9 +117,13 @@ function startCountdown() {
 
 function startRound() {
   if (state.settings.musicVolume > 0) {
-    if (state.gameMode === 'sprint') audio.backgroundMusicSprint.start();
-    else if (state.gameMode === 'survival') audio.backgroundMusicSurvival.start();
-    else audio.backgroundMusicEndless.start();
+    if (state.gameMode === 'sprint' && audio.backgroundMusicSprint.loaded) {
+      audio.backgroundMusicSprint.start();
+    } else if (state.gameMode === 'survival' && audio.backgroundMusicSurvival.loaded) {
+      audio.backgroundMusicSurvival.start();
+    } else if (state.gameMode === 'endless' && audio.backgroundMusicEndless.loaded) {
+      audio.backgroundMusicEndless.start();
+    }
   }
   
   ui.answerEl.focus(); 
@@ -265,6 +282,10 @@ function generateProblem(feedbackPrefix = "") {
 
   state.setCurrentAnswer(answer);
   state.setCurrentProblemString(problemString);
+  
+  // Anti-cheat: Store hashed answer, not plaintext
+  window.currentAnswerHash = hashAnswer(answer);
+  
   ui.updateProblemDisplay(feedbackPrefix + problemString);
   ui.answerEl.value = "";
   ui.answerEl.focus();
@@ -280,9 +301,13 @@ function updateScore(points) {
   ui.updateScoreDisplay(state.score);
 
   if (state.gameMode === 'endless') {
-      if (Math.floor(state.score / 100) > Math.floor(oldScore / 100)) {
+      const MAX_LIVES = 10;
+      if (Math.floor(state.score / 250) > Math.floor(oldScore / 250) && state.lives < MAX_LIVES) {
           state.setLives(state.lives + 1);
           ui.updateLivesDisplay(state.lives);
+          ui.updateFeedbackDisplay(`❤️ Extra Life! (${state.lives}/${MAX_LIVES})`, "pink");
+      } else if (state.lives >= MAX_LIVES && Math.floor(state.score / 250) > Math.floor(oldScore / 250)) {
+          ui.updateFeedbackDisplay("💪 MAX LIVES! Go for broke - take risks for massive scores!", "purple");
       }
   }
   
@@ -295,6 +320,50 @@ export function handleAnswerSubmit() {
   if (userAnswerStr === '') return; 
   const userAnswer = parseInt(userAnswerStr);
   state.setProblemsAnswered(state.problemsAnswered + 1);
+
+  // Anti-cheat: Check submission timing
+  const now = performance.now();
+  const timeSinceLastSubmission = now - window.lastSubmissionTime;
+  window.lastSubmissionTime = now;
+  
+  if (timeSinceLastSubmission < 200) {
+    state.invalidateSession("Submission too fast (< 200ms) - impossible to solve in that time");
+    return;
+  }
+
+  // Anti-cheat: Check theoretical max score
+  const elapsedMs = now - window.gameStartTime;
+  const elapsedSeconds = elapsedMs / 1000;
+  const theoreticalMaxScore = elapsedSeconds * 15; // 15 points per second max
+  const allowedScore = theoreticalMaxScore * 1.5; // 50% buffer for streaks
+  
+  if (state.score > allowedScore) {
+    state.invalidateSession(`Score impossible (${state.score} > theoretical max ${Math.floor(allowedScore)})`);
+    return;
+  }
+
+  // Anti-cheat: Check average time per problem
+  const avgTimePerProblem = elapsedMs / state.problemsAnswered;
+  if (avgTimePerProblem < 400) {
+    state.invalidateSession(`Average solve time too fast (${Math.floor(avgTimePerProblem)}ms < 400ms minimum)`);
+    return;
+  }
+
+  // Anti-cheat: Validate answer is in reasonable range based on operation
+  const problemStr = state.currentProblemString.toLowerCase();
+  let isValidRange = false;
+  if (problemStr.includes("+") || problemStr.includes("-")) {
+    isValidRange = userAnswer >= 1 && userAnswer <= 100;
+  } else if (problemStr.includes("×")) {
+    isValidRange = userAnswer >= 1 && userAnswer <= 2500;
+  } else if (problemStr.includes("÷")) {
+    isValidRange = userAnswer >= 1 && userAnswer <= 50;
+  }
+  
+  if (!isValidRange && state.gameMode !== 'undefined') {
+    state.invalidateSession(`Invalid answer range: ${userAnswer} is impossible for this problem`);
+    return;
+  }
 
   if (userAnswer === state.currentAnswer) {
     state.setStreak(state.streak + 1);

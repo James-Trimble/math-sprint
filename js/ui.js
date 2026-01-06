@@ -3,6 +3,7 @@ import { setCurrentModalId } from './state.js';
 
 // --- HTML Element References ---
 export const allScreens = document.querySelectorAll(".screen");
+export const readyScreen = document.getElementById("ready-screen");
 export const mainMenuScreen = document.getElementById("main-menu");
 export const gameScreen = document.getElementById("game-screen");
 

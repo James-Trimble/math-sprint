@@ -16,7 +16,14 @@
 
 <main id="ready-screen" class="screen" role="region" aria-labelledby="ready-heading">
   <h1 id="ready-heading">Math Sprint</h1>
+  <div id="audio-loading-spinner" class="audio-loading-spinner" aria-live="polite">
+    <span class="spinner"></span>
+    <p>Loading audio...</p>
+  </div>
   <button id="begin-btn">Loading Audio...</button>
+  <div id="audio-loading-banner" class="hidden audio-loading-banner" role="alert" aria-live="polite">
+    <p>🎵 Audio is still loading in the background, but the game is ready to play!</p>
+  </div>
 </main>
 
 <main id="main-menu" class="screen hidden" role="region" aria-labelledby="main-menu-heading">
@@ -170,6 +177,15 @@
     <p>Loading update notes...</p>
     <ul></ul>
     <button id="close-popup-btn">Let's Play!</button>
+  </div>
+</main>
+
+<main id="audio-feature-popup" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="audio-feature-heading">
+  <div class="popup-content">
+    <h1 id="audio-feature-heading">🎵 Faster Startup</h1>
+    <p>Audio files are loading in the background while you play! This means you can start playing immediately, even on slower connections.</p>
+    <p><strong>Pro tip:</strong> Sounds will work perfectly once loaded.</p>
+    <button id="audio-feature-close-btn">Got It!</button>
   </div>
 </main>
 
