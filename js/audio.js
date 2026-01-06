@@ -14,11 +14,18 @@ let audioLoadTimeoutId = null;
 
 const onAudioLoaded = () => {
   audioLoadedCount++;
-  if (beginBtn && audioLoadedCount >= MIN_LOAD_THRESHOLD) { 
+  console.log(`Audio loaded: ${audioLoadedCount}/${MIN_LOAD_THRESHOLD}`);
+  if (audioLoadedCount >= MIN_LOAD_THRESHOLD) { 
     clearTimeout(audioLoadTimeoutId);
     audioTimeoutTriggered = false;
-    beginBtn.disabled = false;
-    beginBtn.textContent = "Click to Begin";
+    const btn = document.getElementById("begin-btn");
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "Click to Begin";
+      console.log("Button enabled by audio load");
+    } else {
+      console.error("beginBtn not found!");
+    }
     hideAudioLoadingIndicator();
   }
 };
@@ -26,11 +33,16 @@ const onAudioLoaded = () => {
 const onAudioError = () => {
   audioLoadError = true;
   audioLoadedCount++;
+  console.log(`Audio error/loaded: ${audioLoadedCount}/${MIN_LOAD_THRESHOLD}`);
   if (audioLoadedCount >= MIN_LOAD_THRESHOLD) {
     clearTimeout(audioLoadTimeoutId);
-    if (beginBtn) {
-      beginBtn.disabled = false;
-      beginBtn.textContent = "Click to Begin";
+    const btn = document.getElementById("begin-btn");
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "Click to Begin";
+      console.log("Button enabled by audio threshold");
+    } else {
+      console.error("beginBtn not found!");
     }
     hideAudioLoadingIndicator();
   }
@@ -38,9 +50,13 @@ const onAudioError = () => {
 
 const enableButtonOnTimeout = () => {
   audioTimeoutTriggered = true;
-  if (beginBtn) {
-    beginBtn.disabled = false;
-    beginBtn.textContent = "Click to Begin";
+  const btn = document.getElementById("begin-btn");
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = "Click to Begin";
+    console.log("Button enabled by timeout");
+  } else {
+    console.error("beginBtn not found in timeout!");
   }
   showAudioLoadingFallback();
 };

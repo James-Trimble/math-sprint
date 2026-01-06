@@ -219,6 +219,38 @@ function gameOver() {
       audio.gameOverMusicPlayer.start(); 
     }
   }
+
+  // Feedback popup logic - show after 1-2 second delay
+  setTimeout(() => {
+    checkAndShowFeedbackPopup();
+  }, 1500);
+}
+
+function checkAndShowFeedbackPopup() {
+  // Check if feedback prompts are enabled
+  const feedbackPromptsEnabled = localStorage.getItem('mathSprintFeedbackPromptsEnabled') !== 'false';
+  
+  // Check if user has dismissed with "Don't Ask Again"
+  const feedbackDismissed = localStorage.getItem('mathSprintFeedbackPromptDismissed') === 'true';
+  
+  if (!feedbackPromptsEnabled || feedbackDismissed) {
+    return;
+  }
+
+  // Get or initialize games completed counter
+  const gamesCompleted = parseInt(localStorage.getItem('mathSprintGamesCompleted') || '0') + 1;
+  localStorage.setItem('mathSprintGamesCompleted', gamesCompleted.toString());
+
+  // Get last feedback prompt timestamp
+  const lastPromptTime = parseInt(localStorage.getItem('mathSprintLastFeedbackPrompt') || '0');
+  const now = Date.now();
+  const tenMinutes = 10 * 60 * 1000;
+
+  // Show popup every 5 games AND more than 10 minutes since last prompt
+  if (gamesCompleted % 5 === 0 && (now - lastPromptTime) > tenMinutes) {
+    localStorage.setItem('mathSprintLastFeedbackPrompt', now.toString());
+    ui.showScreen('feedback-popup', true);
+  }
 }
 
 function generateProblem(feedbackPrefix = "") {

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You | Math Sprint</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        body {
+            background: #121212;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            max-width: 700px;
+            margin: 2rem auto;
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.2);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+        }
+
+        h1 {
+            color: #4ecdc4;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .thank-you-content {
+            text-align: center;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .thank-you-content p {
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+            color: #ddd;
+        }
+
+        .check-icon {
+            font-size: 3rem;
+            color: #4ecdc4;
+            margin-bottom: 1rem;
+        }
+
+        .back-button-container {
+            text-align: center;
+        }
+
+        button {
+            background: linear-gradient(135deg, #4ecdc4, #556270);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 600px) {
+            main {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .check-icon {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="thank-you-content">
+            <div class="check-icon">✓</div>
+            <h1>Thank You!</h1>
+            <p>We've received your feedback and really appreciate you taking the time to help us improve Math Sprint.</p>
+            <p>Your input is valuable as we continue to develop this game!</p>
+        </div>
+        <div class="back-button-container">
+            <button onclick="window.location.href = '../';">Back to Game</button>
+        </div>
+    </main>
+
+    <footer style="text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(78, 205, 196, 0.2); color: #888; font-size: 0.9rem;">
+        <p>&copy; <span id="copyright-year">2026</span> James Trimble. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Set current year in copyright
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

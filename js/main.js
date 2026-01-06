@@ -14,12 +14,12 @@ window.addEventListener("load", () => {
 
   state.loadSettings();
   
-  // 0.9.0 Update: Give bonus sparks and mark feature as seen
+  // v0.9.2 Update: Compensate players for cipher key reset
   const lastVersion = localStorage.getItem("mathSprintLastVersion");
   if (lastVersion !== state.GAME_VERSION) {
-    if (!localStorage.getItem("securityUpdateBonusGiven")) {
-      state.addSparks(300);
-      localStorage.setItem("securityUpdateBonusGiven", "true");
+    if (!localStorage.getItem("v092CipherResetBonus")) {
+      state.addSparks(500);
+      localStorage.setItem("v092CipherResetBonus", "true");
     }
   }
   audio.initializeTensionLoop();
@@ -42,42 +42,45 @@ window.addEventListener("load", () => {
   
   // Start the audio loading timeout
   audio.startAudioLoadTimeout();
-});
 
-// --- AUDIO START ---
-ui.beginBtn.addEventListener("click", () => {
-  ui.beginBtn.disabled = true; 
-  
-  Tone.start().then(() => {
-    // 1. Play the correct logo
-    audio.playAudioLogo(window.isChristmasMode);
-    
-    // 2. Calculate how long to wait
-    // Christmas Logo = ~3.5s total duration including decay. 
-    // We want a 0.5s gap. So we wait 4000ms total.
-    const logoWaitTime = window.isChristmasMode ? 4000 : 1500;
-    
-    setTimeout(() => {
-      const lastSeenVersion = localStorage.getItem("mathSprintLastVersion");
+  // --- AUDIO START BUTTON LISTENER ---
+  // Attach this inside the window load event to ensure DOM is ready
+  if (ui.beginBtn) {
+    ui.beginBtn.addEventListener("click", () => {
+      ui.beginBtn.disabled = true; 
       
-      // Show audio feature notification if audio is in fallback mode and not shown before
-      if (audio.isAudioTimeoutTriggered() && !localStorage.getItem("audioFeatureNotificationShown")) {
-        localStorage.setItem("audioFeatureNotificationShown", "true");
-        ui.showScreen("audio-feature-popup", true);
-      } else if (lastSeenVersion !== state.GAME_VERSION) {
-        populateWhatsNew();
-        ui.showScreen("whats-new-popup", true);
-      } else {
-        ui.showScreen("main-menu");
-      }
-      
-      // 3. Start Music (only if audio is ready)
-      if (audio.canPlayMainMenuMusic()) {
-        audio.playMainMenuMusic();
-      }
-      
-    }, logoWaitTime); 
-  });
+      Tone.start().then(() => {
+        // 1. Play the correct logo
+        audio.playAudioLogo(window.isChristmasMode);
+        
+        // 2. Calculate how long to wait
+        // Christmas Logo = ~3.5s total duration including decay. 
+        // We want a 0.5s gap. So we wait 4000ms total.
+        const logoWaitTime = window.isChristmasMode ? 4000 : 1500;
+        
+        setTimeout(() => {
+          const lastSeenVersion = localStorage.getItem("mathSprintLastVersion");
+          
+          // Show audio feature notification if audio is in fallback mode and not shown before
+          if (audio.isAudioTimeoutTriggered() && !localStorage.getItem("audioFeatureNotificationShown")) {
+            localStorage.setItem("audioFeatureNotificationShown", "true");
+            ui.showScreen("audio-feature-popup", true);
+          } else if (lastSeenVersion !== state.GAME_VERSION) {
+            populateWhatsNew();
+            ui.showScreen("whats-new-popup", true);
+          } else {
+            ui.showScreen("main-menu");
+          }
+          
+          // 3. Start Music (only if audio is ready)
+          if (audio.canPlayMainMenuMusic()) {
+            audio.playMainMenuMusic();
+          }
+          
+        }, logoWaitTime); 
+      });
+    });
+  }
 });
 
 function populateWhatsNew() {
@@ -220,7 +223,49 @@ ui.tabs.forEach(tab => {
   });
 });
 
-ui.contrastBtn.addEventListener("click", () => { 
+if (ui.contrastBtn) {
+  ui.contrastBtn.addEventListener("click", () => { 
     document.body.classList.toggle("high-contrast"); 
     localStorage.setItem("mathSprintHighContrast", document.body.classList.contains("high-contrast")); 
-});
+  });
+}
+
+// Feedback prompts toggle
+if (ui.enableFeedbackPromptsCheckbox) {
+  ui.enableFeedbackPromptsCheckbox.addEventListener("change", (e) => {
+    localStorage.setItem("mathSprintFeedbackPromptsEnabled", e.target.checked ? "true" : "false");
+  });
+
+  // Initialize feedback prompts checkbox state from localStorage
+  const feedbackPromptsEnabled = localStorage.getItem("mathSprintFeedbackPromptsEnabled") !== "false";
+  ui.enableFeedbackPromptsCheckbox.checked = feedbackPromptsEnabled;
+}
+
+// --- FEEDBACK POPUP LISTENERS ---
+if (ui.feedbackPopupShareBtn) {
+  ui.feedbackPopupShareBtn.addEventListener("click", () => {
+    audio.playUIClickSound();
+    window.location.href = "../feedback/";
+  });
+}
+
+if (ui.feedbackPopupLaterBtn) {
+  ui.feedbackPopupLaterBtn.addEventListener("click", () => {
+    audio.playUIClickSound();
+    goToMainMenu();
+  });
+}
+
+if (ui.feedbackPopupDontAskBtn) {
+  ui.feedbackPopupDontAskBtn.addEventListener("click", () => {
+    audio.playUIClickSound();
+    // Set the "don't ask again" flag
+    localStorage.setItem("mathSprintFeedbackPromptDismissed", "true");
+    // Uncheck the feedback prompts toggle in settings
+    if (ui.enableFeedbackPromptsCheckbox) {
+      ui.enableFeedbackPromptsCheckbox.checked = false;
+    }
+    localStorage.setItem("mathSprintFeedbackPromptsEnabled", "false");
+    goToMainMenu();
+  });
+}

@@ -4,7 +4,7 @@
 export const GAME_DURATION = 60; 
 export const SURVIVAL_START_TIME = 30; 
 export const STARTING_LIVES = 3; 
-export const GAME_VERSION = "v0.9.1"; 
+export const GAME_VERSION = "v0.9.2"; 
 
 // --- Session Validation ---
 export let isSessionValid = true;
@@ -198,7 +198,7 @@ export function deductSparks(amount) {
 }
 
 // --- Encryption Helpers ---
-const CIPHER_KEY = "mathSprintSecure2025";
+const CIPHER_KEY = "mathSprintSecure2026";
 
 export function encodeValue(val) {
   // Simple Base64 encoding with XOR cipher
