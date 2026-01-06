@@ -73,6 +73,7 @@ export const enableFeedbackPromptsCheckbox = document.getElementById("enable-fee
 export const feedbackPopupShareBtn = document.getElementById("feedback-share-btn");
 export const feedbackPopupLaterBtn = document.getElementById("feedback-later-btn");
 export const feedbackPopupDontAskBtn = document.getElementById("feedback-dont-ask-btn");
+export const bonusModalCloseBtn = document.getElementById("bonus-modal-close");
 export const closePopupBtn = document.getElementById("close-popup-btn");
 export const copyrightYearEl = document.getElementById("copyright-year");
 export const versionNumberEl = document.getElementById("version-number");

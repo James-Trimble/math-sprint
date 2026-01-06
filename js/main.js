@@ -20,6 +20,8 @@ window.addEventListener("load", () => {
     if (!localStorage.getItem("v092CipherResetBonus")) {
       state.addSparks(500);
       localStorage.setItem("v092CipherResetBonus", "true");
+      ui.walletBalanceEl.textContent = state.sparksWallet;
+      ui.showScreen("bonus-modal", true);
     }
   }
   audio.initializeTensionLoop();
@@ -82,6 +84,14 @@ window.addEventListener("load", () => {
     });
   }
 });
+
+// Bonus modal close
+if (ui.bonusModalCloseBtn) {
+  ui.bonusModalCloseBtn.addEventListener("click", () => {
+    audio.playUIClickSound();
+    ui.showScreen("ready-screen");
+  });
+}
 
 function populateWhatsNew() {
     const headingEl = document.getElementById("whats-new-heading");
