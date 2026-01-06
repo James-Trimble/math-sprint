@@ -26,6 +26,7 @@ export const quickUseBar = document.getElementById("quick-use-bar");
 export const scoreEl = document.getElementById("score");
 export const timerEl = document.getElementById("timer");
 export const livesEl = document.getElementById("lives");
+export const consecutiveMistakesEl = document.getElementById("consecutive-mistakes");
 export const gabrielContainer = document.getElementById("gabriel-container");
 export const gabrielSprite = document.getElementById("gabriel-sprite");
 
@@ -153,6 +154,15 @@ export function updateLivesDisplay(lives) {
     livesEl.textContent = `Lives: ${lives}`;
 }
 
+export function updateConsecutiveMistakesDisplay(current, max = 3) {
+  if (current === 0) {
+    consecutiveMistakesEl.classList.add("hidden");
+  } else {
+    consecutiveMistakesEl.classList.remove("hidden");
+    consecutiveMistakesEl.textContent = `⚠️ Consecutive: ${current}/${max}`;
+  }
+}
+
 export function updateProblemDisplay(problemString) {
   problemEl.textContent = problemString;
 }
@@ -249,4 +259,16 @@ export function validateOperationToggles() {
   } else {
     operationCheckboxes.forEach(cb => cb.disabled = false);
   }
+}
+
+// Red Flash Warning for Consecutive Mistakes
+export function triggerRedFlash() {
+  const flash = document.createElement('div');
+  flash.className = 'red-flash';
+  document.body.appendChild(flash);
+  
+  // Remove the flash element after animation completes
+  setTimeout(() => {
+    flash.remove();
+  }, 600);
 }

@@ -1,14 +1,14 @@
 export const VERSION_INFO = {
-    version: "v0.9.0",
-    heading: "v0.9.0: Security Lockdown",
-    tagline: "Anti-cheat protection, critical bug fixes, and fair play enforcement. We apologize for the reset - your data is now secure.",
+    version: "v0.9.1",
+    heading: "v0.9.1: Challenges & Consequences",
+    tagline: "Music fixed, harder numbers, and new penalty system. Master 3 consecutive mistakes without losing lives!",
     notes: [
-        "🔒 Anti-cheat system detects and blocks tampering attempts instantly",
-        "🎵 Fixed: Music now loads properly with comprehensive error handling",
-        "❤️ Endless Mode rebalanced: Lives capped at 10, earned every 250pts (was 100)",
-        "💪 Special message at max lives encourages aggressive, risk-taking play",
-        "🛡️ All game data encrypted to prevent score/currency manipulation",
-        "⏱️ Timing validation prevents impossibly fast submissions",
-        "📦 We're giving you 300 Sparks as thanks for your patience during this update"
+        "🎵 Music playback fixed: Audio context properly resumed for browser autoplay policies",
+        "📈 Higher numbers challenge: Addition/Subtraction now go up to 100+ (was 50)",
+        "✖️ Multiplication difficulty increased: Now up to 15×15=225 at high scores (was 12×12=144)",
+        "❌ 3 Consecutive Mistakes = Life Lost: In Endless Mode, lose 1 life per 3 consecutive wrong answers",
+        "⏱️ Sprint Mode penalty: 10 second time penalty for 3 consecutive mistakes (was no penalty)",
+        "🔴 Red flash warning at 2 mistakes: Visual alert to warn you before losing a life/time",
+        "⚠️ Consecutive mistake counter: Live display shows your mistake streak during gameplay"
     ]
 };

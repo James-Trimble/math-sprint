@@ -4,7 +4,7 @@
 export const GAME_DURATION = 60; 
 export const SURVIVAL_START_TIME = 30; 
 export const STARTING_LIVES = 3; 
-export const GAME_VERSION = "v0.9.0"; 
+export const GAME_VERSION = "v0.9.1"; 
 
 // --- Session Validation ---
 export let isSessionValid = true;
@@ -19,6 +19,9 @@ export let streak = 0;
 // OVERDRIVE STATE
 export let overdriveActive = false; 
 export let overdriveTimer = 0; // NEW: Counts down overdrive duration
+
+// --- Mistakes Tracking ---
+export let consecutiveMistakes = 0;
 
 // --- Session Earnings ---
 export let sessionSparks = 0;
@@ -139,6 +142,13 @@ export function setLives(count) {
 export function setCurrentAnswer(newAnswer) { currentAnswer = newAnswer; }
 export function setCurrentProblemString(newString) { currentProblemString = newString; }
 export function setStreak(newStreak) { streak = newStreak; }
+export function setConsecutiveMistakes(count) { 
+  if (count > 20) {
+    invalidateSession("Consecutive mistakes exceeds maximum possible value (>20)");
+    return;
+  }
+  consecutiveMistakes = count; 
+}
 export function setTimerInterval(newInterval) { timerInterval = newInterval; }
 export function setTensionLoop(newLoop) { tensionLoop = newLoop; }
 

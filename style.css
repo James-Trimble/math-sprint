@@ -571,3 +571,27 @@ body.high-contrast .audio-loading-banner {
 body.high-contrast .audio-loading-banner p {
   color: #ffff00;
 }
+
+/* --- Red Flash Animation for Consecutive Mistakes Warning --- */
+@keyframes redFlash {
+  0% {
+    background-color: rgba(255, 0, 0, 0);
+  }
+  50% {
+    background-color: rgba(255, 0, 0, 0.3);
+  }
+  100% {
+    background-color: rgba(255, 0, 0, 0);
+  }
+}
+
+.red-flash {
+  animation: redFlash 0.6s ease-out;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+}

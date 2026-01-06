@@ -77,7 +77,7 @@ function hideAudioLoadingIndicator() {
 
 // --- Music Players ---
 export const backgroundMusicMainMenu = new Tone.Player({
-  url: "./music/mathsprintmainmenu.mp3",
+  url: "../music/mathsprintmainmenu.mp3",
   loop: true,
   volume: -2,
   onload: onAudioLoaded,
@@ -85,7 +85,7 @@ export const backgroundMusicMainMenu = new Tone.Player({
 }).toDestination();
 
 export const backgroundMusicSprint = new Tone.Player({
-  url: "./music/mathsprintsprintmode.mp3",
+  url: "../music/mathsprintsprintmode.mp3",
   loop: true,
   volume: -2,
   onload: onAudioLoaded,
@@ -93,7 +93,7 @@ export const backgroundMusicSprint = new Tone.Player({
 }).toDestination();
 
 export const backgroundMusicEndless = new Tone.Player({
-  url: "./music/mathsprintendlessmode.mp3",
+  url: "../music/mathsprintendlessmode.mp3",
   loop: true,
   volume: -2,
   onload: onAudioLoaded,
@@ -101,7 +101,7 @@ export const backgroundMusicEndless = new Tone.Player({
 }).toDestination();
 
 export const backgroundMusicSurvival = new Tone.Player({
-  url: "./music/mathsprintsurvivalmode.mp3", 
+  url: "../music/mathsprintsurvivalmode.mp3", 
   loop: true,
   volume: -2,
   onload: onAudioLoaded,
@@ -109,7 +109,7 @@ export const backgroundMusicSurvival = new Tone.Player({
 }).toDestination();
 
 export const gameOverMusicPlayer = new Tone.Player({
-  url: "./music/mathsprintgameover.mp3",
+  url: "../music/mathsprintgameover.mp3",
   loop: true,
   loopEnd: 44,
   onload: onAudioLoaded,
@@ -117,14 +117,14 @@ export const gameOverMusicPlayer = new Tone.Player({
 }).toDestination();
 
 export const gameOverMusicSurvival = new Tone.Player({
-  url: "./music/mathsprintgameoversurvival.mp3", 
+  url: "../music/mathsprintgameoversurvival.mp3", 
   loop: false,
   onload: onAudioLoaded,
   onerror: onAudioError,
 }).toDestination();
 
 export const highScoreMusicSprint = new Tone.Player({
-  url: "./music/mathsprinthighscoresprint.mp3",
+  url: "../music/mathsprinthighscoresprint.mp3",
   loop: true,
   loopEnd: 48,
   onload: onAudioLoaded,
@@ -132,14 +132,14 @@ export const highScoreMusicSprint = new Tone.Player({
 }).toDestination();
 
 export const highScoreMusicEndless = new Tone.Player({
-  url: "./music/mathsprinthighscoreendless.mp3",
+  url: "../music/mathsprinthighscoreendless.mp3",
   loop: true,
   onload: onAudioLoaded,
   onerror: onAudioError,
 }).toDestination();
 
 export const highScoreMusicSurvival = new Tone.Player({
-  url: "./music/mathsprinthighscoresurvival.mp3", 
+  url: "../music/mathsprinthighscoresurvival.mp3", 
   loop: true,
   onload: onAudioLoaded,
   onerror: onAudioError,

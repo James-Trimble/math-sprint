@@ -6,6 +6,7 @@
   "background_color": "#e3f2fd",
   "theme_color": "#007bff",
   "orientation": "portrait",
+  "version": "0.9.1",
   "icons": [
     {
       "src": "img/gabriel.png",

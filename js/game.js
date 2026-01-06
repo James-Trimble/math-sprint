@@ -47,6 +47,7 @@ export function startGame(mode = 'sprint') {
   state.setGameMode(mode);
   state.setScore(0);
   state.setStreak(0);
+  state.setConsecutiveMistakes(0); // Reset consecutive mistakes counter
   state.setOverdriveActive(false);
   state.setOverdriveTimer(0);
   state.setProblemsAnswered(0);
@@ -57,6 +58,7 @@ export function startGame(mode = 'sprint') {
   window.lastSubmissionTime = performance.now();
   
   ui.configureGameUI(mode);
+  ui.updateConsecutiveMistakesDisplay(0); // Hide consecutive mistakes display
   
   if (mode === 'sprint') {
     state.setTimeLeft(state.GAME_DURATION);
@@ -116,6 +118,11 @@ function startCountdown() {
 }
 
 function startRound() {
+  // Resume audio context before starting music (required for browser autoplay policies)
+  if (Tone.context.state !== 'running') {
+    Tone.context.resume();
+  }
+  
   if (state.settings.musicVolume > 0) {
     if (state.gameMode === 'sprint' && audio.backgroundMusicSprint.loaded) {
       audio.backgroundMusicSprint.start();
@@ -248,7 +255,7 @@ function generateProblem(feedbackPrefix = "") {
   if (state.gameMode === 'endless' || state.gameMode === 'survival') {
       if (state.score < 40) maxNum = 10;
       else if (state.score < 100) maxNum = 20;
-      else maxNum = 50;
+      else maxNum = 100;  // Increased from 50 to 100 for higher difficulty
   }
 
   switch (op) {
@@ -265,7 +272,15 @@ function generateProblem(feedbackPrefix = "") {
       problemString = `${a} - ${b} = ?`;
       break;
     case "×":
-      const multMax = (maxNum > 12) ? 12 : maxNum; 
+      // Increase multiplication cap from 12 to 15 at high scores for more challenge
+      let multMax;
+      if (maxNum >= 100) {
+        multMax = 15;  // At highest difficulty, allow up to 15×15=225
+      } else if (maxNum >= 20) {
+        multMax = 12;  // At mid difficulty, keep 12×12=144
+      } else {
+        multMax = Math.min(maxNum, 12);  // At low difficulty, cap at maxNum or 12
+      }
       a = Math.floor(Math.random() * multMax) + 1;
       b = Math.floor(Math.random() * multMax) + 1;
       answer = a * b;
@@ -326,8 +341,9 @@ export function handleAnswerSubmit() {
   const timeSinceLastSubmission = now - window.lastSubmissionTime;
   window.lastSubmissionTime = now;
   
-  if (timeSinceLastSubmission < 200) {
-    state.invalidateSession("Submission too fast (< 200ms) - impossible to solve in that time");
+  // Allow submissions as fast as 100ms (increased from 200ms for faster players)
+  if (timeSinceLastSubmission < 100) {
+    state.invalidateSession("Submission too fast (< 100ms) - impossible to solve in that time");
     return;
   }
 
@@ -335,7 +351,7 @@ export function handleAnswerSubmit() {
   const elapsedMs = now - window.gameStartTime;
   const elapsedSeconds = elapsedMs / 1000;
   const theoreticalMaxScore = elapsedSeconds * 15; // 15 points per second max
-  const allowedScore = theoreticalMaxScore * 1.5; // 50% buffer for streaks
+  const allowedScore = theoreticalMaxScore * 2.0; // 100% buffer for streaks (was 50%)
   
   if (state.score > allowedScore) {
     state.invalidateSession(`Score impossible (${state.score} > theoretical max ${Math.floor(allowedScore)})`);
@@ -344,8 +360,9 @@ export function handleAnswerSubmit() {
 
   // Anti-cheat: Check average time per problem
   const avgTimePerProblem = elapsedMs / state.problemsAnswered;
-  if (avgTimePerProblem < 400) {
-    state.invalidateSession(`Average solve time too fast (${Math.floor(avgTimePerProblem)}ms < 400ms minimum)`);
+  // Reduced from 400ms to 250ms to allow faster players (was too restrictive)
+  if (avgTimePerProblem < 250) {
+    state.invalidateSession(`Average solve time too fast (${Math.floor(avgTimePerProblem)}ms < 250ms minimum)`);
     return;
   }
 
@@ -353,11 +370,14 @@ export function handleAnswerSubmit() {
   const problemStr = state.currentProblemString.toLowerCase();
   let isValidRange = false;
   if (problemStr.includes("+") || problemStr.includes("-")) {
-    isValidRange = userAnswer >= 1 && userAnswer <= 100;
+    // Addition/subtraction can reach up to 200 (100+100) at high difficulty
+    isValidRange = userAnswer >= -100 && userAnswer <= 200;
   } else if (problemStr.includes("×")) {
-    isValidRange = userAnswer >= 1 && userAnswer <= 2500;
+    // Multiplication at high difficulty: 15×15 = 225, with margin allow up to 250
+    isValidRange = userAnswer >= 1 && userAnswer <= 250;
   } else if (problemStr.includes("÷")) {
-    isValidRange = userAnswer >= 1 && userAnswer <= 50;
+    // Division: divisor up to 12, quotient up to 12, so max around 12
+    isValidRange = userAnswer >= 1 && userAnswer <= 20;
   }
   
   if (!isValidRange && state.gameMode !== 'undefined') {
@@ -368,6 +388,8 @@ export function handleAnswerSubmit() {
   if (userAnswer === state.currentAnswer) {
     state.setStreak(state.streak + 1);
     state.setCorrectAnswers(state.correctAnswers + 1);
+    state.setConsecutiveMistakes(0); // Reset consecutive mistakes on correct answer
+    ui.updateConsecutiveMistakesDisplay(0); // Hide the display
     
     if (state.gameMode === 'survival') {
         state.setTimeLeft(state.timeLeft + 5);
@@ -402,6 +424,15 @@ export function handleAnswerSubmit() {
     state.setOverdriveTimer(0);
     ui.toggleOverdriveVisuals(false);
     audio.playIncorrectTone();
+    
+    // Track consecutive mistakes
+    state.setConsecutiveMistakes(state.consecutiveMistakes + 1);
+    ui.updateConsecutiveMistakesDisplay(state.consecutiveMistakes);
+    
+    // Trigger red flash warning at 2 consecutive mistakes
+    if (state.consecutiveMistakes === 2) {
+      ui.triggerRedFlash();
+    }
 
     if (itemEffects.shouldBlockPenalty()) {
         ui.updateFeedbackDisplay("🛡️ Shield blocked it", "blue");
@@ -410,8 +441,17 @@ export function handleAnswerSubmit() {
     }
     
     if (state.gameMode === 'survival') {
-        state.setTimeLeft(state.timeLeft - 10);
-        ui.updateTimerDisplay(state.timeLeft);
+        // Add 10 second penalty for 3 consecutive mistakes in Sprint mode
+        if (state.consecutiveMistakes >= 3) {
+            state.setTimeLeft(state.timeLeft - 10);
+            ui.updateTimerDisplay(state.timeLeft);
+            state.setConsecutiveMistakes(0); // Reset mistake counter after penalty
+            ui.updateConsecutiveMistakesDisplay(0); // Hide the display
+            ui.updateFeedbackDisplay("⏱️ 10s penalty for 3 mistakes!", "orange");
+        } else {
+            state.setTimeLeft(state.timeLeft - 10);
+            ui.updateTimerDisplay(state.timeLeft);
+        }
         if (state.timeLeft <= 0) {
             gameOver();
             return;
@@ -419,12 +459,33 @@ export function handleAnswerSubmit() {
     }
     
     if (state.gameMode === 'endless') {
-        state.setLives(state.lives - 1);
-        ui.updateLivesDisplay(state.lives);
-        audio.playGabrielSassy(); 
-        if (state.lives <= 0) {
-            gameOver();
-            return;
+        // Lose 1 life for every 3 consecutive mistakes in Endless mode
+        if (state.consecutiveMistakes >= 3) {
+            state.setLives(state.lives - 1);
+            ui.updateLivesDisplay(state.lives);
+            audio.playGabrielSassy();
+            state.setConsecutiveMistakes(0); // Reset mistake counter after penalty
+            ui.updateConsecutiveMistakesDisplay(0); // Hide the display
+            ui.updateFeedbackDisplay("💔 Lost a life! (3 consecutive mistakes)", "orange");
+            if (state.lives <= 0) {
+                gameOver();
+                return;
+            }
+        }
+    }
+    
+    // For Sprint mode (not survival), also apply the time penalty separately
+    if (state.gameMode === 'sprint') {
+        if (state.consecutiveMistakes >= 3) {
+            state.setTimeLeft(state.timeLeft - 10);
+            ui.updateTimerDisplay(state.timeLeft);
+            state.setConsecutiveMistakes(0); // Reset mistake counter after penalty
+            ui.updateConsecutiveMistakesDisplay(0); // Hide the display
+            ui.updateFeedbackDisplay("⏱️ 10s penalty for 3 mistakes!", "orange");
+            if (state.timeLeft <= 0) {
+                gameOver();
+                return;
+            }
         }
     }
     
