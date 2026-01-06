@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credits | Math Sprint</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        body {
+            background: #121212;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            max-width: 700px;
+            margin: 2rem auto;
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.2);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+        }
+
+        h1 {
+            color: #4ecdc4;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .credits-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .credits-list li {
+            background: rgba(78, 205, 196, 0.1);
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            border-left: 4px solid #4ecdc4;
+            border-radius: 4px;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .credits-list strong {
+            color: #4ecdc4;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .license {
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #4ecdc4, #556270);
+            color: white;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+            display: inline-block;
+            margin-top: 2rem;
+        }
+
+        .back-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 18px rgba(78, 205, 196, 0.5);
+        }
+
+        .back-button:active {
+            transform: scale(0.98);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(78, 205, 196, 0.2);
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #4ecdc4;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Credits</h1>
+        
+        <ul class="credits-list">
+            <li>
+                <strong>Game Design & Code</strong>
+                James Trimble
+            </li>
+            <li>
+                <strong>Audio Engine</strong>
+                Tone.js by Yotam Mann
+                <div class="license">MIT License</div>
+            </li>
+            <li>
+                <strong>Visual Effects</strong>
+                Canvas Confetti by Kiril Vatev
+                <div class="license">ISC License</div>
+            </li>
+            <li>
+                <strong>Music Generation</strong>
+                Producer.ai
+            </li>
+            <li>
+                <strong>Icons & Assets</strong>
+                Gabriel.png – Original asset provided by Fay
+            </li>
+        </ul>
+
+        <a href="../" class="back-button">← Back to Game</a>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="copyright-year">2025</span> James Trimble. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Set current year in copyright
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

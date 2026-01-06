@@ -1,7 +1,7 @@
 {
   "name": "Math Sprint",
   "short_name": "MathSprint",
-  "start_url": "/index.html",
+  "start_url": "play/",
   "display": "standalone",
   "background_color": "#e3f2fd",
   "theme_color": "#007bff",

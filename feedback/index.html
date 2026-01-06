@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback | Math Sprint</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        body {
+            background: #121212;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            max-width: 700px;
+            margin: 2rem auto;
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.2);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+        }
+
+        h1 {
+            color: #4ecdc4;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .content-section {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            color: #ddd;
+            text-align: center;
+        }
+
+        .content-section p {
+            margin: 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .feedback-button {
+            background: linear-gradient(135deg, #4ecdc4, #556270);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+            display: inline-block;
+            margin: 0.5rem;
+        }
+
+        .feedback-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 18px rgba(78, 205, 196, 0.5);
+        }
+
+        .feedback-button:active {
+            transform: scale(0.98);
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #4ecdc4, #556270);
+            color: white;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+            display: inline-block;
+            margin-top: 2rem;
+        }
+
+        .back-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 18px rgba(78, 205, 196, 0.5);
+        }
+
+        .back-button:active {
+            transform: scale(0.98);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(78, 205, 196, 0.2);
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #4ecdc4;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Feedback & Bug Reports</h1>
+        
+        <div class="content-section">
+            <p>Have a feature suggestion? Found a bug? We'd love to hear from you!</p>
+        </div>
+
+        <div class="content-section">
+            <a href="mailto:jrtrimble2005@icloud.com?subject=Math%20Sprint%20Feedback" class="feedback-button">Send Feedback</a>
+        </div>
+
+        <a href="../" class="back-button">← Back to Game</a>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="copyright-year">2025</span> James Trimble. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Set current year in copyright
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
