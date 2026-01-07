@@ -212,11 +212,12 @@ function gameOver() {
 
     ui.showScreen("game-over-screen");
     
-    if (state.gameMode === 'survival') audio.gameOverMusicSurvival.start();
-    else audio.playGameOverSFX(); 
+    audio.playGameOverSFX();
     
-    if (state.settings.musicVolume > 0 && state.gameMode !== 'survival') {
-      audio.gameOverMusicPlayer.start(); 
+    if (state.settings.musicVolume > 0) {
+      if (state.gameMode === 'sprint') audio.gameOverMusicSprint.start();
+      else if (state.gameMode === 'endless') audio.gameOverMusicEndless.start();
+      else if (state.gameMode === 'survival') audio.gameOverMusicSurvival.start();
     }
   }
 

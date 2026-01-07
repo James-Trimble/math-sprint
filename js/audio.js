@@ -6,7 +6,7 @@ const reverb = new Tone.Reverb(0.4).toDestination();
 
 // --- Audio Loading State ---
 let audioLoadedCount = 0;
-const MIN_LOAD_THRESHOLD = 9;
+const MIN_LOAD_THRESHOLD = 10;
 const AUDIO_LOAD_TIMEOUT = 10000; // 10 seconds
 let audioTimeoutTriggered = false;
 let audioLoadError = false;
@@ -124,8 +124,16 @@ export const backgroundMusicSurvival = new Tone.Player({
   onerror: onAudioError,
 }).toDestination();
 
-export const gameOverMusicPlayer = new Tone.Player({
-  url: "../music/mathsprintgameover.mp3",
+export const gameOverMusicSprint = new Tone.Player({
+  url: "../music/mathsprintgameoversprint.mp3",
+  loop: true,
+  loopEnd: 44,
+  onload: onAudioLoaded,
+  onerror: onAudioError,
+}).toDestination();
+
+export const gameOverMusicEndless = new Tone.Player({
+  url: "../music/mathsprintgameoverendless.mp3",
   loop: true,
   loopEnd: 44,
   onload: onAudioLoaded,
@@ -248,8 +256,12 @@ export function canPlaySurvivalMusic() {
   return backgroundMusicSurvival.loaded || audioTimeoutTriggered;
 }
 
-export function canPlayGameOverMusic() {
-  return gameOverMusicPlayer.loaded || audioTimeoutTriggered;
+export function canPlayGameOverSprintMusic() {
+  return gameOverMusicSprint.loaded || audioTimeoutTriggered;
+}
+
+export function canPlayGameOverEndlessMusic() {
+  return gameOverMusicEndless.loaded || audioTimeoutTriggered;
 }
 
 export function canPlayGameOverSurvivalMusic() {
@@ -310,7 +322,8 @@ export function stopAllMusic(tensionLoop) {
   if(backgroundMusicEndless.state === "started") backgroundMusicEndless.stop();
   if(backgroundMusicSurvival.state === "started") backgroundMusicSurvival.stop();
   
-  gameOverMusicPlayer.stop();
+  gameOverMusicSprint.stop();
+  gameOverMusicEndless.stop();
   gameOverMusicSurvival.stop();
   highScoreMusicSprint.stop();
   highScoreMusicEndless.stop();
@@ -332,7 +345,8 @@ export function applyVolumeSettings() {
   backgroundMusicSprint.volume.value = musicDb;
   backgroundMusicEndless.volume.value = musicDb;
   backgroundMusicSurvival.volume.value = musicDb;
-  gameOverMusicPlayer.volume.value = musicDb;
+  gameOverMusicSprint.volume.value = musicDb;
+  gameOverMusicEndless.volume.value = musicDb;
   gameOverMusicSurvival.volume.value = musicDb;
   highScoreMusicSprint.volume.value = musicDb;
   highScoreMusicEndless.volume.value = musicDb;
