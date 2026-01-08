@@ -5,7 +5,7 @@
 
 import * as state from './state.js';
 import * as ui from './ui.js';
-import * as audio from './audio.js';
+import * as audio from './audio-hub.js';
 import * as inventory from './inventory.js';
 
 // Achievement queue to display after game ends

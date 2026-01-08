@@ -7,62 +7,94 @@ import * as state from './state.js';
 
 const tutorialModule = (() => {
   let tutorialActive = false;
-  let tutorialPhase = 0; // 0: intro, 1-5: mechanics, 6: complete
+  let tutorialPhase = 0;
   const tutorialPhases = [
     {
-      id: 'intro',
-      title: 'Welcome to MathSprint',
-      description: 'Learn the basics of how to play and master the mechanics',
-      callout: 'You will answer math problems as quickly as you can. Ready?',
-      allowGameStart: false
+      id: 'welcome',
+      title: 'Welcome to MathSprint! 👋',
+      description: 'An interactive guided tour',
+      callout: 'This tutorial will walk you through the game step-by-step. Let\'s start with a quick math practice!',
+      allowGameStart: false,
+      type: 'info'
     },
     {
-      id: 'basics',
-      title: 'Basic Problem-Solving',
-      description: 'Answer problems correctly to earn points',
-      callout: 'Answer each problem correctly. You get 10 points per correct answer.',
+      id: 'practice-basics',
+      title: 'Try It: Answer 3 Problems',
+      description: 'Get hands-on experience',
+      callout: 'Answer 3 math problems to learn the basics. Don\'t worry - this is just practice!',
       allowGameStart: true,
       targetCorrect: 3,
-      operation: 'addition'
+      operation: 'addition',
+      type: 'practice',
+      modeOverride: 'sprint'
     },
     {
-      id: 'streak',
-      title: 'Building a Streak',
-      description: 'Answer consecutive questions correctly to activate Overdrive',
-      callout: 'Get 3 questions right in a row to activate Overdrive for a 2x multiplier!',
-      allowGameStart: true,
-      targetCorrect: 3,
-      operation: 'addition'
+      id: 'modes-sprint',
+      title: 'Game Mode: Sprint (60s)',
+      description: 'Race against the clock',
+      callout: 'Sprint Mode: Answer as many problems as you can in 60 seconds. Perfect for quick sessions!',
+      allowGameStart: false,
+      type: 'mode-demo',
+      mode: 'sprint'
     },
     {
-      id: 'penalties',
-      title: 'Watch Your Mistakes',
-      description: 'Learn about the penalty system',
-      callout: 'Make 3 mistakes in a row and you get a 10-second penalty. Be careful!',
-      allowGameStart: true,
-      targetCorrect: 5,
-      operation: 'addition'
+      id: 'modes-endless',
+      title: 'Game Mode: Endless (3 Lives)',
+      description: 'Test your accuracy',
+      callout: 'Endless Mode: No timer, but 3 mistakes in a row costs you a life. How long can you survive?',
+      allowGameStart: false,
+      type: 'mode-demo',
+      mode: 'endless'
     },
     {
-      id: 'items',
-      title: 'Using Items',
-      description: 'Items can help you in tough situations',
-      callout: 'Visit the shop to purchase items with Sparks (earned from gameplay). Use them strategically!',
-      allowGameStart: false
+      id: 'modes-survival',
+      title: 'Game Mode: Survival (Dynamic)',
+      description: 'The ultimate challenge',
+      callout: 'Survival Mode: Start with 30 seconds. Each correct answer adds time, mistakes subtract time. Intense!',
+      allowGameStart: false,
+      type: 'mode-demo',
+      mode: 'survival'
     },
     {
-      id: 'modes',
-      title: 'Game Modes',
-      description: 'Choose your challenge',
-      callout: 'Sprint: 60 seconds | Endless: 3 lives | Survival: Expanding timer with difficulty scaling',
-      allowGameStart: false
+      id: 'modes-daily',
+      title: 'Game Mode: Daily Challenge',
+      description: 'Compete globally',
+      callout: 'Daily Challenge: Everyone worldwide gets the same problems each day. Beat your personal best!',
+      allowGameStart: false,
+      type: 'mode-demo',
+      mode: 'daily-challenge'
+    },
+    {
+      id: 'shop-tour',
+      title: 'The Shop: Power-Ups & Items ⚡',
+      description: 'Strategic advantages',
+      callout: 'Earn Sparks from gameplay to buy items. Time Freeze, Score Multipliers, Extra Lives, and more!',
+      allowGameStart: false,
+      type: 'shop-demo'
+    },
+    {
+      id: 'achievements-tour',
+      title: 'Achievements System 🏆',
+      description: 'Track your progress',
+      callout: 'Unlock 30+ achievements by playing, reaching milestones, and discovering hidden secrets!',
+      allowGameStart: false,
+      type: 'achievements-demo'
+    },
+    {
+      id: 'overdrive-explained',
+      title: 'Pro Tip: Overdrive Mode 🔥',
+      description: 'Double your points',
+      callout: 'Get 3 correct answers in a row to activate Overdrive and earn 2x points. Keep the streak alive!',
+      allowGameStart: false,
+      type: 'info'
     },
     {
       id: 'complete',
-      title: 'Ready to Play!',
-      description: 'You are now ready to start playing MathSprint',
-      callout: 'Good luck! You have earned the Tutorial Master achievement and 25 Sparks!',
-      allowGameStart: false
+      title: 'You\'re Ready! 🎉',
+      description: 'Tutorial complete',
+      callout: 'You\'ve earned the Tutorial Master achievement and 25 Sparks! Time to play for real!',
+      allowGameStart: false,
+      type: 'completion'
     }
   ];
 

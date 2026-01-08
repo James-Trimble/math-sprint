@@ -5,7 +5,7 @@
 
 import * as state from './state.js';
 import * as ui from './ui.js';
-import * as audio from './audio.js';
+import * as audio from './audio-hub.js';
 import * as itemEffects from './item-effects.js';
 import { generateProblem, updateScore } from './game-problems.js';
 import { checkAndUnlockAchievement, displayTutorialCompletion } from './game-achievements.js';

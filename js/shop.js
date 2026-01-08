@@ -1,6 +1,6 @@
 import * as state from './state.js';
 import * as ui from './ui.js';
-import * as audio from './audio.js';
+import * as audio from './audio-hub.js';
 import * as inventory from './inventory.js';
 import { getItemsList, getItemById, ITEM_CATEGORIES } from './items.js';
 import { checkAndUnlockAchievement } from './game-achievements.js';

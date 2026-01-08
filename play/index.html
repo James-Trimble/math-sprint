@@ -6,6 +6,7 @@
   <title>Math Sprint</title>
   <link rel="stylesheet" href="../style.css" />
   <link rel="manifest" href="../manifest.json">
+  <link rel="icon" type="image/png" href="../img/gabriel.png">
   <meta name="theme-color" content="#007bff">
   <link rel="apple-touch-icon" href="../img/gabriel.png">
   
@@ -208,17 +209,17 @@
   </div>
 </main>
 
-<main id="tutorial-screen" class="screen hidden" role="region" aria-labelledby="tutorial-heading">
+<main id="tutorial-screen" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="tutorial-heading">
   <div class="popup-content" style="max-width: 600px; margin: 0 auto;">
     <h1 id="tutorial-heading">MathSprint Tutorial</h1>
-    <div id="tutorial-phase-content" style="min-height: 200px;">
+    <div id="tutorial-phase-content" style="min-height: 200px;" aria-live="polite" aria-atomic="true">
       <!-- Phase content will be inserted here -->
     </div>
-    <div id="tutorial-progress" style="text-align: center; color: #999; margin: 1rem 0; font-size: 0.9rem;"></div>
+    <div id="tutorial-progress" style="text-align: center; color: #999; margin: 1rem 0; font-size: 0.9rem;" aria-live="polite"></div>
     <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
-      <button id="tutorial-prev-btn" class="hidden">← Back</button>
-      <button id="tutorial-next-btn">Next →</button>
-      <button id="tutorial-skip-btn">Skip Tutorial</button>
+      <button id="tutorial-prev-btn" class="hidden" aria-label="Previous tutorial step">← Back</button>
+      <button id="tutorial-next-btn" aria-label="Next tutorial step">Next →</button>
+      <button id="tutorial-skip-btn" aria-label="Skip tutorial">Skip Tutorial</button>
     </div>
   </div>
 </main>
@@ -373,6 +374,17 @@
     </div>
   </div>
 </div>
+
+<!-- Message of the Day Dialog -->
+<dialog id="motd-dialog" class="motd-dialog" aria-labelledby="motd-title" aria-describedby="motd-message" aria-modal="true" role="alertdialog">
+  <div class="motd-content">
+    <button id="motd-close-btn" class="motd-close" aria-label="Close announcement">×</button>
+    <div class="motd-icon" aria-hidden="true">ℹ️</div>
+    <h2 id="motd-title" class="motd-title">Announcement</h2>
+    <div id="motd-message" class="motd-message"></div>
+    <button id="motd-dismiss-btn" class="motd-dismiss-btn">Got it!</button>
+  </div>
+</dialog>
 
 <footer>
   <p>&copy; <span id="copyright-year">2026</span> James Trimble. All rights reserved.</p>

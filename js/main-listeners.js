@@ -5,7 +5,7 @@
 
 import * as state from './state.js';
 import * as ui from './ui.js';
-import * as audio from './audio.js';
+import * as audio from './audio-hub.js';
 import * as shop from './shop.js';
 import * as tutorialUI from './tutorial-ui.js';
 import { startGame, goToMainMenu } from './game-flow.js';
@@ -36,13 +36,30 @@ function setupMainMenuListeners() {
   // Daily Challenge
   const dailyChallengeBtn = document.getElementById("daily-challenge-btn");
   if (dailyChallengeBtn) {
+    // Update button text on menu show
+    const updateDailyChallengeButton = () => {
+      if (typeof window.dailyChallengeModule !== 'undefined' && window.dailyChallengeModule.hasPlayedToday()) {
+        const timeUntil = window.dailyChallengeModule.getTimeUntilNext();
+        dailyChallengeBtn.innerHTML = `Daily Challenge 🎯<span class="btn-subtitle">Next in ${timeUntil}</span>`;
+      } else {
+        dailyChallengeBtn.innerHTML = `Daily Challenge 🎯<span class="btn-subtitle">New challenge every day</span>`;
+      }
+    };
+    
+    // Update on load
+    updateDailyChallengeButton();
+    
+    // Update every minute
+    setInterval(updateDailyChallengeButton, 60000);
+    
     dailyChallengeBtn.addEventListener("click", () => {
       if (typeof window.dailyChallengeModule !== 'undefined') {
         const today = window.dailyChallengeModule.getTodaysDateFormatted();
         const lastPlayed = localStorage.getItem('mathSprintDailyChallengeLastPlayed');
         
         if (lastPlayed === today) {
-          alert("You've already played today's Daily Challenge! Come back tomorrow for a new challenge.");
+          const timeUntil = window.dailyChallengeModule.getTimeUntilNext();
+          alert(`You've already played today's Daily Challenge! Come back in ${timeUntil} for a new challenge.`);
           return;
         }
         

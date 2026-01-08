@@ -5,7 +5,7 @@
 
 import * as state from './state.js';
 import * as ui from './ui.js';
-import * as audio from './audio.js';
+import * as audio from './audio-hub.js';
 import * as itemEffects from './item-effects.js';
 import * as inventory from './inventory.js';
 import * as shop from './shop.js';
@@ -360,6 +360,20 @@ export function gameOver() {
       else if (state.gameMode === 'endless') audio.gameOverMusicEndless.start();
       else if (state.gameMode === 'survival') audio.gameOverMusicSurvival.start();
     }
+  }
+
+  // Hide play again button for daily challenge mode
+  if (state.gameMode === 'daily-challenge') {
+    const playAgainBtn = document.getElementById('play-again-btn');
+    const playAgainHighScoreBtn = document.getElementById('play-again-high-score-btn');
+    if (playAgainBtn) playAgainBtn.style.display = 'none';
+    if (playAgainHighScoreBtn) playAgainHighScoreBtn.style.display = 'none';
+  } else {
+    // Show play again button for other modes
+    const playAgainBtn = document.getElementById('play-again-btn');
+    const playAgainHighScoreBtn = document.getElementById('play-again-high-score-btn');
+    if (playAgainBtn) playAgainBtn.style.display = '';
+    if (playAgainHighScoreBtn) playAgainHighScoreBtn.style.display = '';
   }
 
   // Show achievement button if any pending

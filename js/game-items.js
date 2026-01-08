@@ -4,7 +4,7 @@
  */
 
 import * as ui from './ui.js';
-import * as audio from './audio.js';
+import * as audio from './audio-hub.js';
 import * as itemEffects from './item-effects.js';
 import * as inventory from './inventory.js';
 

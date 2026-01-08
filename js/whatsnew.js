@@ -12,7 +12,7 @@ export const VERSION_INFO = {
         "🎵 New Audio Tracks: Dedicated music for onboarding, tutorial, shop, and daily challenge modes",
         "♿ Full WCAG 2.1 AA Accessibility: Screen reader support, high contrast mode, keyboard navigation, focus management",
         "✨ Gabriel Celebration: Visual feedback and achievement popups when unlocking achievements",
-        "🌍 Marketing Homepage: Professional launch page showcasing all features and game modes",
+        "📢 Message of the Day: Important announcements and updates displayed on app load with full accessibility support",
         "💾 Smart Save System: All progress, settings, items, and achievements persist across sessions",
         "🎮 4 Game Modes: Sprint (60s), Endless (3 lives), Survival (dynamic), Daily Challenge (global)"
     ]

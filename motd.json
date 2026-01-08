@@ -1,0 +1,9 @@
+{
+  "id": "welcome-2026-01-08",
+  "title": "Welcome to Math Sprint! 🎉",
+  "message": "Thanks for playing! We're thrilled to have you here.\n\n📝 **Submit Feedback**: [Click here to share your thoughts](/feedback/) - we'd love to hear from you!\n\n⚠️ **Known Issue**: There's a bug in tutorial step 8 where 'View All Achievements' doesn't work. We're aware and working on a fix.\n\nThank you for your patience and enjoy the game!",
+  "type": "info",
+  "dismissible": true,
+  "startDate": "2026-01-08",
+  "endDate": null
+}

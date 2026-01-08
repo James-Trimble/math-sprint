@@ -120,6 +120,35 @@ const dailyChallengeModule = (() => {
   }
 
   /**
+   * Check if today's challenge has been played
+   * @returns {boolean}
+   */
+  function hasPlayedToday() {
+    const today = getTodaysDate();
+    const lastPlayed = localStorage.getItem('mathSprintDailyChallengeLastPlayed');
+    return lastPlayed === today;
+  }
+
+  /**
+   * Get time until next daily challenge in human readable format
+   * @returns {string}
+   */
+  function getTimeUntilNext() {
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setUTCHours(24, 0, 0, 0);
+    
+    const diff = tomorrow - now;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${minutes}m`;
+  }
+
+  /**
    * Cleanup old personal bests (keep only last 90 days)
    */
   function cleanupOldBests() {
@@ -159,6 +188,8 @@ const dailyChallengeModule = (() => {
     getPersonalBest,
     getStoredPersonalBests,
     getSessionPersonalBest,
+    hasPlayedToday,
+    getTimeUntilNext,
     cleanupOldBests
   };
 })();

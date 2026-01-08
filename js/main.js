@@ -1,6 +1,6 @@
 import * as state from './state.js';
 import * as ui from './ui.js';
-import * as audio from './audio.js';
+import * as audio from './audio-hub.js';
 import * as items from './items.js';
 import * as inventory from './inventory.js';
 import * as shop from './shop.js';
@@ -11,6 +11,7 @@ import { initializeListeners } from './main-listeners.js';
 import { VERSION_INFO } from './whatsnew.js';
 import { populateWhatsNew } from './whatsnew-ui.js';
 import { updateWelcomeMessage } from './welcome-ui.js';
+import { initMOTD } from './motd.js';
 import './achievements.js';
 import './onboarding.js';
 import { startOnboardingFlow, showOnboardingStep1, showOnboardingStep2, showOnboardingStep3, completeOnboarding } from './onboarding-flow.js';
@@ -325,3 +326,8 @@ initializeListeners();
 
 // Make updateWelcomeMessage globally accessible for game-flow module
 window.updateWelcomeMessage = updateWelcomeMessage;
+
+// Initialize MOTD system (will display after reaching main menu)
+setTimeout(() => {
+  initMOTD();
+}, 1000); // Delay to ensure main menu is fully loaded
