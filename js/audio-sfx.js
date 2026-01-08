@@ -68,68 +68,117 @@ const holidaySynth = new Tone.PolySynth(Tone.FMSynth, {
 
 // --- SFX Functions ---
 
+// Helper: Convert volume (0-100) to dB scale
+const volToDb = (vol) => (vol == 0 ? -Infinity : (vol - 100) * 0.4);
+
 export function playCorrectTone() { 
-  if (settings.sfxVolume > 0) gameSynth.triggerAttackRelease("E5", "8n"); 
+  if (settings.sfxVolume > 0) {
+    gameSynth.volume.value = volToDb(settings.sfxVolume);
+    gameSynth.triggerAttackRelease("E5", "8n"); 
+  }
 }
 
 export function playIncorrectTone() { 
-  if (settings.sfxVolume > 0) gameSynth.triggerAttackRelease("C4", "8n"); 
+  if (settings.sfxVolume > 0) {
+    gameSynth.volume.value = volToDb(settings.sfxVolume);
+    gameSynth.triggerAttackRelease("C4", "8n"); 
+  }
 }
 
 export function playStreakTone() { 
-  if (settings.sfxVolume > 0) streakSynth.triggerAttackRelease("G5", "8n", "+0.1"); 
+  if (settings.sfxVolume > 0) {
+    streakSynth.volume.value = volToDb(settings.sfxVolume);
+    streakSynth.triggerAttackRelease("G5", "8n", "+0.1"); 
+  }
 }
 
 export function playCashOutSFX() { 
-  if (settings.sfxVolume > 0) cashOutSynth.triggerAttackRelease(["C5", "E5", "G5", "C6"], "8n"); 
+  if (settings.sfxVolume > 0) {
+    cashOutSynth.volume.value = volToDb(settings.sfxVolume);
+    cashOutSynth.triggerAttackRelease(["C5", "E5", "G5", "C6"], "8n"); 
+  }
 }
 
 export function playGameOverSFX() { 
-  if (settings.sfxVolume > 0) gameOverSFX.triggerAttackRelease("A2", "1n"); 
+  if (settings.sfxVolume > 0) {
+    gameOverSFX.volume.value = volToDb(settings.sfxVolume);
+    gameOverSFX.triggerAttackRelease("A2", "1n"); 
+  }
 }
 
 export function playNewHighScoreSFX() { 
-  if (settings.sfxVolume > 0) newHighScoreSFX.triggerAttackRelease(["C4", "E4", "G4", "C5"], "1n"); 
+  if (settings.sfxVolume > 0) {
+    newHighScoreSFX.volume.value = volToDb(settings.sfxVolume);
+    newHighScoreSFX.triggerAttackRelease(["C4", "E4", "G4", "C5"], "1n"); 
+  }
 }
 
 export function playUIClickSound() { 
-  if (settings.sfxVolume > 0) uiClickSynth.triggerAttackRelease("C5", "32n"); 
+  if (settings.sfxVolume > 0) {
+    uiClickSynth.volume.value = volToDb(settings.sfxVolume);
+    uiClickSynth.triggerAttackRelease("C5", "32n"); 
+  }
 }
 
 export function playUIBackSound() { 
-  if (settings.sfxVolume > 0) uiBackSynth.triggerAttackRelease("A4", "32n"); 
+  if (settings.sfxVolume > 0) {
+    uiBackSynth.volume.value = volToDb(settings.sfxVolume);
+    uiBackSynth.triggerAttackRelease("A4", "32n"); 
+  }
 }
 
 export function playUIToggleOnSound() { 
-  if (settings.sfxVolume > 0) uiToggleOnSynth.triggerAttackRelease("C6", "64n"); 
+  if (settings.sfxVolume > 0) {
+    uiToggleOnSynth.volume.value = volToDb(settings.sfxVolume);
+    uiToggleOnSynth.triggerAttackRelease("C6", "64n"); 
+  }
 }
 
 export function playUIToggleOffSound() { 
-  if (settings.sfxVolume > 0) uiToggleOffSynth.triggerAttackRelease("G5", "64n"); 
+  if (settings.sfxVolume > 0) {
+    uiToggleOffSynth.volume.value = volToDb(settings.sfxVolume);
+    uiToggleOffSynth.triggerAttackRelease("G5", "64n"); 
+  }
 }
 
 export function playUIErrorSound() { 
-  if (settings.sfxVolume > 0) uiErrorSynth.triggerAttackRelease("G#2", "16n"); 
+  if (settings.sfxVolume > 0) {
+    uiErrorSynth.volume.value = volToDb(settings.sfxVolume);
+    uiErrorSynth.triggerAttackRelease("G#2", "16n"); 
+  }
 }
 
 export function playCountdownBeep() { 
-  if (settings.sfxVolume > 0) countdownSynth.triggerAttackRelease("G4", "16n"); 
+  if (settings.sfxVolume > 0) {
+    countdownSynth.volume.value = volToDb(settings.sfxVolume);
+    countdownSynth.triggerAttackRelease("G4", "16n"); 
+  }
 }
 
 export function playCountdownGoBeep() { 
-  if (settings.sfxVolume > 0) countdownSynth.triggerAttackRelease("C5", "8n"); 
+  if (settings.sfxVolume > 0) {
+    countdownSynth.volume.value = volToDb(settings.sfxVolume);
+    countdownSynth.triggerAttackRelease("C5", "8n"); 
+  }
 }
 
 export function playGabrielHappy() { 
-  if (settings.sfxVolume > 0) gabrielSynth.triggerAttackRelease("C6", "16n"); 
+  if (settings.sfxVolume > 0) {
+    gabrielSynth.volume.value = volToDb(settings.sfxVolume);
+    gabrielSynth.triggerAttackRelease("C6", "16n"); 
+  }
 }
 
 export function playGabrielSassy() { 
-  if (settings.sfxVolume > 0) gabrielSynth.triggerAttackRelease("G3", "8n"); 
+  if (settings.sfxVolume > 0) {
+    gabrielSynth.volume.value = volToDb(settings.sfxVolume);
+    gabrielSynth.triggerAttackRelease("G3", "8n"); 
+  }
 }
 
 export function playPurchaseSuccessSFX(category) {
   if (settings.sfxVolume <= 0) return;
+  purchaseSuccessSynth.volume.value = volToDb(settings.sfxVolume);
   const now = Tone.now();
   switch (category) {
     case 'time':
@@ -150,6 +199,7 @@ export function playPurchaseSuccessSFX(category) {
 
 export function playPurchaseFailSFX() {
   if (settings.sfxVolume <= 0) return;
+  purchaseFailSynth.volume.value = volToDb(settings.sfxVolume);
   const now = Tone.now();
   purchaseFailSynth.triggerAttackRelease("F#2", "8n", now);
   purchaseFailSynth.triggerAttackRelease("F2", "8n", now + 0.1);
@@ -157,6 +207,7 @@ export function playPurchaseFailSFX() {
 
 export function playItemActivationSFX(soundType) {
   if (settings.sfxVolume <= 0) return;
+  itemActivationSynth.volume.value = volToDb(settings.sfxVolume);
   const now = Tone.now();
   switch (soundType) {
     case 'freeze':
@@ -195,6 +246,7 @@ export function playItemActivationSFX(soundType) {
 
 export function playShieldBlockSFX() {
   if (settings.sfxVolume <= 0) return;
+  itemActivationSynth.volume.value = volToDb(settings.sfxVolume);
   const now = Tone.now();
   itemActivationSynth.triggerAttackRelease(["G5", "E5"], "32n", now);
 }
@@ -202,10 +254,21 @@ export function playShieldBlockSFX() {
 export function playAchievementUnlockSFX() {
   if (settings.sfxVolume <= 0) return;
   const now = Tone.now();
-  achievementUnlockSynth.volume.value = -15;
+  // Combine sfx volume setting with the standard -15 for this synth
+  const sfxDb = volToDb(settings.sfxVolume);
+  achievementUnlockSynth.volume.value = sfxDb - 15;
   achievementUnlockSynth.triggerAttackRelease(["C5", "E5", "G5"], "32n", now);
   achievementUnlockSynth.triggerAttackRelease(["E5", "G5", "C6"], "32n", now + 0.15);
   achievementUnlockSynth.triggerAttackRelease(["G5", "C6", "E6"], "32n", now + 0.3);
+}
+
+export function playVolumeAdjustSFX() {
+  if (settings.sfxVolume <= 0) return;
+  // Convert volume (0-100) to dB scale
+  const volToDb = (vol) => (vol == 0 ? -Infinity : (vol - 100) * 0.4);
+  const sfxDb = volToDb(settings.sfxVolume);
+  uiClickSynth.volume.value = sfxDb;
+  uiClickSynth.triggerAttackRelease("D5", "32n");
 }
 
 export function playAudioLogo(isChristmas) {

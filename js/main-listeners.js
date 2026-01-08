@@ -285,7 +285,8 @@ function setupSettingsListeners() {
 
   ui.sfxVolumeSlider.addEventListener("input", (e) => { 
     state.settings.sfxVolume = e.target.value; 
-    audio.applyVolumeSettings(); 
+    audio.applyVolumeSettings();
+    audio.playVolumeAdjustSFX();
     state.saveSettings(); 
   });
 
