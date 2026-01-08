@@ -1,7 +1,7 @@
 {
   "id": "launch-1-0-0",
   "title": "Welcome to Math Sprint 1.0",
-  "message": "Thank you for being part of our journey from alpha to the official launch! Math Sprint is now available to everyone worldwide.\n\n**What's New**: We've introduced Daily Challenge - compete with players around the world on the same problems every day. You'll see a What's New button on the main menu with all the latest improvements and features.\n\nHave feedback? [Share your thoughts with us](/feedback/) - we'd love to hear from you!\n\nHappy sprinting!",
+  "message": "Thank you for being part of our journey from alpha to the official launch! Math Sprint is now available to everyone worldwide.\n\n**What's New**: We've introduced Daily Challenge - compete with players around the world on the same problems every day.\n\n**Known Issue**: We are aware of a bug in tutorial step 8 where the \"View All Achievements\" button does not work. We're working on a fix.\n\nHave feedback? [Share your thoughts with us](/feedback/) - we'd love to hear from you!\n\nHappy sprinting!",
   "type": "info",
   "startDate": "2026-01-08",
   "endDate": null
