@@ -208,10 +208,10 @@ const achievementsModule = (() => {
     jsCodebase: {
       id: 'jsCodebase',
       title: 'JS === Sparks',
-      description: 'Our JavaScript has 4,340 lines of code, and you have 4,340 sparks! That\'s worth celebrating!',
+      description: 'Our JavaScript has 6,363 lines of code, and you have 6,363 sparks! That\'s worth celebrating!',
       reward: 100,
       category: 'milestone',
-      threshold: 4340
+      threshold: 6363
     },
 
     // Hidden/Fun Easter Eggs
