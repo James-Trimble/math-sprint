@@ -28,24 +28,32 @@
 
 <main id="main-menu" class="screen hidden" role="region" aria-labelledby="main-menu-heading">
   <h1 id="main-menu-heading">Main Menu</h1>
+  <div id="welcome-message" style="text-align: center; margin-bottom: 1.5rem; font-size: 1.1rem; color: #4ecdc4;"></div>
   
-  <button id="sprint-mode-btn">
+  <button id="sprint-mode-btn" aria-label="Sprint Mode - 60 seconds">
     Sprint Mode
     <span class="btn-subtitle">(60 Seconds)</span>
   </button>
   
-  <button id="endless-mode-btn">
+  <button id="endless-mode-btn" aria-label="Endless Mode - 3 strikes">
     Endless Mode
     <span class="btn-subtitle">(3 Strikes)</span>
   </button>
-  
-  <button id="survival-mode-btn" style="border: 2px solid #d32f2f; color: #d32f2f;">
+
+  <button id="survival-mode-btn" aria-label="Survival Mode - Danger zone" style="border: 2px solid #d32f2f; color: #d32f2f;">
     Survival Mode
     <span class="btn-subtitle">(Danger!)</span>
   </button>
+
+  <button id="daily-challenge-btn" aria-label="Daily Challenge - New challenge every day">
+    Daily Challenge 🎯
+    <span class="btn-subtitle">(New Daily)</span>
+  </button>
   
-  <button id="shop-btn">The Shop ⚡</button>
-  <button id="settings-btn">Settings</button>
+  <button id="shop-btn" aria-label="Shop - Buy items with sparks">The Shop ⚡</button>
+  <button id="achievements-btn" aria-label="Achievements - View your unlocked achievements">Achievements 🏆</button>
+  <button id="tutorial-btn" aria-label="Tutorial - Learn how to play">Tutorial 📚</button>
+  <button id="settings-btn" aria-label="Settings - Adjust audio, gameplay, and accessibility options">Settings</button>
 </main>
 
 <main id="shop-screen" class="screen hidden" role="region" aria-labelledby="shop-heading">
@@ -55,6 +63,8 @@
     ⚡ <span id="wallet-balance">0</span> Sparks
   </div>
   <div id="shop-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div id="shop-tabs" class="shop-tabs" role="tablist" aria-label="Item categories"></div>
     
   <div class="shop-grid" id="shop-grid" aria-label="Shop items"></div>
     
@@ -102,6 +112,7 @@
 
 <main id="game-over-screen" class="screen hidden" role="region" aria-labelledby="game-over-heading">
   <h1 id="game-over-heading">Game Over</h1>
+  <p id="game-over-player-name" style="text-align: center; color: #4ecdc4; margin-bottom: 1rem;"></p>
   <p>Your Final Score:</p>
   <h2 id="final-score">0</h2>
   <div id="score-breakdown">
@@ -109,13 +120,16 @@
     <p>Correct: <span id="correct-answers">0</span></p>
     <p>Accuracy: <span id="accuracy">0%</span></p>
   </div>
+  <button id="view-achievements-game-over-btn" class="hidden" style="background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; font-weight: bold;">🏆 View Achievements</button>
   <button id="play-again-btn">Play Again</button>
   <button id="main-menu-game-over-btn">Main Menu</button>
 </main>
 
 <main id="high-score-screen" class="screen hidden" role="region" aria-labelledby="high-score-heading">
   <h1 id="high-score-heading">New High Score!</h1>
+  <p id="high-score-player-name" style="text-align: center; color: #4ecdc4; margin-bottom: 1rem;"></p>
   <h2 id="new-high-score">0</h2>
+  <button id="view-achievements-high-score-btn" class="hidden" style="background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; font-weight: bold;">🏆 View Achievements</button>
   <button id="play-again-high-score-btn">Play Again</button>
   <button id="main-menu-high-score-btn">Main Menu</button>
   <button id="score-breakdown-btn">See Breakdown</button>
@@ -194,8 +208,22 @@
   </div>
 </main>
 
-<!-- Feedback Popup -->
-<div id="feedback-popup" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="feedback-popup-heading">
+<main id="tutorial-screen" class="screen hidden" role="region" aria-labelledby="tutorial-heading">
+  <div class="popup-content" style="max-width: 600px; margin: 0 auto;">
+    <h1 id="tutorial-heading">MathSprint Tutorial</h1>
+    <div id="tutorial-phase-content" style="min-height: 200px;">
+      <!-- Phase content will be inserted here -->
+    </div>
+    <div id="tutorial-progress" style="text-align: center; color: #999; margin: 1rem 0; font-size: 0.9rem;"></div>
+    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+      <button id="tutorial-prev-btn" class="hidden">← Back</button>
+      <button id="tutorial-next-btn">Next →</button>
+      <button id="tutorial-skip-btn">Skip Tutorial</button>
+    </div>
+  </div>
+</main>
+
+<main id="feedback-popup" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="feedback-popup-heading">
   <div class="popup-content">
     <h2 id="feedback-popup-heading">Enjoying Math Sprint?</h2>
     <p>This is a work in progress, and your feedback helps us make it better!</p>
@@ -203,6 +231,134 @@
       <button id="feedback-share-btn" class="popup-button primary">Share Feedback</button>
       <button id="feedback-later-btn" class="popup-button">Maybe Later</button>
       <button id="feedback-dont-ask-btn" class="popup-button">Don't Ask Again</button>
+    </div>
+  </div>
+</main>
+
+<main id="achievements-screen" class="screen hidden" role="region" aria-labelledby="achievements-heading">
+  <h1 id="achievements-heading">Achievements</h1>
+  <p id="achievements-stats">Unlocked: <span id="achievements-unlocked-count">0</span> / <span id="achievements-total-count">0</span></p>
+  <div id="achievements-container" class="achievements-grid"></div>
+  <button id="back-to-menu-achievements-btn">Back to Menu</button>
+</main>
+
+<!-- Achievement live region for screen reader announcements -->
+<div id="achievement-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+<!-- Onboarding Step 1: Welcome + Name Entry -->
+<div id="onboarding-step1" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="onboarding-step1-heading">
+  <div class="popup-content onboarding-content">
+    <h2 id="onboarding-step1-heading">Welcome to MathSprint! 🎮</h2>
+    <p style="margin-bottom: 2rem;">Get ready to challenge your math skills with fast-paced problems, strategic items, and multiple game modes.</p>
+    
+    <form id="onboarding-name-form">
+      <div style="margin-bottom: 1.5rem;">
+        <label for="onboarding-name-input" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+          Your Name
+        </label>
+        <input 
+          id="onboarding-name-input" 
+          type="text" 
+          placeholder="Enter your name" 
+          required
+          aria-describedby="onboarding-name-help"
+          style="width: 100%; padding: 0.75rem; border: 2px solid #4ecdc4; border-radius: 8px; font-size: 1rem; background: #222; color: #fff;"
+        />
+        <small id="onboarding-name-help" style="display: block; margin-top: 0.5rem; color: #999;">
+          Your name is required for future leaderboards!
+        </small>
+        <div id="onboarding-name-error" class="hidden" style="color: #ff6b6b; margin-top: 0.5rem;" role="alert"></div>
+      </div>
+      
+      <div class="popup-buttons">
+        <button type="submit" class="popup-button primary" id="onboarding-step1-next">Continue →</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Onboarding Step 2: Settings Preview -->
+<div id="onboarding-step2" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="onboarding-step2-heading">
+  <div class="popup-content onboarding-content">
+    <h2 id="onboarding-step2-heading">Customize Your Experience ⚙️</h2>
+    <p style="margin-bottom: 1.5rem;">Choose which operations you'd like to practice:</p>
+    
+    <form id="onboarding-settings-form" style="margin-bottom: 2rem;">
+      <fieldset style="border: none; padding: 0;">
+        <legend style="display: none;">Math Operations</legend>
+        
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <label style="display: flex; align-items: center; cursor: pointer; gap: 0.75rem;">
+            <input 
+              id="onboarding-op-addition" 
+              type="checkbox" 
+              checked
+              aria-label="Enable Addition"
+              style="width: 20px; height: 20px; cursor: pointer;"
+            />
+            <span>➕ Addition</span>
+          </label>
+          
+          <label style="display: flex; align-items: center; cursor: pointer; gap: 0.75rem;">
+            <input 
+              id="onboarding-op-subtraction" 
+              type="checkbox"
+              aria-label="Enable Subtraction"
+              style="width: 20px; height: 20px; cursor: pointer;"
+            />
+            <span>➖ Subtraction</span>
+          </label>
+          
+          <label style="display: flex; align-items: center; cursor: pointer; gap: 0.75rem;">
+            <input 
+              id="onboarding-op-multiplication" 
+              type="checkbox"
+              aria-label="Enable Multiplication"
+              style="width: 20px; height: 20px; cursor: pointer;"
+            />
+            <span>✖️ Multiplication</span>
+          </label>
+          
+          <label style="display: flex; align-items: center; cursor: pointer; gap: 0.75rem;">
+            <input 
+              id="onboarding-op-division" 
+              type="checkbox"
+              aria-label="Enable Division"
+              style="width: 20px; height: 20px; cursor: pointer;"
+            />
+            <span>➗ Division</span>
+          </label>
+        </div>
+      </fieldset>
+    </form>
+    
+    <div class="popup-buttons">
+      <button type="button" class="popup-button" id="onboarding-step2-back">← Back</button>
+      <button type="button" class="popup-button primary" id="onboarding-step2-next">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Onboarding Step 3: Tutorial Offer & Completion -->
+<div id="onboarding-step3" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="onboarding-step3-heading">
+  <div class="popup-content onboarding-content">
+    <h2 id="onboarding-step3-heading">You're All Set! 🎉</h2>
+    <p style="margin-bottom: 1.5rem;">Ready to jump in? We have two options for you:</p>
+    
+    <div style="background: rgba(78, 205, 196, 0.1); border: 2px solid #4ecdc4; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+      <h3 style="margin-top: 0; color: #4ecdc4; margin-bottom: 0.75rem;">📚 Take the Interactive Tutorial</h3>
+      <p style="margin: 0 0 0.75rem 0; color: #ccc;">Learn all the game mechanics step-by-step with guided walkthroughs.</p>
+      <ul style="margin: 0.75rem 0; padding-left: 1.5rem; color: #aaa;">
+        <li>Master all 4 game modes</li>
+        <li>Learn the shop and items</li>
+        <li>Unlock achievement rewards</li>
+        <li><strong>Get a free Time Freeze item!</strong></li>
+      </ul>
+    </div>
+    
+    <div class="popup-buttons">
+      <button type="button" class="popup-button" id="onboarding-skip-tutorial">Skip → Go to Menu</button>
+      <button type="button" class="popup-button primary" id="onboarding-start-tutorial">🎓 Start Tutorial</button>
     </div>
   </div>
 </div>
@@ -229,6 +385,7 @@
   <p id="version-number">v0.0.0</p>
 </footer>
 
+<!-- Load main entry point (all modules are imported from here) -->
 <script src="../js/main.js" type="module"></script>
 
 </body>

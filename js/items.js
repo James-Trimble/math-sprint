@@ -113,6 +113,101 @@ export const ITEMS = [
     forcedOps: ["+"],
     durationMs: 30000,
     soundType: "easy"
+  },
+  {
+    id: "scoreMultiplier",
+    name: "Score Multiplier",
+    icon: "✖️",
+    category: ITEM_CATEGORIES.SCORE,
+    cost: 110,
+    description: "3x points for 10 seconds",
+    durationMs: 10000,
+    multiplier: 3,
+    soundType: "boost"
+  },
+  {
+    id: "timeLapse",
+    name: "Time Lapse",
+    icon: "⏱️",
+    category: ITEM_CATEGORIES.TIME,
+    cost: 85,
+    description: "Add 25 seconds to the clock",
+    bonusTime: 25,
+    soundType: "rewind"
+  },
+  {
+    id: "quickReflex",
+    name: "Quick Reflex",
+    icon: "⚡",
+    category: ITEM_CATEGORIES.CHALLENGE,
+    cost: 70,
+    description: "Problems become easier for 20 seconds",
+    difficulty: -1,
+    durationMs: 20000,
+    soundType: "modify"
+  },
+  {
+    id: "criticalHit",
+    name: "Critical Hit",
+    icon: "💥",
+    category: ITEM_CATEGORIES.SCORE,
+    cost: 130,
+    description: "+500 points instantly (use wisely!)",
+    instantPoints: 500,
+    soundType: "bonus"
+  },
+  {
+    id: "lifeVest",
+    name: "Life Vest",
+    icon: "🌊",
+    category: ITEM_CATEGORIES.SURVIVAL,
+    cost: 85,
+    description: "+2 lives (Endless only)",
+    livesBonus: 2,
+    modeRestriction: "endless",
+    soundType: "life"
+  },
+  {
+    id: "safeZone",
+    name: "Safe Zone",
+    icon: "🏰",
+    category: ITEM_CATEGORIES.SURVIVAL,
+    cost: 95,
+    description: "Block 2 wrong-answer penalties",
+    charges: 2,
+    soundType: "shield"
+  },
+  {
+    id: "focusMode",
+    name: "Focus Mode",
+    icon: "🎯",
+    category: ITEM_CATEGORIES.CHALLENGE,
+    cost: 65,
+    description: "Only addition and subtraction for 25 seconds",
+    forcedOps: ["+", "-"],
+    durationMs: 25000,
+    soundType: "modify"
+  },
+  {
+    id: "resilience",
+    name: "Resilience",
+    icon: "💪",
+    category: ITEM_CATEGORIES.SURVIVAL,
+    cost: 110,
+    description: "Reduce penalty duration by 50%",
+    penaltyReduction: 0.5,
+    durationMs: 30000,
+    soundType: "shield"
+  },
+  {
+    id: "perfectStrike",
+    name: "Perfect Strike",
+    icon: "✨",
+    category: ITEM_CATEGORIES.SCORE,
+    cost: 140,
+    description: "10x multiplier for next correct answer only",
+    nextAnswerMultiplier: 10,
+    soundType: "boost"
   }
 ];
 

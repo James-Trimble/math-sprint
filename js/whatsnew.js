@@ -1,14 +1,19 @@
 export const VERSION_INFO = {
-    version: "v0.9.1",
-    heading: "v0.9.1: Challenges & Consequences",
-    tagline: "Music fixed, harder numbers, and new penalty system. Master 3 consecutive mistakes without losing lives!",
+    version: "v1.0",
+    heading: "v1.0: Official Launch 🚀",
+    tagline: "Achievements, daily challenges, strategic shop, and full accessibility. The complete MathSprint experience!",
     notes: [
-        "🎵 Music playback fixed: Audio context properly resumed for browser autoplay policies",
-        "📈 Higher numbers challenge: Addition/Subtraction now go up to 100+ (was 50)",
-        "✖️ Multiplication difficulty increased: Now up to 15×15=225 at high scores (was 12×12=144)",
-        "❌ 3 Consecutive Mistakes = Life Lost: In Endless Mode, lose 1 life per 3 consecutive wrong answers",
-        "⏱️ Sprint Mode penalty: 10 second time penalty for 3 consecutive mistakes (was no penalty)",
-        "🔴 Red flash warning at 2 mistakes: Visual alert to warn you before losing a life/time",
-        "⚠️ Consecutive mistake counter: Live display shows your mistake streak during gameplay"
+        "🏆 Achievement System: Unlock 15+ achievements across gameplay, tutorials, and milestones",
+        "🎯 Daily Challenge: Brand new mode with global daily seeding - compete with players worldwide on the same problems",
+        "📊 Personal Best Tracking: Track your best score for every daily challenge",
+        "👋 Onboarding Experience: Welcome new players with guided setup and name entry",
+        "📚 Interactive Tutorial: 7-phase guided tutorial teaching mechanics, strategies, and items (replays from menu anytime)",
+        "🛍️ Expanded Shop: 20 items organized in 4 categories (Time, Power, Protection, Strategic)",
+        "🎵 New Audio Tracks: Dedicated music for onboarding, tutorial, shop, and daily challenge modes",
+        "♿ Full WCAG 2.1 AA Accessibility: Screen reader support, high contrast mode, keyboard navigation, focus management",
+        "✨ Gabriel Celebration: Visual feedback and achievement popups when unlocking achievements",
+        "🌍 Marketing Homepage: Professional launch page showcasing all features and game modes",
+        "💾 Smart Save System: All progress, settings, items, and achievements persist across sessions",
+        "🎮 4 Game Modes: Sprint (60s), Endless (3 lives), Survival (dynamic), Daily Challenge (global)"
     ]
 };

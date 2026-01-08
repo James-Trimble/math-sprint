@@ -169,6 +169,45 @@ export const highScoreMusicSurvival = new Tone.Player({
   onerror: onAudioError,
 }).toDestination();
 
+export const highScoreMusicDailyChallenge = new Tone.Player({
+  url: "../music/mathsprintdailychallengehighscore.mp3", 
+  loop: true,
+  onload: onAudioLoaded,
+  onerror: onAudioError,
+}).toDestination();
+
+export const backgroundMusicOnboarding = new Tone.Player({
+  url: "../music/mathsprintonboarding.mp3",
+  loop: true,
+  volume: -2,
+  onload: onAudioLoaded,
+  onerror: onAudioError,
+}).toDestination();
+
+export const backgroundMusicTutorial = new Tone.Player({
+  url: "../music/mathsprinttutorial.mp3",
+  loop: true,
+  volume: -2,
+  onload: onAudioLoaded,
+  onerror: onAudioError,
+}).toDestination();
+
+export const backgroundMusicShop = new Tone.Player({
+  url: "../music/mathsprintshop.mp3",
+  loop: true,
+  volume: -2,
+  onload: onAudioLoaded,
+  onerror: onAudioError,
+}).toDestination();
+
+export const backgroundMusicDailyChallenge = new Tone.Player({
+  url: "../music/mathsprintdailychallenge.mp3",
+  loop: true,
+  volume: -2,
+  onload: onAudioLoaded,
+  onerror: onAudioError,
+}).toDestination();
+
 // --- SFX Synths ---
 const synthEnvelope = { attack: 0.01, decay: 0.1, sustain: 0.2, release: 0.4 };
 const gameSynth = new Tone.Synth({ envelope: synthEnvelope }).toDestination();
@@ -203,6 +242,11 @@ const itemActivationSynth = new Tone.PolySynth(Tone.Synth, {
   envelope: { attack: 0.01, decay: 0.3, sustain: 0.1, release: 0.5 }
 }).toDestination();
 
+const achievementUnlockSynth = new Tone.PolySynth(Tone.Synth, {
+  maxPolyphony: 6,
+  envelope: { attack: 0.05, decay: 0.2, sustain: 0.1, release: 0.5 }
+}).toDestination();
+
 // --- AUDIO LOGOS ---
 
 const logoSynth = new Tone.PolySynth(Tone.Synth, {
@@ -230,6 +274,11 @@ const holidaySynth = new Tone.PolySynth(Tone.FMSynth, {
 export function playMainMenuMusic() {
     if (settings.musicVolume <= 0) return;
     if (backgroundMusicMainMenu.state === "started") return;
+
+    // Stop onboarding music if it's playing
+    if (backgroundMusicOnboarding.state === "started") {
+        backgroundMusicOnboarding.stop();
+    }
 
     if (backgroundMusicMainMenu.loaded) {
         backgroundMusicMainMenu.start();
@@ -280,6 +329,83 @@ export function canPlayHighScoreSurvivalMusic() {
   return highScoreMusicSurvival.loaded || audioTimeoutTriggered;
 }
 
+export function canPlayHighScoreDailyChallengeMusic() {
+  return highScoreMusicDailyChallenge.loaded || audioTimeoutTriggered;
+}
+
+export function canPlayOnboardingMusic() {
+  return backgroundMusicOnboarding.loaded || audioTimeoutTriggered;
+}
+
+export function canPlayTutorialMusic() {
+  return backgroundMusicTutorial.loaded || audioTimeoutTriggered;
+}
+
+export function canPlayShopMusic() {
+  return backgroundMusicShop.loaded || audioTimeoutTriggered;
+}
+
+export function canPlayDailyChallengeMusic() {
+  return backgroundMusicDailyChallenge.loaded || audioTimeoutTriggered;
+}
+
+export function playOnboardingMusic() {
+    if (settings.musicVolume <= 0) return;
+    if (backgroundMusicOnboarding.state === "started") return;
+
+    // Stop main menu music if it's playing
+    if (backgroundMusicMainMenu.state === "started") {
+        backgroundMusicMainMenu.stop();
+    }
+
+    if (backgroundMusicOnboarding.loaded) {
+        backgroundMusicOnboarding.start();
+    } else {
+        setTimeout(() => {
+             if (backgroundMusicOnboarding.loaded) backgroundMusicOnboarding.start();
+        }, 1000);
+    }
+}
+
+export function playTutorialMusic() {
+    if (settings.musicVolume <= 0) return;
+    if (backgroundMusicTutorial.state === "started") return;
+
+    if (backgroundMusicTutorial.loaded) {
+        backgroundMusicTutorial.start();
+    } else {
+        setTimeout(() => {
+             if (backgroundMusicTutorial.loaded) backgroundMusicTutorial.start();
+        }, 1000);
+    }
+}
+
+export function playShopMusic() {
+    if (settings.musicVolume <= 0) return;
+    if (backgroundMusicShop.state === "started") return;
+
+    if (backgroundMusicShop.loaded) {
+        backgroundMusicShop.start();
+    } else {
+        setTimeout(() => {
+             if (backgroundMusicShop.loaded) backgroundMusicShop.start();
+        }, 1000);
+    }
+}
+
+export function playDailyChallengeMusic() {
+    if (settings.musicVolume <= 0) return;
+    if (backgroundMusicDailyChallenge.state === "started") return;
+
+    if (backgroundMusicDailyChallenge.loaded) {
+        backgroundMusicDailyChallenge.start();
+    } else {
+        setTimeout(() => {
+             if (backgroundMusicDailyChallenge.loaded) backgroundMusicDailyChallenge.start();
+        }, 1000);
+    }
+}
+
 export function playAudioLogo(isChristmas) {
   const now = Tone.now();
   if (isChristmas) {
@@ -321,6 +447,10 @@ export function stopAllMusic(tensionLoop) {
   if(backgroundMusicSprint.state === "started") backgroundMusicSprint.stop();
   if(backgroundMusicEndless.state === "started") backgroundMusicEndless.stop();
   if(backgroundMusicSurvival.state === "started") backgroundMusicSurvival.stop();
+  if(backgroundMusicOnboarding.state === "started") backgroundMusicOnboarding.stop();
+  if(backgroundMusicTutorial.state === "started") backgroundMusicTutorial.stop();
+  if(backgroundMusicShop.state === "started") backgroundMusicShop.stop();
+  if(backgroundMusicDailyChallenge.state === "started") backgroundMusicDailyChallenge.stop();
   
   gameOverMusicSprint.stop();
   gameOverMusicEndless.stop();
@@ -328,6 +458,7 @@ export function stopAllMusic(tensionLoop) {
   highScoreMusicSprint.stop();
   highScoreMusicEndless.stop();
   highScoreMusicSurvival.stop();
+  highScoreMusicDailyChallenge.stop();
 
   if (Tone.Transport.state === "started") {
     if (tensionLoop) tensionLoop.stop();
@@ -345,12 +476,17 @@ export function applyVolumeSettings() {
   backgroundMusicSprint.volume.value = musicDb;
   backgroundMusicEndless.volume.value = musicDb;
   backgroundMusicSurvival.volume.value = musicDb;
+  backgroundMusicOnboarding.volume.value = musicDb;
+  backgroundMusicTutorial.volume.value = musicDb;
+  backgroundMusicShop.volume.value = musicDb;
+  backgroundMusicDailyChallenge.volume.value = musicDb;
   gameOverMusicSprint.volume.value = musicDb;
   gameOverMusicEndless.volume.value = musicDb;
   gameOverMusicSurvival.volume.value = musicDb;
   highScoreMusicSprint.volume.value = musicDb;
   highScoreMusicEndless.volume.value = musicDb;
   highScoreMusicSurvival.volume.value = musicDb;
+  highScoreMusicDailyChallenge.volume.value = musicDb;
 }
 
 export function playCorrectTone() { if (settings.sfxVolume > 0) gameSynth.triggerAttackRelease("E5", "8n"); }
@@ -438,4 +574,14 @@ export function playShieldBlockSFX() {
   if (settings.sfxVolume <= 0) return;
   const now = Tone.now();
   itemActivationSynth.triggerAttackRelease(["G5", "E5"], "32n", now);
+}
+
+export function playAchievementUnlockSFX() {
+  if (settings.sfxVolume <= 0) return;
+  const now = Tone.now();
+  // Softer ascending chord progression for celebration
+  achievementUnlockSynth.volume.value = -15; // Reduce volume by 15dB
+  achievementUnlockSynth.triggerAttackRelease(["C5", "E5", "G5"], "32n", now);
+  achievementUnlockSynth.triggerAttackRelease(["E5", "G5", "C6"], "32n", now + 0.15);
+  achievementUnlockSynth.triggerAttackRelease(["G5", "C6", "E6"], "32n", now + 0.3);
 }

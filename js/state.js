@@ -1,10 +1,12 @@
 // js/state.js
 
+import { checkAndUnlockAchievement } from './game-achievements.js';
+
 // --- Constants ---
 export const GAME_DURATION = 60; 
 export const SURVIVAL_START_TIME = 30; 
 export const STARTING_LIVES = 3; 
-export const GAME_VERSION = "v0.9.2"; 
+export const GAME_VERSION = "v1.0"; 
 
 // --- Session Validation ---
 export let isSessionValid = true;
@@ -38,6 +40,7 @@ export let tensionLoop;
 export let highScoreSprint = decodeHighScore("mathSprintHighScore") || 0;
 export let highScoreEndless = decodeHighScore("mathSprintHighScoreEndless") || 0;
 export let highScoreSurvival = decodeHighScore("mathSprintHighScoreSurvival") || 0;
+export let highScoreDailyChallenge = decodeHighScore("mathSprintHighScoreDailyChallenge") || 0;
 
 function decodeHighScore(key) {
   const val = localStorage.getItem(key);
@@ -166,6 +169,9 @@ export function setHighScore(newHighScore) {
   } else if (gameMode === 'endless') {
     highScoreEndless = newHighScore;
     localStorage.setItem("mathSprintHighScoreEndless", encodeValue(highScoreEndless.toString()));
+  } else if (gameMode === 'daily-challenge') {
+    highScoreDailyChallenge = newHighScore;
+    localStorage.setItem("mathSprintHighScoreDailyChallenge", encodeValue(highScoreDailyChallenge.toString()));
   } else {
     highScoreSurvival = newHighScore;
     localStorage.setItem("mathSprintHighScoreSurvival", encodeValue(highScoreSurvival.toString()));
@@ -175,6 +181,7 @@ export function setHighScore(newHighScore) {
 export function getHighScore() {
   if (gameMode === 'sprint') return highScoreSprint;
   if (gameMode === 'endless') return highScoreEndless;
+  if (gameMode === 'daily-challenge') return highScoreDailyChallenge;
   return highScoreSurvival;
 }
 
@@ -187,6 +194,11 @@ export function addSparks(amount) {
     sparksWallet += amount;
     sessionSparks += amount; 
     localStorage.setItem("mathSprintSparks", encodeValue(sparksWallet.toString()));
+    
+    // Check for JS codebase milestone
+    if (sparksWallet >= 4340) {
+      checkAndUnlockAchievement('jsCodebase');
+    }
 }
 
 export function deductSparks(amount) {

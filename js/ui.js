@@ -14,6 +14,7 @@ export const endlessModeBtn = document.getElementById("endless-mode-btn");
 export const survivalModeBtn = document.getElementById("survival-mode-btn"); // New
 export const settingsBtn = document.getElementById("settings-btn");
 export const shopBtn = document.getElementById("shop-btn"); // New
+export const welcomeMessage = document.getElementById("welcome-message");
 export const gameForm = document.getElementById("game-form");
 export const problemEl = document.getElementById("problem");
 export const answerEl = document.getElementById("answer");
@@ -52,6 +53,7 @@ export const scoreBreakdownBtn = document.getElementById("score-breakdown-btn");
 // Shop Elements
 export const walletBalanceEl = document.getElementById("wallet-balance"); 
 export const shopGridEl = document.getElementById("shop-grid");
+export const shopTabsEl = document.getElementById("shop-tabs");
 export const shopLiveEl = document.getElementById("shop-live");
 export const backToMenuShopBtn = document.getElementById("back-to-menu-shop-btn");
 
@@ -78,28 +80,65 @@ export const closePopupBtn = document.getElementById("close-popup-btn");
 export const copyrightYearEl = document.getElementById("copyright-year");
 export const versionNumberEl = document.getElementById("version-number");
 
+// Onboarding Elements
+export const onboardingStep1Screen = document.getElementById("onboarding-step1");
+export const onboardingStep2Screen = document.getElementById("onboarding-step2");
+export const onboardingStep3Screen = document.getElementById("onboarding-step3");
+export const onboardingNameForm = document.getElementById("onboarding-name-form");
+export const onboardingNameInput = document.getElementById("onboarding-name-input");
+export const onboardingNameError = document.getElementById("onboarding-name-error");
+export const onboardingOpAddition = document.getElementById("onboarding-op-addition");
+export const onboardingOpSubtraction = document.getElementById("onboarding-op-subtraction");
+export const onboardingOpMultiplication = document.getElementById("onboarding-op-multiplication");
+export const onboardingOpDivision = document.getElementById("onboarding-op-division");
+
 // --- UI Functions ---
 
 export function showScreen(screenId, isModal = false) {
+  // Blur any focused element to avoid aria-hidden warnings
+  if (document.activeElement && typeof document.activeElement.blur === 'function') {
+    try { document.activeElement.blur(); } catch {}
+  }
+
   allScreens.forEach(screen => {
     screen.classList.add("hidden");
     screen.setAttribute("aria-hidden", "true");
-    screen.inert = true;
+    // Ensure inert is applied as an attribute for consistent behavior
+    try { screen.setAttribute("inert", ""); } catch {}
   });
 
   const targetScreen = document.getElementById(screenId);
   if (targetScreen) {
     targetScreen.classList.remove("hidden");
     targetScreen.setAttribute("aria-hidden", "false");
-    targetScreen.inert = false;
+    // Remove inert attribute explicitly to restore interactivity
+    try { targetScreen.removeAttribute("inert"); } catch {}
+
+    // Focus first focusable element for accessibility
+    const focusable = targetScreen.querySelector(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable && typeof focusable.focus === 'function') {
+      try { focusable.focus(); } catch {}
+    }
   }
 
   if (isModal) {
     document.body.classList.add("modal-open");
-    if(mainMenuScreen) mainMenuScreen.inert = true;
-    if(gameScreen) gameScreen.inert = true;
+    if(mainMenuScreen) {
+      try { mainMenuScreen.setAttribute("inert", ""); } catch {}
+    }
+    if(gameScreen) {
+      try { gameScreen.setAttribute("inert", ""); } catch {}
+    }
   } else {
     document.body.classList.remove("modal-open");
+    if(mainMenuScreen) {
+      try { mainMenuScreen.removeAttribute("inert"); } catch {}
+    }
+    if(gameScreen) {
+      try { gameScreen.removeAttribute("inert"); } catch {}
+    }
   }
 
   setCurrentModalId(isModal ? screenId : null);
@@ -200,11 +239,13 @@ export function renderQuickUseButtons(items, inventoryLookup, onClick) {
   quickUseBar.innerHTML = "";
   items.forEach(item => {
     const count = inventoryLookup(item.id) || 0;
+    // Hide buttons for items with 0 count instead of showing disabled
+    if (count === 0) return;
+    
     const btn = document.createElement("button");
     btn.className = "item-button";
     btn.dataset.itemId = item.id;
     btn.type = "button";
-    btn.disabled = count === 0;
     btn.setAttribute("aria-label", `${item.name}, ${count} available`);
     btn.innerHTML = `<span class="icon">${item.icon}</span><span class="label">${item.name}</span><span class="count">(${count})</span>`;
     btn.addEventListener("click", () => onClick && onClick(item.id));
@@ -216,9 +257,13 @@ export function updateQuickUseCount(itemId, count) {
   if (!quickUseBar) return;
   const btn = quickUseBar.querySelector(`[data-item-id="${itemId}"]`);
   if (btn) {
-    const countEl = btn.querySelector(".count");
-    if (countEl) countEl.textContent = `(${count})`;
-    btn.disabled = count === 0;
+    if (count === 0) {
+      // Hide button when count reaches 0
+      btn.remove();
+    } else {
+      const countEl = btn.querySelector(".count");
+      if (countEl) countEl.textContent = `(${count})`;
+    }
   }
 }
 
@@ -276,4 +321,189 @@ export function triggerRedFlash() {
   setTimeout(() => {
     flash.remove();
   }, 600);
+}
+
+// --- Achievement Popup System ---
+
+/**
+ * Animate Gabriel's celebration when achievement is unlocked
+ * Cycles through sprite frames: idle -> running -> fast -> running -> idle
+ * Duration: ~500ms per frame × 2 complete cycles = ~5 seconds
+ */
+export function playGabrielCelebration() {
+  if (!gabrielSprite) return;
+
+  const frames = ['idle', 'running', 'fast', 'running'];
+  const frameDuration = 500; // ms per frame
+  let frameIndex = 0;
+  let cycleCount = 0;
+
+  const frameInterval = setInterval(() => {
+    gabrielSprite.classList.remove('idle', 'running', 'fast');
+    gabrielSprite.classList.add(frames[frameIndex]);
+
+    frameIndex = (frameIndex + 1) % frames.length;
+
+    // After completing both cycles (8 frames), stop
+    if (frameIndex === 0) {
+      cycleCount++;
+      if (cycleCount >= 2) {
+        clearInterval(frameInterval);
+        gabrielSprite.classList.remove('idle', 'running', 'fast');
+        gabrielSprite.classList.add('idle'); // Return to idle
+      }
+    }
+  }, frameDuration);
+}
+
+/**
+ * Display achievement unlock popup
+ * @param {Object} achievement - Achievement object {id, title, description, reward}
+ * @param {Function} onClose - Callback when popup is dismissed
+ */
+export function showAchievementPopup(achievement, onClose = null) {
+  const popupId = `achievement-popup-${Date.now()}`;
+  
+  const popup = document.createElement('div');
+  popup.className = 'achievement-popup-overlay';
+  popup.id = popupId;
+  popup.setAttribute('role', 'dialog');
+  popup.setAttribute('aria-modal', 'true');
+  popup.setAttribute('aria-label', `Achievement Unlocked: ${achievement.title}`);
+
+  const content = document.createElement('div');
+  content.className = 'achievement-popup-content';
+
+  let rewardHTML = '';
+  if (achievement.reward) {
+    rewardHTML = `<div class="achievement-reward">+${achievement.reward} Sparks</div>`;
+  }
+
+  content.innerHTML = `
+    <div class="achievement-popup-header">
+      <h2>🏆 Achievement Unlocked!</h2>
+    </div>
+    <div class="achievement-popup-body">
+      <div class="gabriel-celebration" id="gabriel-celebration"></div>
+      <h3>${achievement.title}</h3>
+      <p>${achievement.description}</p>
+      ${rewardHTML}
+    </div>
+    <div class="achievement-popup-footer">
+      <button class="achievement-close-btn" aria-label="Close achievement popup">Continue</button>
+    </div>
+  `;
+
+  popup.appendChild(content);
+  document.body.appendChild(popup);
+
+  // Play celebration animation
+  playGabrielCelebration();
+
+  // Add announcement for screen readers
+  const liveRegion = document.getElementById('achievement-live-region') || createLiveRegion();
+  liveRegion.textContent = `Achievement unlocked: ${achievement.title}. ${achievement.description}`;
+  if (achievement.reward) {
+    liveRegion.textContent += ` Earned ${achievement.reward} Sparks.`;
+  }
+
+  // Close button handler
+  const closeBtn = content.querySelector('.achievement-close-btn');
+  const handleClose = () => {
+    popup.remove();
+    if (onClose) onClose();
+  };
+
+  closeBtn.addEventListener('click', handleClose);
+  closeBtn.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      handleClose();
+    }
+  });
+
+  // Trap focus within popup (WCAG keyboard accessibility)
+  popup.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') {
+      // Only the close button is focusable, so Tab/Shift+Tab keeps focus on it
+      e.preventDefault();
+      closeBtn.focus();
+    }
+  });
+
+  // Auto-close after 5 seconds if not dismissed
+  setTimeout(handleClose, 5000);
+
+  closeBtn.focus();
+}
+
+/**
+ * Display tutorial phase callout/instruction
+ * @param {Object} phase - Tutorial phase object
+ */
+export function displayTutorialPhaseCallout(phase) {
+  if (!phase) return;
+
+  const overlay = document.createElement("div");
+  overlay.className = "popup-overlay";
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-modal", "true");
+  overlay.setAttribute("aria-labelledby", "tutorial-callout-title");
+  overlay.style.cssText = "display: flex; align-items: center; justify-content: center; z-index: 1000;";
+
+  overlay.innerHTML = `
+    <div class="popup-content" style="max-width: 500px;">
+      <h2 id="tutorial-callout-title" style="color: #4ecdc4; margin-top: 0;">${phase.title}</h2>
+      <p>${phase.description}</p>
+      <div style="background: rgba(78, 205, 196, 0.15); border: 2px solid #4ecdc4; border-radius: 8px; padding: 1rem; margin: 1.5rem 0;">
+        <p style="margin: 0; font-size: 1.1rem; font-weight: 500;">📚 ${phase.callout}</p>
+      </div>
+      <button id="tutorial-callout-close" class="popup-button primary" style="width: 100%;">Got it! →</button>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  const closeBtn = document.getElementById("tutorial-callout-close");
+  const handleClose = () => {
+    overlay.remove();
+  };
+
+  closeBtn.addEventListener("click", handleClose);
+  closeBtn.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" || e.key === "Enter") {
+      e.preventDefault();
+      handleClose();
+    }
+  });
+
+  closeBtn.focus();
+
+  // Auto-close after 8 seconds
+  setTimeout(handleClose, 8000);
+}
+
+/**
+ * Create ARIA live region for achievement announcements
+ */
+export function createLiveRegion() {
+  let region = document.getElementById('achievement-live-region');
+  if (!region) {
+    region = document.createElement('div');
+    region.id = 'achievement-live-region';
+    region.setAttribute('aria-live', 'polite');
+    region.setAttribute('aria-atomic', 'true');
+    region.className = 'sr-only';
+    document.body.appendChild(region);
+  }
+  return region;
+}
+
+/**
+ * Announce achievement during gameplay via ARIA live region (non-intrusive)
+ * @param {string} message - Message to announce
+ */
+export function announceAchievementDuringGameplay(message) {
+  const liveRegion = document.getElementById('achievement-live-region') || createLiveRegion();
+  liveRegion.textContent = message;
 }

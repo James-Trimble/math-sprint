@@ -595,3 +595,348 @@ body.high-contrast .audio-loading-banner p {
   bottom: 0;
   z-index: 9999;
 }
+
+/* --- Shop Tabs --- */
+.shop-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.shop-tab-btn {
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  background: var(--shadow-color);
+  color: var(--text-color);
+  border: 2px solid transparent;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.shop-tab-btn[aria-selected="true"] {
+  background: var(--primary-color);
+  color: var(--primary-text);
+  border-color: var(--primary-color);
+  font-weight: bold;
+}
+
+.shop-tab-btn:focus {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+body.high-contrast .shop-tab-btn {
+  border: 2px solid var(--border-light);
+}
+
+body.high-contrast .shop-tab-btn[aria-selected="true"] {
+  background: yellow;
+  color: black;
+  border-color: yellow;
+}
+
+/* --- Achievements --- */
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.achievement-card {
+  background: var(--shadow-color);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 2px solid var(--border-light);
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.achievement-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.achievement-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.achievement-card h3 {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  color: var(--primary-color);
+}
+
+body.high-contrast .achievement-card h3 {
+  color: yellow;
+}
+
+.achievement-description {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0.5rem 0;
+}
+
+body.high-contrast .achievement-description {
+  color: #ccc;
+}
+
+.achievement-reward {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #ffab00;
+  margin-top: 0.5rem;
+}
+
+body.high-contrast .achievement-reward {
+  color: #ffeb3b;
+}
+
+.achievements-secret-btn {
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  background: rgba(0, 123, 255, 0.1);
+  color: var(--primary-color);
+  border: 1px dashed var(--primary-color);
+}
+
+body.high-contrast .achievements-secret-btn {
+  background: rgba(255, 255, 0, 0.1);
+  color: yellow;
+  border-color: yellow;
+}
+
+/* --- Achievement Popup --- */
+.achievement-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.achievement-popup-content {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.achievement-popup-header {
+  margin-bottom: 1rem;
+}
+
+.achievement-popup-header h2 {
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 1.5rem;
+}
+
+body.high-contrast .achievement-popup-header h2 {
+  color: yellow;
+}
+
+.gabriel-celebration {
+  font-size: 3rem;
+  margin: 1rem 0;
+  animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.achievement-popup-body h3 {
+  margin: 0.5rem 0;
+  color: var(--text-color);
+  font-size: 1.3rem;
+}
+
+.achievement-popup-body p {
+  margin: 0.5rem 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+body.high-contrast .achievement-popup-body p {
+  color: #ccc;
+}
+
+.achievement-popup-footer {
+  margin-top: 1.5rem;
+}
+
+.achievement-close-btn {
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  background: var(--primary-color);
+  color: var(--primary-text);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: auto;
+  display: inline-block;
+}
+
+.achievement-close-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+body.high-contrast .achievement-close-btn {
+  background: yellow;
+  color: black;
+}
+
+/* --- Onboarding Screens --- */
+.onboarding-content {
+  text-align: left;
+}
+
+.onboarding-content h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.onboarding-content p {
+  text-align: center;
+  color: #aaa;
+  line-height: 1.6;
+}
+
+.onboarding-content form {
+  margin: 1.5rem 0;
+}
+
+.onboarding-content label {
+  display: block;
+  margin: 0.75rem 0 0.5rem 0;
+  font-weight: 600;
+  color: #fff;
+}
+
+.onboarding-content input[type="text"],
+.onboarding-content input[type="email"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #4ecdc4;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #222;
+  color: #fff;
+  transition: border-color 0.2s;
+}
+
+.onboarding-content input:focus {
+  outline: none;
+  border-color: #00d4ff;
+  box-shadow: 0 0 8px rgba(78, 205, 196, 0.3);
+}
+
+body.high-contrast .onboarding-content input[type="text"],
+body.high-contrast .onboarding-content input[type="email"] {
+  border-color: yellow;
+  background: #000;
+}
+
+.onboarding-content small {
+  display: block;
+  margin-top: 0.5rem;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.popup-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.popup-button {
+  flex: 1;
+  min-width: 150px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border: 2px solid #4ecdc4;
+  background: transparent;
+  color: #4ecdc4;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.popup-button:hover {
+  background: rgba(78, 205, 196, 0.1);
+  transform: translateY(-2px);
+}
+
+.popup-button.primary {
+  background: linear-gradient(135deg, #4ecdc4, #00d4ff);
+  color: #000;
+  border-color: transparent;
+}
+
+.popup-button.primary:hover {
+  box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+}
+
+body.high-contrast .popup-button {
+  border-color: yellow;
+  color: yellow;
+}
+
+body.high-contrast .popup-button:hover {
+  background: rgba(255, 255, 0, 0.2);
+}
+
+body.high-contrast .popup-button.primary {
+  background: yellow;
+  color: black;
+}
