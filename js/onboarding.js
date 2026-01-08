@@ -1,34 +1,16 @@
 /**
  * Onboarding System
- * Manages first-run experience for new players and confirm flow for alpha testers
+ * Manages first-run experience for new players
  */
 
 import * as state from './state.js';
 
 const onboardingModule = (() => {
-  let currentStep = 1; // 1, 2, 3 for new players; 'confirm' for alpha testers
-  let isAlphaTester = false;
+  let currentStep = 1; // 1, 2, or 3 for all players
   let onboardingData = {
     playerName: '',
     settings: {}
   };
-
-  /**
-   * Check if player is an alpha tester (has any mathSprint data)
-   * @returns {boolean}
-   */
-  function detectAlphaTester() {
-    const alphaTesterKeys = [
-      'mathSprintHighScore',
-      'mathSprintHighScoreEndless',
-      'mathSprintHighScoreSurvival',
-      'mathSprintSparks',
-      'mathSprintInventoryV1',
-      'mathSprintSettings',
-      'mathSprintGamesCompleted'
-    ];
-    return alphaTesterKeys.some(key => localStorage.getItem(key));
-  }
 
   /**
    * Check if onboarding has been completed
@@ -47,32 +29,17 @@ const onboardingModule = (() => {
 
   /**
    * Start onboarding flow
-   * For new players: full 3-step flow
-   * For alpha testers: simplified confirm flow
+   * Full 3-step flow for all new players
    */
   function start() {
-    isAlphaTester = detectAlphaTester();
-    
-    if (isAlphaTester) {
-      currentStep = 'confirm';
-      // Pre-populate name if available
-      state.loadSettings();
-      onboardingData.playerName = state.settings.playerName || '';
-    } else {
-      currentStep = 1;
-      onboardingData.playerName = '';
-    }
+    currentStep = 1;
+    onboardingData.playerName = '';
   }
 
   /**
    * Advance to next step
    */
   function nextStep() {
-    if (isAlphaTester && currentStep === 'confirm') {
-      currentStep = 'complete';
-      return;
-    }
-
     if (currentStep < 3) {
       currentStep++;
     } else if (currentStep === 3) {
@@ -82,7 +49,7 @@ const onboardingModule = (() => {
 
   /**
    * Get current step
-   * @returns {number|string} 1, 2, 3, 'confirm', or 'complete'
+   * @returns {number|string} 1, 2, 3, or 'complete'
    */
   function getCurrentStep() {
     return currentStep;
@@ -140,16 +107,7 @@ const onboardingModule = (() => {
     currentStep = 'complete';
   }
 
-  /**
-   * Check if alpha tester (used to determine flow)
-   * @returns {boolean}
-   */
-  function getIsAlphaTester() {
-    return isAlphaTester;
-  }
-
   return {
-    detectAlphaTester,
     isOnboardingComplete,
     markOnboardingComplete,
     start,
@@ -160,8 +118,7 @@ const onboardingModule = (() => {
     getData,
     saveSettings,
     saveName,
-    complete,
-    getIsAlphaTester
+    complete
   };
 })();
 

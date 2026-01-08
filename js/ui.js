@@ -155,6 +155,40 @@ export function applySeasonalVisuals(isWinter, isChristmas) {
   }
 }
 
+/**
+ * Show audio error banner on main menu if audio tracks failed to load
+ * Auto-dismisses after 8 seconds with manual close option
+ */
+export function showAudioErrorBanner() {
+  const banner = document.getElementById("audio-error-banner");
+  const closeBtn = document.getElementById("audio-error-close");
+  
+  if (!banner) return;
+  
+  // Show the banner
+  banner.classList.add("visible");
+  
+  // Auto-dismiss after 8 seconds
+  const autoDismissTimer = setTimeout(() => {
+    hiddenAudioErrorBanner();
+  }, 8000);
+  
+  // Manual close button
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      clearTimeout(autoDismissTimer);
+      hiddenAudioErrorBanner();
+    }, { once: true });
+  }
+}
+
+export function hiddenAudioErrorBanner() {
+  const banner = document.getElementById("audio-error-banner");
+  if (banner) {
+    banner.classList.remove("visible");
+  }
+}
+
 // Overdrive Visuals
 export function toggleOverdriveVisuals(isActive) {
     if (isActive) {

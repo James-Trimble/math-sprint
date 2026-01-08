@@ -31,28 +31,50 @@
   <h1 id="main-menu-heading">Main Menu</h1>
   <div id="welcome-message" style="text-align: center; margin-bottom: 1.5rem; font-size: 1.1rem; color: #4ecdc4;"></div>
   
-  <button id="sprint-mode-btn" aria-label="Sprint Mode - 60 seconds">
-    Sprint Mode
-    <span class="btn-subtitle">(60 Seconds)</span>
-  </button>
+  <div id="audio-error-banner" class="hidden audio-error-banner" role="alert" aria-live="polite" aria-labelledby="audio-error-title">
+    <div class="audio-error-content">
+      <h3 id="audio-error-title">Audio Loading Issue</h3>
+      <p>Some audio tracks failed to load. Music and sounds may be unavailable.</p>
+      <button id="audio-error-close" class="audio-error-close" aria-label="Dismiss audio error message">×</button>
+    </div>
+  </div>
   
-  <button id="endless-mode-btn" aria-label="Endless Mode - 3 strikes">
-    Endless Mode
-    <span class="btn-subtitle">(3 Strikes)</span>
-  </button>
-
-  <button id="survival-mode-btn" aria-label="Survival Mode - Danger zone" style="border: 2px solid #d32f2f; color: #d32f2f;">
-    Survival Mode
-    <span class="btn-subtitle">(Danger!)</span>
-  </button>
-
-  <button id="daily-challenge-btn" aria-label="Daily Challenge - New challenge every day">
-    Daily Challenge 🎯
-    <span class="btn-subtitle">(New Daily)</span>
+  <button id="play-now-btn" class="play-now-button" aria-label="Play Now - Start a game">
+    Play Now
   </button>
   
   <button id="shop-btn" aria-label="Shop - Buy items with sparks">The Shop ⚡</button>
   <button id="achievements-btn" aria-label="Achievements - View your unlocked achievements">Achievements 🏆</button>
+  <button id="tutorial-btn" aria-label="Tutorial - Learn how to play">Tutorial 📚</button>
+  <button id="settings-btn" aria-label="Settings - Adjust audio, gameplay, and accessibility options">Settings</button>
+</main>
+
+<dialog id="mode-selection-screen" class="mode-selection-modal" role="dialog" aria-modal="true" aria-labelledby="mode-selection-heading">
+  <div class="mode-selection-content">
+    <button id="mode-selection-close" class="mode-selection-close" aria-label="Close mode selection">×</button>
+    <h2 id="mode-selection-heading">Choose Your Mode</h2>
+    
+    <button id="sprint-mode-btn" class="mode-button" aria-label="Sprint Mode - 60 seconds">
+      Sprint Mode
+      <span class="mode-subtitle">(60 Seconds)</span>
+    </button>
+    
+    <button id="endless-mode-btn" class="mode-button" aria-label="Endless Mode - 3 strikes">
+      Endless Mode
+      <span class="mode-subtitle">(3 Strikes)</span>
+    </button>
+
+    <button id="survival-mode-btn" class="mode-button danger" aria-label="Survival Mode - Danger zone">
+      Survival Mode
+      <span class="mode-subtitle">(Danger!)</span>
+    </button>
+
+    <button id="daily-challenge-btn" class="mode-button" aria-label="Daily Challenge - New challenge every day">
+      Daily Challenge
+      <span class="mode-subtitle">(New Daily)</span>
+    </button>
+  </div>
+</dialog>
   <button id="tutorial-btn" aria-label="Tutorial - Learn how to play">Tutorial 📚</button>
   <button id="settings-btn" aria-label="Settings - Adjust audio, gameplay, and accessibility options">Settings</button>
 </main>

@@ -1,9 +1,11 @@
 /**
  * Message of the Day (MOTD) System
- * Displays important announcements to players on app load
+ * Displays important announcements to players as a modal gate after logo
+ * Uses hybrid storage: localStorage for permanent dismissal, sessionStorage for single-show-per-session
  */
 
 const STORAGE_KEY = 'mathSprintDismissedMOTDs';
+const SESSION_SHOWN_KEY = 'mathSprintMOTDShownThisSession';
 const MAX_DISMISSED_HISTORY = 50;
 
 /**
@@ -23,7 +25,7 @@ async function fetchMOTD() {
 }
 
 /**
- * Check if MOTD has been dismissed
+ * Check if MOTD has been permanently dismissed
  * @param {string} id - MOTD identifier
  * @returns {boolean} True if already dismissed
  */
@@ -37,13 +39,45 @@ function isDismissed(id) {
 }
 
 /**
- * Mark MOTD as dismissed
+ * Check if MOTD was already shown this session
+ * @param {string} id - MOTD identifier
+ * @returns {boolean}
+ */
+function wasShownThisSession(id) {
+  try {
+    const shown = JSON.parse(sessionStorage.getItem(SESSION_SHOWN_KEY) || '[]');
+    return shown.includes(id);
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * Mark MOTD as shown this session
+ * @param {string} id - MOTD identifier
+ */
+function markShownThisSession(id) {
+  try {
+    let shown = JSON.parse(sessionStorage.getItem(SESSION_SHOWN_KEY) || '[]');
+    if (!shown.includes(id)) {
+      shown.push(id);
+      sessionStorage.setItem(SESSION_SHOWN_KEY, JSON.stringify(shown));
+    }
+  } catch (error) {
+    console.warn('Failed to track session MOTD:', error);
+  }
+}
+
+/**
+ * Mark MOTD as permanently dismissed
  * @param {string} id - MOTD identifier
  */
 function markDismissed(id) {
   try {
     let dismissed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    dismissed.push(id);
+    if (!dismissed.includes(id)) {
+      dismissed.push(id);
+    }
     
     // Keep only the last N dismissed IDs to avoid storage bloat
     if (dismissed.length > MAX_DISMISSED_HISTORY) {
@@ -99,64 +133,91 @@ function formatMessage(text) {
 }
 
 /**
- * Create and display MOTD modal
+ * Create and display MOTD modal - returns Promise that resolves when dismissed
  * @param {Object} motd - MOTD data
+ * @returns {Promise<void>}
  */
 function displayMOTD(motd) {
-  const dialog = document.getElementById('motd-dialog');
-  if (!dialog) return;
-  
-  const titleEl = document.getElementById('motd-title');
-  const messageEl = document.getElementById('motd-message');
-  const closeBtn = document.getElementById('motd-close-btn');
-  const dismissBtn = document.getElementById('motd-dismiss-btn');
-  
-  // Set content
-  if (titleEl) titleEl.textContent = motd.title || 'Announcement';
-  if (messageEl) messageEl.innerHTML = formatMessage(motd.message);
-  
-  // Show modal with slight delay for smooth UX
-  setTimeout(() => {
-    dialog.showModal();
-    
-    // Focus the dismiss button for keyboard accessibility
-    if (dismissBtn) dismissBtn.focus();
-    
-    // Announce to screen readers
-    const announcement = document.createElement('div');
-    announcement.setAttribute('role', 'status');
-    announcement.setAttribute('aria-live', 'polite');
-    announcement.className = 'sr-only';
-    announcement.textContent = `Announcement: ${motd.title}`;
-    document.body.appendChild(announcement);
-    setTimeout(() => announcement.remove(), 1000);
-  }, 500);
-  
-  // Handle dismiss
-  const handleDismiss = () => {
-    markDismissed(motd.id);
-    dialog.close();
-  };
-  
-  // Event listeners
-  if (closeBtn) {
-    closeBtn.addEventListener('click', handleDismiss, { once: true });
-  }
-  if (dismissBtn) {
-    dismissBtn.addEventListener('click', handleDismiss, { once: true });
-  }
-  
-  // Escape key handler (dialog handles this natively, but we'll track dismissal)
-  dialog.addEventListener('close', () => {
-    if (!isDismissed(motd.id)) {
-      markDismissed(motd.id);
+  return new Promise((resolve) => {
+    const dialog = document.getElementById('motd-dialog');
+    if (!dialog) {
+      resolve();
+      return;
     }
-  }, { once: true });
+    
+    const titleEl = document.getElementById('motd-title');
+    const messageEl = document.getElementById('motd-message');
+    const closeBtn = document.getElementById('motd-close-btn');
+    const dismissBtn = document.getElementById('motd-dismiss-btn');
+    
+    // Set content
+    if (titleEl) titleEl.textContent = motd.title || 'Announcement';
+    if (messageEl) messageEl.innerHTML = formatMessage(motd.message);
+    
+    // Set ARIA attributes for accessibility
+    dialog.setAttribute('aria-labelledby', 'motd-title');
+    dialog.setAttribute('aria-describedby', 'motd-message');
+    
+    // Show modal with slight delay for smooth UX
+    setTimeout(() => {
+      dialog.showModal();
+      
+      // Focus the dismiss button for keyboard accessibility
+      if (dismissBtn) dismissBtn.focus();
+      
+      // Announce to screen readers
+      const announcement = document.createElement('div');
+      announcement.setAttribute('role', 'status');
+      announcement.setAttribute('aria-live', 'polite');
+      announcement.className = 'sr-only';
+      announcement.textContent = `Announcement: ${motd.title}`;
+      document.body.appendChild(announcement);
+      setTimeout(() => announcement.remove(), 1000);
+    }, 100);
+    
+    // Handle dismiss
+    const handleDismiss = () => {
+      markDismissed(motd.id);
+      markShownThisSession(motd.id);
+      dialog.close();
+      resolve();
+    };
+    
+    // Event listeners (ensure they're only attached once)
+    const wrappedClose = () => {
+      closeBtn.removeEventListener('click', wrappedClose);
+      dismissBtn.removeEventListener('click', wrappedDismiss);
+      dialog.removeEventListener('close', wrappedDialogClose);
+      handleDismiss();
+    };
+    
+    const wrappedDismiss = () => {
+      closeBtn.removeEventListener('click', wrappedClose);
+      dismissBtn.removeEventListener('click', wrappedDismiss);
+      dialog.removeEventListener('close', wrappedDialogClose);
+      handleDismiss();
+    };
+    
+    const wrappedDialogClose = () => {
+      closeBtn.removeEventListener('click', wrappedClose);
+      dismissBtn.removeEventListener('click', wrappedDismiss);
+      dialog.removeEventListener('close', wrappedDialogClose);
+      if (!isDismissed(motd.id)) {
+        markDismissed(motd.id);
+      }
+      resolve();
+    };
+    
+    if (closeBtn) closeBtn.addEventListener('click', wrappedClose);
+    if (dismissBtn) dismissBtn.addEventListener('click', wrappedDismiss);
+    dialog.addEventListener('close', wrappedDialogClose);
+  });
 }
 
 /**
  * Initialize MOTD system
  * Fetches and displays MOTD if applicable
+ * Returns a Promise that resolves when MOTD is dismissed
  */
 export async function initMOTD() {
   const motd = await fetchMOTD();
@@ -165,7 +226,12 @@ export async function initMOTD() {
     return; // No MOTD available
   }
   
-  // Check if already dismissed
+  // Check if already shown this session (hybrid storage)
+  if (wasShownThisSession(motd.id)) {
+    return;
+  }
+  
+  // Check if permanently dismissed
   if (isDismissed(motd.id)) {
     return;
   }
@@ -175,14 +241,10 @@ export async function initMOTD() {
     return;
   }
   
-  // Check dismissible flag
-  if (motd.dismissible === false) {
-    // Force display even if dismissed (use sparingly)
-  }
-  
-  // Display the MOTD
-  displayMOTD(motd);
+  // Display the MOTD and wait for dismissal
+  await displayMOTD(motd);
 }
 
 // Make available globally for manual testing
 window.motdModule = { initMOTD, fetchMOTD };
+

@@ -28,10 +28,55 @@ export function initializeListeners() {
  * Main menu navigation buttons
  */
 function setupMainMenuListeners() {
-  // Game mode buttons
-  ui.sprintModeBtn.addEventListener("click", () => startGame('sprint'));
-  ui.endlessModeBtn.addEventListener("click", () => startGame('endless'));
-  ui.survivalModeBtn.addEventListener("click", () => startGame('survival'));
+  // Play Now button - opens mode selection modal
+  const playNowBtn = document.getElementById("play-now-btn");
+  const modeSelectionScreen = document.getElementById("mode-selection-screen");
+  const modeSelectionClose = document.getElementById("mode-selection-close");
+  
+  if (playNowBtn && modeSelectionScreen) {
+    playNowBtn.addEventListener("click", () => {
+      audio.playUIClickSound();
+      modeSelectionScreen.showModal();
+      // Focus the first mode button for accessibility
+      const firstModeBtn = modeSelectionScreen.querySelector(".mode-button");
+      if (firstModeBtn) firstModeBtn.focus();
+    });
+  }
+  
+  // Mode selection close button and backdrop
+  if (modeSelectionClose && modeSelectionScreen) {
+    modeSelectionClose.addEventListener("click", () => {
+      audio.playUIClickSound();
+      modeSelectionScreen.close();
+    });
+  }
+  
+  // Close modal when clicking backdrop (outside the dialog content)
+  if (modeSelectionScreen) {
+    modeSelectionScreen.addEventListener("click", (e) => {
+      if (e.target === modeSelectionScreen) {
+        audio.playUIClickSound();
+        modeSelectionScreen.close();
+      }
+    });
+  }
+  
+  // Game mode buttons (now inside the modal)
+  ui.sprintModeBtn.addEventListener("click", () => {
+    audio.playUIClickSound();
+    modeSelectionScreen?.close();
+    startGame('sprint');
+  });
+  ui.endlessModeBtn.addEventListener("click", () => {
+    audio.playUIClickSound();
+    modeSelectionScreen?.close();
+    startGame('endless');
+  });
+  ui.survivalModeBtn.addEventListener("click", () => {
+    audio.playUIClickSound();
+    modeSelectionScreen?.close();
+    startGame('survival');
+  });
 
   // Daily Challenge
   const dailyChallengeBtn = document.getElementById("daily-challenge-btn");
@@ -40,9 +85,9 @@ function setupMainMenuListeners() {
     const updateDailyChallengeButton = () => {
       if (typeof window.dailyChallengeModule !== 'undefined' && window.dailyChallengeModule.hasPlayedToday()) {
         const timeUntil = window.dailyChallengeModule.getTimeUntilNext();
-        dailyChallengeBtn.innerHTML = `Daily Challenge 🎯<span class="btn-subtitle">Next in ${timeUntil}</span>`;
+        dailyChallengeBtn.innerHTML = `Daily Challenge<span class="mode-subtitle">Next in ${timeUntil}</span>`;
       } else {
-        dailyChallengeBtn.innerHTML = `Daily Challenge 🎯<span class="btn-subtitle">New challenge every day</span>`;
+        dailyChallengeBtn.innerHTML = `Daily Challenge<span class="mode-subtitle">New challenge every day</span>`;
       }
     };
     
@@ -66,6 +111,8 @@ function setupMainMenuListeners() {
         window.dailyChallengeModule.start();
         localStorage.setItem('mathSprintDailyChallengeLastPlayed', today);
       }
+      audio.playUIClickSound();
+      modeSelectionScreen?.close();
       startGame('daily-challenge');
     });
   }
