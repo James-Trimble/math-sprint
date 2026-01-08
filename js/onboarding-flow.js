@@ -108,14 +108,18 @@ export function showOnboardingStep3() {
   const handleStep3StartTutorial = () => {
     completeOnboarding();
     setTimeout(() => {
-      audio.stopAllMusic(state.tensionLoop);
+      // Fade out onboarding/main menu music before starting tutorial
+      audio.fadeOutOnboarding();
       if (audio.backgroundMusicMainMenu?.state === 'started') {
         audio.backgroundMusicMainMenu.stop();
       }
       if (typeof window.tutorialModule !== 'undefined') {
         window.tutorialModule.reset();
         window.tutorialModule.start();
-        audio.playTutorialMusic();
+        // Wait briefly for fade to complete before starting tutorial music
+        setTimeout(() => {
+          audio.playTutorialMusic();
+        }, 550);
         const phase = window.tutorialModule.getCurrentPhase();
         const progress = window.tutorialModule.getProgress();
         tutorialUI.displayTutorialPhase(phase, window.tutorialModule.getPhaseIndex(), progress.total);
@@ -129,7 +133,14 @@ export function showOnboardingStep3() {
 }
 
 export function completeOnboarding() {
-  audio.stopAllMusic(state.tensionLoop);
+  // Fade out onboarding music before stopping all music
+  audio.fadeOutOnboarding();
+  
+  // Stop other music after a brief delay to let fade complete
+  setTimeout(() => {
+    audio.stopAllMusic(state.tensionLoop);
+  }, 550);
+
   window.onboardingModule.complete();
 
   if (typeof window.gameModule !== 'undefined' && typeof window.achievementsModule !== 'undefined') {

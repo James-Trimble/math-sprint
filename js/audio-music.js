@@ -8,10 +8,11 @@ import { settings, setTensionLoop } from './state.js';
 // --- Audio Loading State ---
 let audioLoadedCount = 0;
 const MIN_LOAD_THRESHOLD = 10;
-const AUDIO_LOAD_TIMEOUT = 10000; // 10 seconds
+const AUDIO_LOAD_TIMEOUT = 10000; // 10 seconds (removed: timeout fallback)
 let audioTimeoutTriggered = false;
 let audioLoadError = false;
 let audioLoadTimeoutId = null;
+let audioFailedCount = 0;
 
 export const onAudioLoaded = () => {
   audioLoadedCount++;
@@ -33,8 +34,9 @@ export const onAudioLoaded = () => {
 
 export const onAudioError = () => {
   audioLoadError = true;
+  audioFailedCount++;
   audioLoadedCount++;
-  console.log(`Audio error/loaded: ${audioLoadedCount}/${MIN_LOAD_THRESHOLD}`);
+  console.log(`Audio error: ${audioLoadedCount}/${MIN_LOAD_THRESHOLD}, Failed: ${audioFailedCount}`);
   if (audioLoadedCount >= MIN_LOAD_THRESHOLD) {
     clearTimeout(audioLoadTimeoutId);
     const btn = document.getElementById("begin-btn");
@@ -72,6 +74,10 @@ export function isAudioReady() {
 
 export function isAudioTimeoutTriggered() {
   return audioTimeoutTriggered;
+}
+
+export function hasAudioErrors() {
+  return audioFailedCount > 0;
 }
 
 function showAudioLoadingFallback() {
@@ -242,6 +248,24 @@ export function playOnboardingMusic() {
              if (backgroundMusicOnboarding.loaded) backgroundMusicOnboarding.start();
         }, 1000);
     }
+}
+
+/**
+ * Fade out onboarding music before transitioning to main menu
+ * Prevents overlap and provides smooth audio transition
+ */
+export function fadeOutOnboarding() {
+  if (backgroundMusicOnboarding.state === "started") {
+    // Fade out over 500ms
+    const volToDb = (vol) => (vol == 0 ? -Infinity : (vol - 100) * 0.4);
+    const targetVol = volToDb(0);
+    backgroundMusicOnboarding.volume.rampTo(targetVol, 0.5);
+    
+    // Stop after fade completes
+    setTimeout(() => {
+      backgroundMusicOnboarding.stop();
+    }, 500);
+  }
 }
 
 export function playTutorialMusic() {
