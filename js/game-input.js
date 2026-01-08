@@ -68,6 +68,11 @@ export function handleAnswerSubmit() {
 
   // === Answer Processing ===
   
+  // Easter egg: Answer is 42
+  if (userAnswer === 42 && state.currentAnswer === 42) {
+    checkAndUnlockAchievement('answerIs42');
+  }
+  
   if (userAnswer === state.currentAnswer) {
     handleCorrectAnswer();
   } else {
@@ -86,6 +91,33 @@ function handleCorrectAnswer() {
   state.setCorrectAnswers(state.correctAnswers + 1);
   state.setConsecutiveMistakes(0);
   ui.updateConsecutiveMistakesDisplay(0);
+  
+  // Track timing for speed demon achievement
+  if (!window.speedDemonTimer) {
+    window.speedDemonTimer = performance.now();
+    window.speedDemonCount = 0;
+  }
+  window.speedDemonCount++;
+  
+  const speedDemonElapsed = (performance.now() - window.speedDemonTimer) / 1000;
+  if (window.speedDemonCount >= 3 && speedDemonElapsed < 5) {
+    checkAndUnlockAchievement('speedDemon');
+  }
+  if (window.speedDemonCount >= 3) {
+    window.speedDemonTimer = performance.now();
+    window.speedDemonCount = 0;
+  }
+  
+  // Track triple-digit problems for calculator brain
+  const problemContainsTripleDigit = /\d{3}/.test(state.currentProblemString);
+  if (problemContainsTripleDigit) {
+    window.tripleDigitStreak = (window.tripleDigitStreak || 0) + 1;
+    if (window.tripleDigitStreak >= 3) {
+      checkAndUnlockAchievement('calculatorBrain');
+    }
+  } else {
+    window.tripleDigitStreak = 0;
+  }
   
   if (state.gameMode === 'survival') {
     state.setTimeLeft(state.timeLeft + 5);
@@ -184,6 +216,11 @@ function handleEndlessPenalty() {
     audio.playGabrielSassy();
     state.setConsecutiveMistakes(0);
     ui.updateConsecutiveMistakesDisplay(0);
+    
+    // Track for comeback kid achievement
+    if (state.lives === 1) {
+      window.hadOneLiveLeft = true;
+    }
     
     if (state.lives <= 0) {
       ui.updateFeedbackDisplay("💔 Game Over! No lives remaining", "red");

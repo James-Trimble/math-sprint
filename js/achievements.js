@@ -212,6 +212,50 @@ const achievementsModule = (() => {
       reward: 100,
       category: 'milestone',
       threshold: 4340
+    },
+
+    // Hidden/Fun Easter Eggs
+    answerIs42: {
+      id: 'answerIs42',
+      title: 'Don\'t Panic',
+      description: 'The answer to life, the universe, and everything',
+      reward: 42,
+      category: 'hidden'
+    },
+    perfectTiming: {
+      id: 'perfectTiming',
+      title: 'Down to the Wire',
+      description: 'Finished a Sprint mode game with exactly 0 seconds left',
+      reward: 25,
+      category: 'hidden'
+    },
+    nightOwl: {
+      id: 'nightOwl',
+      title: 'Night Owl',
+      description: 'Played between 2am and 4am',
+      reward: 15,
+      category: 'hidden'
+    },
+    speedDemon: {
+      id: 'speedDemon',
+      title: 'Speed Demon',
+      description: 'Answered 3 problems in under 5 seconds total',
+      reward: 20,
+      category: 'hidden'
+    },
+    calculatorBrain: {
+      id: 'calculatorBrain',
+      title: 'Calculator Brain',
+      description: 'Correctly solved 3 triple-digit problems in a row',
+      reward: 30,
+      category: 'hidden'
+    },
+    comebackKid: {
+      id: 'comebackKid',
+      title: 'Comeback Kid',
+      description: 'Recovered from 1 life remaining to win with all 3 lives',
+      reward: 25,
+      category: 'hidden'
     }
   };
 

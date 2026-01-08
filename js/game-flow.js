@@ -208,6 +208,22 @@ export function gameOver() {
     checkAndUnlockAchievement('quickGameOver');
   }
 
+  // Check for perfect timing achievement (Sprint mode with exactly 0 seconds)
+  if (state.gameMode === 'sprint' && state.timeLeft === 0) {
+    checkAndUnlockAchievement('perfectTiming');
+  }
+
+  // Check for night owl achievement (played between 2am-4am)
+  const currentHour = new Date().getHours();
+  if (currentHour >= 2 && currentHour < 4) {
+    checkAndUnlockAchievement('nightOwl');
+  }
+
+  // Check for comeback kid achievement (endless mode)
+  if (state.gameMode === 'endless' && window.hadOneLiveLeft && state.lives === 3) {
+    checkAndUnlockAchievement('comebackKid');
+  }
+
   // Check for first-game-over achievements per mode
   if (state.gameMode !== 'daily-challenge') {
     const firstGameOverAchievementId = `firstGameOver${state.gameMode.charAt(0).toUpperCase() + state.gameMode.slice(1)}`;
