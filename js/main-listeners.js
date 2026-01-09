@@ -12,7 +12,7 @@ import { startGame, goToMainMenu } from './game-flow.js';
 import { handleAnswerSubmit } from './game-input.js';
 import { displayNextAchievementPopup } from './game-achievements.js';
 import { populateWhatsNew } from './whatsnew-ui.js';
-import { renderAchievementsScreen } from './achievements-ui.js';
+import { renderAchievementsScreen, updateMarketingAchievementLabels } from './achievements-ui.js';
 
 /**
  * Initialize all event listeners
@@ -22,10 +22,28 @@ export function initializeListeners() {
   setupGameplayListeners();
   setupSettingsListeners();
   setupPopupListeners();
+  setupBeforeUnloadHandler();
 
   // Ensure achievements button and marketing labels show current counts on load
   renderAchievementsScreen();
   updateMarketingAchievementLabels();
+}
+
+/**
+ * Setup beforeunload handler for confirm-quit setting
+ */
+function setupBeforeUnloadHandler() {
+  window.addEventListener('beforeunload', (e) => {
+    // Only prompt if game is in progress and setting is enabled
+    const gameScreen = document.getElementById('game-screen');
+    const isGameInProgress = gameScreen && !gameScreen.classList.contains('hidden');
+    
+    if (isGameInProgress && state.settings.confirmQuit !== false) {
+      e.preventDefault();
+      e.returnValue = ''; // Required for Chrome
+      return '';
+    }
+  });
 }
 
 /**
@@ -282,11 +300,13 @@ function setupGameplayListeners() {
   const viewAchievementsGameOverBtn = document.getElementById('view-achievements-game-over-btn');
   if (viewAchievementsGameOverBtn) {
     viewAchievementsGameOverBtn.addEventListener("click", () => {
-      viewAchievementsGameOverBtn.classList.add('hidden');
+      audio.playAchievementUnlockSFX();
       if (window.pendingAchievements && window.pendingAchievements.length > 0) {
-        // Play sound on starting the achievement view flow
-        audio.playAchievementUnlockSFX();
+        // Show pending achievements first
         displayNextAchievementPopup();
+      } else {
+        // Show all achievements
+        renderAchievementsScreen();
       }
     });
   }
@@ -294,11 +314,13 @@ function setupGameplayListeners() {
   const viewAchievementsHighScoreBtn = document.getElementById('view-achievements-high-score-btn');
   if (viewAchievementsHighScoreBtn) {
     viewAchievementsHighScoreBtn.addEventListener("click", () => {
-      viewAchievementsHighScoreBtn.classList.add('hidden');
+      audio.playAchievementUnlockSFX();
       if (window.pendingAchievements && window.pendingAchievements.length > 0) {
-        // Play sound on starting the achievement view flow
-        audio.playAchievementUnlockSFX();
+        // Show pending achievements first
         displayNextAchievementPopup();
+      } else {
+        // Show all achievements
+        renderAchievementsScreen();
       }
     });
   }
@@ -359,6 +381,117 @@ function setupSettingsListeners() {
     });
   });
 
+  // === GENERAL TAB SETTINGS ===
+  
+  // Player name
+  const playerNameInput = document.getElementById('player-name-display');
+  const saveNameBtn = document.getElementById('save-name-btn');
+  if (playerNameInput && saveNameBtn) {
+    saveNameBtn.addEventListener('click', () => {
+      const newName = playerNameInput.value.trim();
+      if (newName) {
+        localStorage.setItem('mathSprintPlayerName', newName);
+        audio.playUIClickSound();
+      }
+    });
+  }
+
+  // Feedback prompts
+  if (ui.enableFeedbackPromptsCheckbox) {
+    ui.enableFeedbackPromptsCheckbox.addEventListener('change', (e) => {
+      state.settings.feedbackPromptsEnabled = e.target.checked;
+      state.saveSettings();
+    });
+  }
+
+  // Show timer during game
+  const showTimerToggle = document.getElementById('show-timer-during-game');
+  if (showTimerToggle) {
+    showTimerToggle.addEventListener('change', (e) => {
+      state.settings.showTimerDuringGame = e.target.checked;
+      state.saveSettings();
+    });
+  }
+
+  // Confirm quit
+  const confirmQuitToggle = document.getElementById('confirm-quit');
+  if (confirmQuitToggle) {
+    confirmQuitToggle.addEventListener('change', (e) => {
+      state.settings.confirmQuit = e.target.checked;
+      state.saveSettings();
+    });
+  }
+
+  // Reset progress
+  const resetProgressBtn = document.getElementById('reset-progress-btn');
+  if (resetProgressBtn) {
+    resetProgressBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to reset ALL progress?\n\nThis will clear:\n• All achievements\n• All sparks\n• All settings\n• Your player name\n\nThis cannot be undone!')) {
+        localStorage.clear();
+        location.reload();
+      }
+    });
+  }
+
+  // Version display
+  const versionDisplay = document.getElementById('version-display');
+  if (versionDisplay) {
+    versionDisplay.textContent = `Version: ${state.GAME_VERSION}`;
+  }
+
+  // === ACCESSIBILITY TAB SETTINGS ===
+
+  // High contrast toggle
+  if (ui.highContrastToggle) {
+    ui.highContrastToggle.addEventListener('change', (e) => {
+      const enabled = !!e.target.checked;
+      state.settings.highContrast = enabled;
+      if (enabled) document.body.classList.add('high-contrast');
+      else document.body.classList.remove('high-contrast');
+      state.saveSettings();
+    });
+  }
+
+  // Words for operators
+  const wordsForOperatorsToggle = document.getElementById('words-for-operators-toggle');
+  if (wordsForOperatorsToggle) {
+    wordsForOperatorsToggle.addEventListener('change', (e) => {
+      state.settings.wordsInsteadOfOperators = e.target.checked;
+      state.saveSettings();
+    });
+  }
+
+  // Reduced motion
+  const reducedMotionToggle = document.getElementById('reduced-motion-toggle');
+  if (reducedMotionToggle) {
+    reducedMotionToggle.addEventListener('change', (e) => {
+      state.settings.reducedMotion = e.target.checked;
+      if (e.target.checked) document.body.classList.add('reduced-motion');
+      else document.body.classList.remove('reduced-motion');
+      state.saveSettings();
+    });
+  }
+
+  // Larger text
+  const largerTextToggle = document.getElementById('larger-text-toggle');
+  if (largerTextToggle) {
+    largerTextToggle.addEventListener('change', (e) => {
+      state.settings.largerText = e.target.checked;
+      if (e.target.checked) document.body.classList.add('larger-text');
+      else document.body.classList.remove('larger-text');
+      state.saveSettings();
+    });
+  }
+
+  // Screen reader hints
+  const screenReaderHintsToggle = document.getElementById('screen-reader-hints-toggle');
+  if (screenReaderHintsToggle) {
+    screenReaderHintsToggle.addEventListener('change', (e) => {
+      state.settings.screenReaderHints = e.target.checked;
+      state.saveSettings();
+    });
+  }
+
   // Tab navigation
   ui.tabs.forEach(tab => {
     tab.addEventListener("click", () => {
@@ -384,8 +517,20 @@ function setupPopupListeners() {
   // Cash out popup
   ui.cashOutCloseBtn.addEventListener("click", () => {
     audio.playUIClickSound();
-    ui.showScreen("main-menu");
-    audio.playMainMenuMusic();
+    // If there are pending achievement popups, show them one-by-one after banking sparks
+    if (window.pendingAchievements && window.pendingAchievements.length > 0) {
+      // Start the popup flow; when drained, return to main menu
+      displayNextAchievementPopup();
+      const onDrained = () => {
+        document.removeEventListener('mathSprintAchievementsDrained', onDrained);
+        ui.showScreen("main-menu");
+        audio.playMainMenuMusic();
+      };
+      document.addEventListener('mathSprintAchievementsDrained', onDrained);
+    } else {
+      ui.showScreen("main-menu");
+      audio.playMainMenuMusic();
+    }
   });
 
   // Audio feature notification

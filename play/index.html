@@ -162,12 +162,43 @@
   <h1 id="settings-heading">Settings</h1>
 
   <div class="tab-list" role="tablist">
-    <button id="tab-audio" role="tab" aria-selected="true" aria-controls="tabpanel-audio">Audio</button>
+    <button id="tab-general" role="tab" aria-selected="true" aria-controls="tabpanel-general">General</button>
+    <button id="tab-audio" role="tab" aria-selected="false" aria-controls="tabpanel-audio">Audio</button>
     <button id="tab-gameplay" role="tab" aria-selected="false" aria-controls="tabpanel-gameplay">Gameplay</button>
     <button id="tab-accessibility" role="tab" aria-selected="false" aria-controls="tabpanel-accessibility">Accessibility</button>
   </div>
 
-  <div id="tabpanel-audio" role="tabpanel" aria-labelledby="tab-audio">
+  <div id="tabpanel-general" role="tabpanel" aria-labelledby="tab-general">
+    <h2>General</h2>
+    <div class="setting-group">
+      <label for="player-name-display">Player Name</label>
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <input type="text" id="player-name-display" maxlength="20" style="flex: 1; padding: 0.5rem;">
+        <button id="save-name-btn" class="small-btn">Save</button>
+      </div>
+    </div>
+    <div class="setting-group">
+      <input type="checkbox" id="enable-feedback-prompts" checked>
+      <label for="enable-feedback-prompts">Show feedback prompts after games</label>
+    </div>
+    <div class="setting-group">
+      <input type="checkbox" id="show-timer-during-game" checked>
+      <label for="show-timer-during-game">Show timer during gameplay</label>
+    </div>
+    <div class="setting-group">
+      <input type="checkbox" id="confirm-quit" checked>
+      <label for="confirm-quit">Confirm before quitting mid-game</label>
+    </div>
+    <div class="setting-group" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #333;">
+      <button id="reset-progress-btn" class="danger-btn">Reset All Progress</button>
+      <p style="font-size: 0.8rem; color: #888; margin-top: 0.5rem;">This will clear all achievements, sparks, and settings.</p>
+    </div>
+    <div class="setting-group" style="margin-top: 1rem;">
+      <p id="version-display" style="font-size: 0.8rem; color: #666;"></p>
+    </div>
+  </div>
+
+  <div id="tabpanel-audio" role="tabpanel" aria-labelledby="tab-audio" class="hidden">
     <h2>Audio Settings</h2>
     <div class="setting-group">
       <label for="master-volume">Master Volume</label>
@@ -201,11 +232,29 @@
   <div id="tabpanel-accessibility" role="tabpanel" aria-labelledby="tab-accessibility" class="hidden">
     <h2>Accessibility</h2>
     <div class="setting-group">
-      <button id="contrast-toggle-settings">Toggle High Contrast</button>
+      <input type="checkbox" id="high-contrast-toggle">
+      <label for="high-contrast-toggle">High Contrast Mode</label>
+      <p class="setting-description">Increases color contrast for better visibility</p>
     </div>
     <div class="setting-group">
-      <input type="checkbox" id="enable-feedback-prompts" checked>
-      <label for="enable-feedback-prompts">Enable feedback prompts</label>
+      <input type="checkbox" id="words-for-operators-toggle">
+      <label for="words-for-operators-toggle">Use Words for Operators</label>
+      <p class="setting-description">Show "plus", "minus" instead of +, − symbols</p>
+    </div>
+    <div class="setting-group">
+      <input type="checkbox" id="reduced-motion-toggle">
+      <label for="reduced-motion-toggle">Reduced Motion</label>
+      <p class="setting-description">Minimize animations and transitions</p>
+    </div>
+    <div class="setting-group">
+      <input type="checkbox" id="larger-text-toggle">
+      <label for="larger-text-toggle">Larger Text</label>
+      <p class="setting-description">Increase font size throughout the game</p>
+    </div>
+    <div class="setting-group">
+      <input type="checkbox" id="screen-reader-hints-toggle" checked>
+      <label for="screen-reader-hints-toggle">Screen Reader Hints</label>
+      <p class="setting-description">Extra announcements for screen reader users</p>
     </div>
   </div>
 </main>
@@ -351,7 +400,22 @@
         </div>
       </fieldset>
     </form>
-    
+    <div style="margin-top: 1rem;">
+      <h3 style="margin-bottom: 0.5rem;">Audio Preview</h3>
+      <div class="setting-group">
+        <label for="onboarding-master-volume">Master Volume</label>
+        <input type="range" id="onboarding-master-volume" min="0" max="100" value="100">
+      </div>
+      <div class="setting-group">
+        <label for="onboarding-music-volume">Music Volume</label>
+        <input type="range" id="onboarding-music-volume" min="0" max="100" value="100">
+      </div>
+      <div class="setting-group">
+        <label for="onboarding-sfx-volume">SFX Volume</label>
+        <input type="range" id="onboarding-sfx-volume" min="0" max="100" value="100">
+      </div>
+    </div>
+
     <div class="popup-buttons">
       <button type="button" class="popup-button" id="onboarding-step2-back">Back</button>
       <button type="button" class="popup-button primary" id="onboarding-step2-next">Continue</button>

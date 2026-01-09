@@ -544,8 +544,13 @@ function attachAchievementsDemoListeners() {
     viewBtn.addEventListener('click', () => {
       if (typeof window.achievementsModule !== 'undefined') {
         hideTutorialScreen();
-        const { renderAchievementsScreen } = require('./achievements-ui.js');
-        renderAchievementsScreen();
+        import('./achievements-ui.js').then(mod => {
+          if (mod && typeof mod.renderAchievementsScreen === 'function') {
+            mod.renderAchievementsScreen();
+          }
+        }).catch(err => {
+          console.error('Failed to load achievements UI module:', err);
+        });
         ui.showScreen('achievements-screen');
         
         // Replace the back button with a tutorial-specific one

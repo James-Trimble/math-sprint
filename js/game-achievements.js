@@ -6,37 +6,67 @@
 import * as state from './state.js';
 import * as ui from './ui.js';
 import * as audio from './audio-hub.js';
-import * as inventory from './inventory.js';
 import { renderAchievementsScreen } from './achievements-ui.js';
 
-// Achievement queue to display after game ends
+// Internal queue and state
 let pendingAchievements = [];
+let isDisplaying = false;
 window.pendingAchievements = pendingAchievements;
 
 /**
- * Check if an achievement should be unlocked and queue it
+ * Check if an achievement should be unlocked and forward to achievementsModule
  */
 export function checkAndUnlockAchievement(achievementId) {
   if (!window.achievementsModule) return;
-
-  // Rely on the achievements module to dispatch an event when unlocking.
-  // The global event listener will handle queuing, announcing, rewarding, and UI updates.
   return window.achievementsModule.unlock(achievementId);
 }
 
-// Global listener for achievement unlocks (handles direct unlocks too)
+/**
+ * Queue an achievement for display. Idempotent by achievement id.
+ */
+export function queueAchievement(achievement) {
+  if (!achievement || !achievement.id) return;
+  // Avoid duplicates
+  if (pendingAchievements.find(a => a.id === achievement.id)) {
+    // Ensure UI is refreshed
+    if (typeof renderAchievementsScreen === 'function') renderAchievementsScreen();
+    return;
+  }
+
+  pendingAchievements.push(achievement);
+  window.pendingAchievements = pendingAchievements;
+
+  if (!isDisplaying) {
+    // Start the display flow
+    displayNextAchievementPopup();
+  }
+
+  if (typeof renderAchievementsScreen === 'function') renderAchievementsScreen();
+}
+
+/**
+ * Drain the achievement queue and return a promise resolved when drained
+ */
+export function drainQueue() {
+  return new Promise((resolve) => {
+    if (!pendingAchievements || pendingAchievements.length === 0) return resolve();
+    const onDrained = () => {
+      document.removeEventListener('mathSprintAchievementsDrained', onDrained);
+      resolve();
+    };
+    document.addEventListener('mathSprintAchievementsDrained', onDrained);
+    // If not currently displaying, kick off the display
+    if (!isDisplaying) displayNextAchievementPopup();
+  });
+}
+
+// Global listener for achievement unlocks
 window.document.addEventListener('mathSprintAchievementUnlocked', (e) => {
   const { achievementId, options = {} } = e.detail || {};
   if (!achievementId || !window.achievementsModule) return;
 
   const achievement = window.achievementsModule.getAchievement(achievementId);
   if (!achievement) return;
-
-  // If another path already queued this achievement, avoid duplicate
-  if (pendingAchievements.find(a => a.id === achievementId)) {
-    if (typeof renderAchievementsScreen === 'function') renderAchievementsScreen();
-    return;
-  }
 
   const suppressPopup = !!options.suppressPopup;
 
@@ -45,20 +75,18 @@ window.document.addEventListener('mathSprintAchievementUnlocked', (e) => {
     ui.announceAchievementDuringGameplay(`Achievement unlocked: ${achievement.title}`);
   }
 
-  // Award sparks (state.addSparks is idempotent enough for our use)
+  // Award reward synchronously
   if (achievement.reward) {
     state.addSparks(achievement.reward);
   }
 
   // Queue for display unless suppressed
   if (!suppressPopup) {
-    pendingAchievements.push(achievement);
-    window.pendingAchievements = pendingAchievements;
+    queueAchievement(achievement);
+  } else {
+    if (typeof renderAchievementsScreen === 'function') renderAchievementsScreen();
   }
-
-  // Update achievements UI
-  if (typeof renderAchievementsScreen === 'function') renderAchievementsScreen();
-  // Update marketing labels (homepage/stat elements) in case the total achievement count changed
+  // Update marketing labels if available
   if (typeof updateMarketingAchievementLabels === 'function') updateMarketingAchievementLabels();
 });
 
@@ -67,17 +95,26 @@ window.document.addEventListener('mathSprintAchievementUnlocked', (e) => {
  */
 export function displayNextAchievementPopup() {
   if (!pendingAchievements || pendingAchievements.length === 0) return;
+  if (isDisplaying) return;
+
+  isDisplaying = true;
 
   const achievement = pendingAchievements.shift();
   window.pendingAchievements = pendingAchievements;
-  
-  // Play sound when showing the popup or on dismissal trigger
+
   audio.playAchievementUnlockSFX();
   ui.showAchievementPopup(achievement, () => {
     // Play sound upon closing each modal
     audio.playAchievementUnlockSFX();
     if (pendingAchievements.length > 0) {
-      displayNextAchievementPopup();
+      // Delay slightly to allow UX separation
+      setTimeout(() => {
+        isDisplaying = false;
+        displayNextAchievementPopup();
+      }, 250);
+    } else {
+      isDisplaying = false;
+      try { document.dispatchEvent(new CustomEvent('mathSprintAchievementsDrained')); } catch (e) {}
     }
   });
 }
@@ -88,14 +125,6 @@ export function displayNextAchievementPopup() {
 export function displayTutorialCompletion() {
   audio.stopAllMusic(state.tensionLoop);
 
-  const tutorialFreezeFreeGiven = localStorage.getItem('tutorialFreezeFreeGiven');
-  let includeItemMessage = '';
-    if (!tutorialFreezeFreeGiven) {
-      inventory.addItemToInventory(0, 1);
-    localStorage.setItem('tutorialFreezeFreeGiven', 'true');
-    includeItemMessage = '<p style="color: #4ecdc4; font-weight: 600;">You\'ve also received a <strong>Time Freeze</strong> item!</p>';
-  }
-  
   const popup = document.createElement("div");
   popup.className = "popup-overlay";
   popup.setAttribute("role", "dialog");
@@ -105,7 +134,6 @@ export function displayTutorialCompletion() {
       <h2>Tutorial Complete!</h2>
       <p>You've earned the <strong>Tutorial Master</strong> achievement!</p>
       <p><strong>+25 Sparks</strong> added to your wallet.</p>
-      ${includeItemMessage}
       <button id="tutorial-complete-btn" class="popup-button primary">Return to Menu</button>
     </div>
   `;
@@ -113,11 +141,12 @@ export function displayTutorialCompletion() {
 
   document.getElementById("tutorial-complete-btn").addEventListener("click", () => {
     popup.remove();
-    tutorialModule.complete();
+    if (window.tutorialModule && typeof window.tutorialModule.complete === 'function') window.tutorialModule.complete();
     audio.playMainMenuMusic();
     ui.showScreen("main-menu");
   });
 }
 
-// Expose to window for external access
+// Expose compatibility functions
 window.displayNextAchievementPopup = displayNextAchievementPopup;
+export { pendingAchievements };

@@ -28,6 +28,18 @@ window.addEventListener("load", () => {
 
   state.loadSettings();
   
+  // Apply accessibility settings on load
+  if (state.settings.highContrast) document.body.classList.add('high-contrast');
+  if (state.settings.reducedMotion) document.body.classList.add('reduced-motion');
+  if (state.settings.largerText) document.body.classList.add('larger-text');
+  
+  // Load player name into settings input
+  const playerNameInput = document.getElementById('player-name-display');
+  if (playerNameInput) {
+    const savedName = localStorage.getItem('mathSprintPlayerName') || '';
+    playerNameInput.value = savedName;
+  }
+  
   // v0.9.2 Update: Compensate players for cipher key reset
   const lastVersion = localStorage.getItem("mathSprintLastVersion");
   if (lastVersion !== state.GAME_VERSION) {

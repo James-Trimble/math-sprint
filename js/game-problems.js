@@ -78,13 +78,13 @@ export function generateProblem(feedbackPrefix = "") {
       a = Math.floor(getRandom() * maxNum) + 1;
       b = Math.floor(getRandom() * maxNum) + 1;
       answer = a + b;
-      problemString = `${a} + ${b} = ?`;
+      problemString = state.settings.wordsInsteadOfOperators ? `${a} plus ${b} = ?` : `${a} + ${b} = ?`;
       break;
     case "-":
       a = Math.floor(getRandom() * maxNum) + 2; 
       b = Math.floor(getRandom() * a) + 1; 
       answer = a - b;
-      problemString = `${a} - ${b} = ?`;
+      problemString = state.settings.wordsInsteadOfOperators ? `${a} minus ${b} = ?` : `${a} - ${b} = ?`;
       break;
     case "×":
       let multMax;
@@ -100,7 +100,7 @@ export function generateProblem(feedbackPrefix = "") {
       a = Math.floor(getRandom() * multMax) + 1;
       b = Math.floor(getRandom() * multMax) + 1;
       answer = a * b;
-      problemString = `${a} × ${b} = ?`;
+      problemString = state.settings.wordsInsteadOfOperators ? `${a} times ${b} = ?` : `${a} × ${b} = ?`;
       break;
     case "÷":
       const divMax = state.gameMode === 'daily-challenge'
@@ -109,7 +109,7 @@ export function generateProblem(feedbackPrefix = "") {
       b = Math.floor(getRandom() * divMax) + 2; 
       answer = Math.floor(getRandom() * divMax) + 2; 
       a = b * answer; 
-      problemString = `${a} ÷ ${b} = ?`;
+        problemString = state.settings.wordsInsteadOfOperators ? `${a} divided by ${b} = ?` : `${a} ÷ ${b} = ?`;
       break;
   }
 

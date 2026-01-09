@@ -376,13 +376,19 @@ export function gameOver() {
     if (playAgainHighScoreBtn) playAgainHighScoreBtn.style.display = '';
   }
 
-  // Show achievement button if any pending
-  const { pendingAchievements } = window;
-  if (pendingAchievements && pendingAchievements.length > 0) {
-    const achievementBtn = document.getElementById('view-achievements-game-over-btn') || document.getElementById('view-achievements-high-score-btn');
-    if (achievementBtn) {
-      achievementBtn.classList.remove('hidden');
+  // Show achievement button - always visible
+  const gameOverBtn = document.getElementById('view-achievements-game-over-btn');
+  const highScoreBtn = document.getElementById('view-achievements-high-score-btn');
+  const achievementBtn = gameOverBtn || highScoreBtn;
+  
+  if (achievementBtn) {
+    achievementBtn.classList.remove('hidden');
+    
+    const { pendingAchievements } = window;
+    if (pendingAchievements && pendingAchievements.length > 0) {
       achievementBtn.textContent = `View ${pendingAchievements.length} Achievement${pendingAchievements.length > 1 ? 's' : ''}`;
+    } else {
+      achievementBtn.textContent = 'View Achievements';
     }
   }
 
@@ -404,7 +410,7 @@ function checkAndShowFeedbackPopup() {
     return;
   }
 
-  const feedbackPromptsEnabled = localStorage.getItem('mathSprintFeedbackPromptsEnabled') !== 'false';
+  const feedbackPromptsEnabled = (typeof state.settings.feedbackPromptsEnabled !== 'undefined') ? !!state.settings.feedbackPromptsEnabled : (localStorage.getItem('mathSprintFeedbackPromptsEnabled') !== 'false');
   const feedbackDismissed = localStorage.getItem('mathSprintFeedbackPromptDismissed') === 'true';
   
   if (!feedbackPromptsEnabled || feedbackDismissed) {

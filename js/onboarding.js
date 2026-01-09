@@ -85,7 +85,16 @@ const onboardingModule = (() => {
    */
   function saveSettings(settings) {
     onboardingData.settings = settings;
-    state.saveSettings(settings);
+    // Merge onboarding settings into persistent state.settings
+    state.loadSettings();
+    if (settings) {
+      state.settings.operations = state.settings.operations || {};
+      state.settings.operations.addition = !!settings.allowAddition;
+      state.settings.operations.subtraction = !!settings.allowSubtraction;
+      state.settings.operations.multiplication = !!settings.allowMultiplication;
+      state.settings.operations.division = !!settings.allowDivision;
+    }
+    state.saveSettings();
   }
 
   /**

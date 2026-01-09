@@ -1,5 +1,5 @@
 // js/ui.js
-import { setCurrentModalId } from './state.js';
+import { setCurrentModalId, settings } from './state.js';
 import { getItemIconSvg } from './items.js';
 
 // --- HTML Element References ---
@@ -71,7 +71,7 @@ export const opMultiplication = document.getElementById("op-multiplication");
 export const opDivision = document.getElementById("op-division");
 export const operationCheckboxes = [opAddition, opSubtraction, opMultiplication, opDivision];
 export const disableCountdownToggle = document.getElementById("disable-countdown");
-export const contrastBtn = document.getElementById("contrast-toggle-settings");
+export const highContrastToggle = document.getElementById("high-contrast-toggle");
 export const enableFeedbackPromptsCheckbox = document.getElementById("enable-feedback-prompts");
 export const feedbackPopupShareBtn = document.getElementById("feedback-share-btn");
 export const feedbackPopupLaterBtn = document.getElementById("feedback-later-btn");
@@ -92,6 +92,9 @@ export const onboardingOpAddition = document.getElementById("onboarding-op-addit
 export const onboardingOpSubtraction = document.getElementById("onboarding-op-subtraction");
 export const onboardingOpMultiplication = document.getElementById("onboarding-op-multiplication");
 export const onboardingOpDivision = document.getElementById("onboarding-op-division");
+export const onboardingMasterVolume = document.getElementById('onboarding-master-volume');
+export const onboardingMusicVolume = document.getElementById('onboarding-music-volume');
+export const onboardingSfxVolume = document.getElementById('onboarding-sfx-volume');
 
 // --- UI Functions ---
 
@@ -204,7 +207,12 @@ export function toggleOverdriveVisuals(isActive) {
 
 export function configureGameUI(mode) {
     if (mode === 'sprint' || mode === 'survival') {
-        timerEl.classList.remove("hidden");
+        // Respect the "show timer" setting
+        if (settings.showTimerDuringGame !== false) {
+            timerEl.classList.remove("hidden");
+        } else {
+            timerEl.classList.add("hidden");
+        }
         livesEl.classList.add("hidden");
     } else {
         // Endless
@@ -324,17 +332,44 @@ export function setGabrielState(state) {
 
 // Settings UI Updates
 export function applySettingsToUI(settings) {
+  // Audio settings
   masterVolumeSlider.value = settings.masterVolume;
   musicVolumeSlider.value = settings.musicVolume;
   sfxVolumeSlider.value = settings.sfxVolume;
+  
+  // Gameplay settings
   opAddition.checked = settings.operations.addition;
   opSubtraction.checked = settings.operations.subtraction;
   opMultiplication.checked = settings.operations.multiplication;
   opDivision.checked = settings.operations.division;
   disableCountdownToggle.checked = settings.disableCountdown;
-  if (localStorage.getItem("mathSprintHighContrast") === "true") {
-    document.body.classList.add("high-contrast");
-  }
+  
+  // General settings
+  if (enableFeedbackPromptsCheckbox) enableFeedbackPromptsCheckbox.checked = !!settings.feedbackPromptsEnabled;
+  
+  const showTimerToggle = document.getElementById('show-timer-during-game');
+  if (showTimerToggle) showTimerToggle.checked = settings.showTimerDuringGame !== false;
+  
+  const confirmQuitToggle = document.getElementById('confirm-quit');
+  if (confirmQuitToggle) confirmQuitToggle.checked = settings.confirmQuit !== false;
+  
+  // Accessibility settings
+  if (highContrastToggle) highContrastToggle.checked = !!settings.highContrast;
+  if (settings.highContrast) document.body.classList.add('high-contrast');
+  
+  const wordsForOperatorsToggle = document.getElementById('words-for-operators-toggle');
+  if (wordsForOperatorsToggle) wordsForOperatorsToggle.checked = !!settings.wordsInsteadOfOperators;
+  
+  const reducedMotionToggle = document.getElementById('reduced-motion-toggle');
+  if (reducedMotionToggle) reducedMotionToggle.checked = !!settings.reducedMotion;
+  if (settings.reducedMotion) document.body.classList.add('reduced-motion');
+  
+  const largerTextToggle = document.getElementById('larger-text-toggle');
+  if (largerTextToggle) largerTextToggle.checked = !!settings.largerText;
+  if (settings.largerText) document.body.classList.add('larger-text');
+  
+  const screenReaderHintsToggle = document.getElementById('screen-reader-hints-toggle');
+  if (screenReaderHintsToggle) screenReaderHintsToggle.checked = settings.screenReaderHints !== false;
 }
 
 export function validateOperationToggles() {
@@ -468,7 +503,7 @@ export function showAchievementPopup(achievement, onClose = null) {
   });
 
   // Auto-close after 5 seconds if not dismissed
-  setTimeout(handleClose, 5000);
+  // NOTE: Do not auto-close achievement popups; require explicit dismissal to ensure users see rewards.
 
   closeBtn.focus();
 }

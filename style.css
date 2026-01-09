@@ -36,6 +36,36 @@ body.high-contrast {
   --button-disabled-text: #aaa;
 }
 
+/* --- Reduced Motion Mode --- */
+body.reduced-motion,
+body.reduced-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* --- Larger Text Mode --- */
+body.larger-text {
+  font-size: 1.2rem;
+}
+
+body.larger-text h1 {
+  font-size: 2.2rem;
+}
+
+body.larger-text h2 {
+  font-size: 1.6rem;
+}
+
+body.larger-text button {
+  font-size: 1.1rem;
+  padding: 0.8rem 1.5rem;
+}
+
+body.larger-text .setting-group label {
+  font-size: 1.2rem;
+}
+
 /* --- Base Layout & Screens --- */
 main {
   max-width: 450px;
@@ -618,6 +648,43 @@ fieldset.setting-group legend {
   font-size: 1.1rem;
   display: block;
   margin-bottom: 0.5rem;
+}
+
+.setting-description {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0.25rem 0 0 1.75rem;
+  font-weight: normal;
+}
+
+/* Small Button */
+.small-btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  background: var(--primary-color);
+  color: var(--primary-text);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.small-btn:hover {
+  opacity: 0.9;
+}
+
+/* Danger Button */
+.danger-btn {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.danger-btn:hover {
+  background: #c82333;
 }
 
 /* Checkbox/Toggle Styles */

@@ -6,7 +6,7 @@ import { checkAndUnlockAchievement } from './game-achievements.js';
 export const GAME_DURATION = 60; 
 export const SURVIVAL_START_TIME = 30; 
 export const STARTING_LIVES = 3; 
-export const GAME_VERSION = "v1.0"; 
+export const GAME_VERSION = "v1.0.1"; 
 export const CODEBASE_LINES = 8403; // Number of lines across the counted repository (JS/HTML/CSS/JSON/MD/TXT) (updated)
 
 
@@ -88,6 +88,17 @@ export let settings = {
   masterVolume: 100,
   musicVolume: 100,
   sfxVolume: 100,
+  // Accessibility settings
+  wordsInsteadOfOperators: false, // use words (plus/minus) for screen readers
+  highContrast: false, // apply high-contrast styles when true
+  reducedMotion: false, // reduce animations
+  largerText: false, // increase font sizes
+  screenReaderHints: true, // extra aria announcements
+  // General settings
+  feedbackPromptsEnabled: true, // enable/disable feedback prompts
+  showTimerDuringGame: true, // show countdown timer during gameplay
+  confirmQuit: true, // confirm before quitting mid-game
+  // Gameplay settings
   operations: {
     addition: true,
     subtraction: false,
