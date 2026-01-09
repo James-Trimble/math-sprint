@@ -53,11 +53,19 @@ export function handleAnswerSubmit() {
   // Validate answer range
   const problemStr = state.currentProblemString.toLowerCase();
   let isValidRange = false;
-  if (problemStr.includes("+") || problemStr.includes("-")) {
+  // Support both operator symbols and word equivalents
+  if (
+    problemStr.includes("+") || problemStr.includes("plus") ||
+    problemStr.includes("-") || problemStr.includes("minus")
+  ) {
     isValidRange = userAnswer >= -100 && userAnswer <= 200;
-  } else if (problemStr.includes("×")) {
+  } else if (
+    problemStr.includes("×") || problemStr.includes("times")
+  ) {
     isValidRange = userAnswer >= 1 && userAnswer <= 250;
-  } else if (problemStr.includes("÷")) {
+  } else if (
+    problemStr.includes("÷") || problemStr.includes("divided by")
+  ) {
     isValidRange = userAnswer >= 1 && userAnswer <= 20;
   }
   
