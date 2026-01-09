@@ -382,7 +382,7 @@ export function gameOver() {
     const achievementBtn = document.getElementById('view-achievements-game-over-btn') || document.getElementById('view-achievements-high-score-btn');
     if (achievementBtn) {
       achievementBtn.classList.remove('hidden');
-      achievementBtn.textContent = `🏆 View ${pendingAchievements.length} Achievement${pendingAchievements.length > 1 ? 's' : ''}`;
+      achievementBtn.textContent = `View ${pendingAchievements.length} Achievement${pendingAchievements.length > 1 ? 's' : ''}`;
     }
   }
 

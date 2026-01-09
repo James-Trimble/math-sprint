@@ -101,8 +101,8 @@ export let settings = {
 
 export function invalidateSession(reason = "Unknown tampering detected") {
   isSessionValid = false;
-  console.error("⚠️ SESSION INVALIDATED:", reason);
-  alert("⚠️ Session Invalid: Tampering Detected.\n\nReason: " + reason + "\n\nThe page will now reload.");
+  console.error("SESSION INVALIDATED:", reason);
+  alert("Session Invalid: Tampering Detected.\n\nReason: " + reason + "\n\nThe page will now reload.");
   location.reload();
 }
 

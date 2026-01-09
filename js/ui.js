@@ -238,7 +238,7 @@ export function updateConsecutiveMistakesDisplay(current, max = 3) {
     consecutiveMistakesEl.classList.add("hidden");
   } else {
     consecutiveMistakesEl.classList.remove("hidden");
-    consecutiveMistakesEl.textContent = `⚠️ Consecutive: ${current}/${max}`;
+    consecutiveMistakesEl.textContent = `Consecutive: ${current}/${max}`;
   }
 }
 
@@ -416,7 +416,7 @@ export function showAchievementPopup(achievement, onClose = null) {
 
   content.innerHTML = `
     <div class="achievement-popup-header">
-      <h2>🏆 Achievement Unlocked!</h2>
+      <h2>Achievement Unlocked!</h2>
     </div>
     <div class="achievement-popup-body">
       <div class="gabriel-celebration" id="gabriel-celebration"></div>
@@ -491,9 +491,9 @@ export function displayTutorialPhaseCallout(phase) {
       <h2 id="tutorial-callout-title" style="color: #4ecdc4; margin-top: 0;">${phase.title}</h2>
       <p>${phase.description}</p>
       <div style="background: rgba(78, 205, 196, 0.15); border: 2px solid #4ecdc4; border-radius: 8px; padding: 1rem; margin: 1.5rem 0;">
-        <p style="margin: 0; font-size: 1.1rem; font-weight: 500;">📚 ${phase.callout}</p>
+        <p style="margin: 0; font-size: 1.1rem; font-weight: 500;">${phase.callout}</p>
       </div>
-      <button id="tutorial-callout-close" class="popup-button primary" style="width: 100%;">Got it! →</button>
+      <button id="tutorial-callout-close" class="popup-button primary" style="width: 100%;">Got it!</button>
     </div>
   `;
 

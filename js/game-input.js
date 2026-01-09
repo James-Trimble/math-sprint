@@ -130,9 +130,9 @@ function handleCorrectAnswer() {
       ui.toggleOverdriveVisuals(true);
     }
     state.setOverdriveTimer(10); 
-    ui.updateFeedbackDisplay("🔥 OVERDRIVE! (2x Points)", "red");
+    ui.updateFeedbackDisplay("OVERDRIVE! (2x Points)", "red");
   } else {
-    ui.updateFeedbackDisplay("✅ Correct!", "green");
+    ui.updateFeedbackDisplay("Correct!", "green");
   }
 
   if (state.streak > 0 && state.streak % 3 === 0) {
@@ -145,7 +145,7 @@ function handleCorrectAnswer() {
     audio.playCorrectTone();
   }
   
-  generateProblem(state.overdriveActive ? "🔥 " : "Correct! ");
+  generateProblem(state.overdriveActive ? "Overdrive: " : "Correct! ");
 }
 
 /**
@@ -166,7 +166,7 @@ function handleIncorrectAnswer() {
   }
 
   if (itemEffects.shouldBlockPenalty()) {
-    ui.updateFeedbackDisplay("🛡️ Shield blocked it", "blue");
+    ui.updateFeedbackDisplay("Shield blocked it", "blue");
     generateProblem("Shield active. ");
     return;
   }
@@ -180,7 +180,7 @@ function handleIncorrectAnswer() {
     handleSprintPenalty();
   }
   
-  ui.updateFeedbackDisplay("❌ Incorrect!", "red");
+  ui.updateFeedbackDisplay("Incorrect!", "red");
   ui.updateProblemDisplay("Incorrect! " + state.currentProblemString);
   ui.answerEl.value = "";
   ui.answerEl.focus();
@@ -195,7 +195,7 @@ function handleSurvivalPenalty() {
     ui.updateTimerDisplay(state.timeLeft);
     state.setConsecutiveMistakes(0);
     ui.updateConsecutiveMistakesDisplay(0);
-    ui.updateFeedbackDisplay("⏱️ 10s penalty for 3 mistakes!", "orange");
+    ui.updateFeedbackDisplay("10s penalty for 3 mistakes!", "orange");
   } else {
     state.setTimeLeft(state.timeLeft - 10);
     ui.updateTimerDisplay(state.timeLeft);
@@ -223,10 +223,10 @@ function handleEndlessPenalty() {
     }
     
     if (state.lives <= 0) {
-      ui.updateFeedbackDisplay("💔 Game Over! No lives remaining", "red");
+      ui.updateFeedbackDisplay("Game Over! No lives remaining", "red");
       gameOver();
     } else {
-      ui.updateFeedbackDisplay("💔 Lost a life! (3 consecutive mistakes)", "orange");
+      ui.updateFeedbackDisplay("Lost a life! (3 consecutive mistakes)", "orange");
     }
   }
 }
@@ -240,7 +240,7 @@ function handleSprintPenalty() {
     ui.updateTimerDisplay(state.timeLeft);
     state.setConsecutiveMistakes(0);
     ui.updateConsecutiveMistakesDisplay(0);
-    ui.updateFeedbackDisplay("⏱️ 10s penalty for 3 mistakes!", "orange");
+    ui.updateFeedbackDisplay("10s penalty for 3 mistakes!", "orange");
     
     if (state.timeLeft <= 0) {
       const { gameOver } = window;

@@ -93,7 +93,7 @@ export function displayTutorialCompletion() {
     if (!tutorialFreezeFreeGiven) {
       inventory.addItemToInventory(0, 1);
     localStorage.setItem('tutorialFreezeFreeGiven', 'true');
-    includeItemMessage = '<p style="color: #4ecdc4; font-weight: 600;">🎁 You\'ve also received a <strong>Time Freeze</strong> item!</p>';
+    includeItemMessage = '<p style="color: #4ecdc4; font-weight: 600;">You\'ve also received a <strong>Time Freeze</strong> item!</p>';
   }
   
   const popup = document.createElement("div");
@@ -102,7 +102,7 @@ export function displayTutorialCompletion() {
   popup.setAttribute("aria-modal", "true");
   popup.innerHTML = `
     <div class="popup-content">
-      <h2>🎓 Tutorial Complete!</h2>
+      <h2>Tutorial Complete!</h2>
       <p>You've earned the <strong>Tutorial Master</strong> achievement!</p>
       <p><strong>+25 Sparks</strong> added to your wallet.</p>
       ${includeItemMessage}

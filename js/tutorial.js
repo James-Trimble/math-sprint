@@ -11,7 +11,7 @@ const tutorialModule = (() => {
   const tutorialPhases = [
     {
       id: 'welcome',
-      title: 'Welcome to MathSprint! 👋',
+      title: 'Welcome to MathSprint!',
       description: 'An interactive guided tour',
       callout: 'This tutorial will walk you through the game step-by-step. Let\'s start with a quick math practice!',
       allowGameStart: false,
@@ -66,7 +66,7 @@ const tutorialModule = (() => {
     },
     {
       id: 'shop-tour',
-      title: 'The Shop: Power-Ups & Items ⚡',
+      title: 'The Shop: Power-Ups & Items',
       description: 'Strategic advantages',
       callout: 'Earn Sparks from gameplay to buy items. Time Freeze, Score Multipliers, Extra Lives, and more!',
       allowGameStart: false,
@@ -74,7 +74,7 @@ const tutorialModule = (() => {
     },
     {
       id: 'achievements-tour',
-      title: 'Achievements System 🏆',
+      title: 'Achievements System',
       description: 'Track your progress',
       callout: 'Unlock 30+ achievements by playing, reaching milestones, and discovering hidden secrets!',
       allowGameStart: false,
@@ -82,7 +82,7 @@ const tutorialModule = (() => {
     },
     {
       id: 'overdrive-explained',
-      title: 'Pro Tip: Overdrive Mode 🔥',
+      title: 'Pro Tip: Overdrive Mode',
       description: 'Double your points',
       callout: 'Get 3 correct answers in a row to activate Overdrive and earn 2x points. Keep the streak alive!',
       allowGameStart: false,
@@ -90,7 +90,7 @@ const tutorialModule = (() => {
     },
     {
       id: 'complete',
-      title: 'You\'re Ready! 🎉',
+      title: 'You\'re Ready!',
       description: 'Tutorial complete',
       callout: 'You\'ve earned the Tutorial Master achievement and 25 Sparks! Time to play for real!',
       allowGameStart: false,

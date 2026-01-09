@@ -14,7 +14,7 @@ export function renderAchievementsScreen() {
   // Also update main Achievements button (display unlocked/total)
   const achievementsBtn = document.getElementById('achievements-btn');
   if (achievementsBtn) {
-    achievementsBtn.textContent = `Achievements 🏆 (${unlockedCount}/${totalCount})`;
+    achievementsBtn.textContent = `Achievements (${unlockedCount}/${totalCount})`;
   }
 
   // Render achievement cards
@@ -33,11 +33,11 @@ export function renderAchievementsScreen() {
 
     let rewardHTML = '';
     if (achievement.reward) {
-      rewardHTML = `<div class="achievement-reward">+${achievement.reward} ⚡</div>`;
+      rewardHTML = `<div class="achievement-reward">+${achievement.reward} Sparks</div>`;
     }
 
     card.innerHTML = `
-      <div class="achievement-icon">🏆</div>
+      <div class="achievement-icon">ACH</div>
       <h3>${achievement.title}</h3>
       <p class="achievement-description">${achievement.description}</p>
       ${rewardHTML}

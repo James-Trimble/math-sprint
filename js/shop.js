@@ -169,7 +169,7 @@ export function renderShopItems() {
             <strong>${item.name}</strong>
             <p class="item-description">${item.description}</p>
             <div class="item-footer">
-                <span class="item-cost">⚡ ${item.cost}</span>
+                <span class="item-cost">Cost: ${item.cost} Sparks</span>
                 <button class="buy-btn" data-item-id="${item.id}" ${affordable ? '' : 'disabled'} aria-label="Buy ${item.name}">Buy</button>
             </div>
             <span class="item-owned">Owned: ${owned}</span>

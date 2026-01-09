@@ -160,7 +160,7 @@ export function completeOnboarding() {
     popup.setAttribute('aria-modal', 'true');
     popup.innerHTML = `
       <div class="popup-content">
-        <h2>🎁 Welcome Gift!</h2>
+        <h2>Welcome Gift!</h2>
         <p>You've received a <strong>Time Freeze</strong> item to try out!</p>
         <button id="onboarding-gift-close-btn" class="popup-button primary">Let's Play!</button>
       </div>

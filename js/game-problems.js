@@ -139,9 +139,9 @@ export function updateScore(points) {
     if (Math.floor(state.score / 250) > Math.floor(oldScore / 250) && state.lives < MAX_LIVES) {
       state.setLives(state.lives + 1);
       ui.updateLivesDisplay(state.lives);
-      ui.updateFeedbackDisplay(`❤️ Extra Life! (${state.lives}/${MAX_LIVES})`, "pink");
+      ui.updateFeedbackDisplay(`Extra Life! (${state.lives}/${MAX_LIVES})`, "pink");
     } else if (state.lives >= MAX_LIVES && Math.floor(state.score / 250) > Math.floor(oldScore / 250)) {
-      ui.updateFeedbackDisplay("💪 MAX LIVES! Go for broke - take risks for massive scores!", "purple");
+      ui.updateFeedbackDisplay("MAX LIVES! Go for broke - take risks for massive scores!", "purple");
     }
   }
   

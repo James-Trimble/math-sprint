@@ -23,7 +23,7 @@
   </div>
   <button id="begin-btn">Loading Audio...</button>
   <div id="audio-loading-banner" class="hidden audio-loading-banner" role="alert" aria-live="polite">
-    <p>🎵 Audio is still loading in the background, but the game is ready to play!</p>
+    <p>Audio is still loading in the background, but the game is ready to play.</p>
   </div>
 </main>
 
@@ -43,9 +43,9 @@
     Play Now
   </button>
   
-  <button id="shop-btn" aria-label="Shop - Buy items with sparks">The Shop ⚡</button>
-  <button id="achievements-btn" aria-label="Achievements - View your unlocked achievements">Achievements 🏆</button>
-  <button id="tutorial-btn" aria-label="Tutorial - Learn how to play">Tutorial 📚</button>
+  <button id="shop-btn" aria-label="Shop - Buy items with sparks">The Shop</button>
+  <button id="achievements-btn" aria-label="Achievements - View your unlocked achievements">Achievements</button>
+  <button id="tutorial-btn" aria-label="Tutorial - Learn how to play">Tutorial</button>
   <button id="settings-btn" aria-label="Settings - Adjust audio, gameplay, and accessibility options">Settings</button>
 </main>
 
@@ -80,7 +80,7 @@
     <h1 id="shop-heading">The Shop</h1>
     
   <div class="currency-display">
-    ⚡ <span id="wallet-balance">0</span> Sparks
+    Sparks: <span id="wallet-balance">0</span>
   </div>
   <div id="shop-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
@@ -117,7 +117,7 @@
         <div id="score">Score: 0</div>
         <div id="timer">Time: 60s</div>
         <div id="lives" class="hidden">Lives: 3</div>
-        <div id="consecutive-mistakes" class="hidden">⚠️ Consecutive: 0/3</div>
+        <div id="consecutive-mistakes" class="hidden">Consecutive: 0/3</div>
     </div>
   </form>
 </main>
@@ -140,7 +140,7 @@
     <p>Correct: <span id="correct-answers">0</span></p>
     <p>Accuracy: <span id="accuracy">0%</span></p>
   </div>
-  <button id="view-achievements-game-over-btn" class="hidden" style="background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; font-weight: bold;">🏆 View Achievements</button>
+  <button id="view-achievements-game-over-btn" class="hidden" style="background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; font-weight: bold;">View Achievements</button>
   <button id="play-again-btn">Play Again</button>
   <button id="main-menu-game-over-btn">Main Menu</button>
 </main>
@@ -149,7 +149,7 @@
   <h1 id="high-score-heading">New High Score!</h1>
   <p id="high-score-player-name" style="text-align: center; color: #4ecdc4; margin-bottom: 1rem;"></p>
   <h2 id="new-high-score">0</h2>
-  <button id="view-achievements-high-score-btn" class="hidden" style="background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; font-weight: bold;">🏆 View Achievements</button>
+  <button id="view-achievements-high-score-btn" class="hidden" style="background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; font-weight: bold;">View Achievements</button>
   <button id="play-again-high-score-btn">Play Again</button>
   <button id="main-menu-high-score-btn">Main Menu</button>
   <button id="score-breakdown-btn">See Breakdown</button>
@@ -157,7 +157,7 @@
 
 <main id="settings-screen" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="settings-heading">
   
-  <button id="back-to-menu-btn" class="back-button" aria-label="Back to Main Menu">&larr; Back</button>
+  <button id="back-to-menu-btn" class="back-button" aria-label="Back to Main Menu">Back</button>
   
   <h1 id="settings-heading">Settings</h1>
 
@@ -221,7 +221,7 @@
 
 <main id="audio-feature-popup" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="audio-feature-heading">
   <div class="popup-content">
-    <h1 id="audio-feature-heading">🎵 Faster Startup</h1>
+    <h1 id="audio-feature-heading">Faster Startup</h1>
     <p>Audio files are loading in the background while you play! This means you can start playing immediately, even on slower connections.</p>
     <p><strong>Pro tip:</strong> Sounds will work perfectly once loaded.</p>
     <button id="audio-feature-close-btn">Got It!</button>
@@ -236,8 +236,8 @@
     </div>
     <div id="tutorial-progress" style="text-align: center; color: #999; margin: 1rem 0; font-size: 0.9rem;" aria-live="polite"></div>
     <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
-      <button id="tutorial-prev-btn" class="hidden" aria-label="Previous tutorial step">← Back</button>
-      <button id="tutorial-next-btn" aria-label="Next tutorial step">Next →</button>
+      <button id="tutorial-prev-btn" class="hidden" aria-label="Previous tutorial step">Back</button>
+      <button id="tutorial-next-btn" aria-label="Next tutorial step">Next</button>
       <button id="tutorial-skip-btn" aria-label="Skip tutorial">Skip Tutorial</button>
     </div>
   </div>
@@ -268,7 +268,7 @@
 <!-- Onboarding Step 1: Welcome + Name Entry -->
 <div id="onboarding-step1" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="onboarding-step1-heading">
   <div class="popup-content onboarding-content">
-    <h2 id="onboarding-step1-heading">Welcome to MathSprint! 🎮</h2>
+    <h2 id="onboarding-step1-heading">Welcome to MathSprint!</h2>
     <p style="margin-bottom: 2rem;">Get ready to challenge your math skills with fast-paced problems, strategic items, and multiple game modes.</p>
     
     <form id="onboarding-name-form">
@@ -291,7 +291,7 @@
       </div>
       
       <div class="popup-buttons">
-        <button type="submit" class="popup-button primary" id="onboarding-step1-next">Continue →</button>
+        <button type="submit" class="popup-button primary" id="onboarding-step1-next">Continue</button>
       </div>
     </form>
   </div>
@@ -300,7 +300,7 @@
 <!-- Onboarding Step 2: Settings Preview -->
 <div id="onboarding-step2" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="onboarding-step2-heading">
   <div class="popup-content onboarding-content">
-    <h2 id="onboarding-step2-heading">Customize Your Experience ⚙️</h2>
+    <h2 id="onboarding-step2-heading">Customize Your Experience</h2>
     <p style="margin-bottom: 1.5rem;">Choose which operations you'd like to practice:</p>
     
     <form id="onboarding-settings-form" style="margin-bottom: 2rem;">
@@ -316,7 +316,7 @@
               aria-label="Enable Addition"
               style="width: 20px; height: 20px; cursor: pointer;"
             />
-            <span>➕ Addition</span>
+            <span>Addition (+)</span>
           </label>
           
           <label style="display: flex; align-items: center; cursor: pointer; gap: 0.75rem;">
@@ -326,7 +326,7 @@
               aria-label="Enable Subtraction"
               style="width: 20px; height: 20px; cursor: pointer;"
             />
-            <span>➖ Subtraction</span>
+            <span>Subtraction (-)</span>
           </label>
           
           <label style="display: flex; align-items: center; cursor: pointer; gap: 0.75rem;">
@@ -336,7 +336,7 @@
               aria-label="Enable Multiplication"
               style="width: 20px; height: 20px; cursor: pointer;"
             />
-            <span>✖️ Multiplication</span>
+            <span>Multiplication (x)</span>
           </label>
           
           <label style="display: flex; align-items: center; cursor: pointer; gap: 0.75rem;">
@@ -346,15 +346,15 @@
               aria-label="Enable Division"
               style="width: 20px; height: 20px; cursor: pointer;"
             />
-            <span>➗ Division</span>
+            <span>Division (/)</span>
           </label>
         </div>
       </fieldset>
     </form>
     
     <div class="popup-buttons">
-      <button type="button" class="popup-button" id="onboarding-step2-back">← Back</button>
-      <button type="button" class="popup-button primary" id="onboarding-step2-next">Continue →</button>
+      <button type="button" class="popup-button" id="onboarding-step2-back">Back</button>
+      <button type="button" class="popup-button primary" id="onboarding-step2-next">Continue</button>
     </div>
   </div>
 </div>
@@ -362,11 +362,11 @@
 <!-- Onboarding Step 3: Tutorial Offer & Completion -->
 <div id="onboarding-step3" class="screen hidden" role="dialog" aria-modal="true" aria-labelledby="onboarding-step3-heading">
   <div class="popup-content onboarding-content">
-    <h2 id="onboarding-step3-heading">You're All Set! 🎉</h2>
+    <h2 id="onboarding-step3-heading">You're All Set!</h2>
     <p style="margin-bottom: 1.5rem;">Ready to jump in? We have two options for you:</p>
     
     <div style="background: rgba(78, 205, 196, 0.1); border: 2px solid #4ecdc4; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
-      <h3 style="margin-top: 0; color: #4ecdc4; margin-bottom: 0.75rem;">📚 Take the Interactive Tutorial</h3>
+      <h3 style="margin-top: 0; color: #4ecdc4; margin-bottom: 0.75rem;">Take the Interactive Tutorial</h3>
       <p style="margin: 0 0 0.75rem 0; color: #ccc;">Learn all the game mechanics step-by-step with guided walkthroughs.</p>
       <ul style="margin: 0.75rem 0; padding-left: 1.5rem; color: #aaa;">
         <li>Master all 4 game modes</li>
@@ -377,8 +377,8 @@
     </div>
     
     <div class="popup-buttons">
-      <button type="button" class="popup-button" id="onboarding-skip-tutorial">Skip → Go to Menu</button>
-      <button type="button" class="popup-button primary" id="onboarding-start-tutorial">🎓 Start Tutorial</button>
+      <button type="button" class="popup-button" id="onboarding-skip-tutorial">Skip and Go to Menu</button>
+      <button type="button" class="popup-button primary" id="onboarding-start-tutorial">Start Tutorial</button>
     </div>
   </div>
 </div>
@@ -398,7 +398,7 @@
 <dialog id="motd-dialog" class="motd-dialog" aria-labelledby="motd-title" aria-describedby="motd-message" aria-modal="true" role="alertdialog">
   <div class="motd-content">
     <button id="motd-close-btn" class="motd-close" aria-label="Close announcement">×</button>
-    <div class="motd-icon" aria-hidden="true">ℹ️</div>
+    <div class="motd-icon" aria-hidden="true">Info</div>
     <h2 id="motd-title" class="motd-title">Announcement</h2>
     <div id="motd-message" class="motd-message"></div>
     <button id="motd-dismiss-btn" class="motd-dismiss-btn">Got it!</button>

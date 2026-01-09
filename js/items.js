@@ -11,7 +11,7 @@ export const ITEMS = [
   {
     id: "timeFreeze",
     name: "Time Freeze",
-    icon: "⏸️",
+    icon: "TF",
     category: ITEM_CATEGORIES.TIME,
     cost: 50,
     description: "Pause the timer for 10 seconds",
@@ -21,7 +21,7 @@ export const ITEMS = [
   {
     id: "timeRewind",
     name: "+15 Seconds",
-    icon: "⏪",
+    icon: "RW",
     category: ITEM_CATEGORIES.TIME,
     cost: 75,
     description: "Add 15 seconds to the clock",
@@ -31,7 +31,7 @@ export const ITEMS = [
   {
     id: "slowMotion",
     name: "Slow Motion",
-    icon: "🐌",
+    icon: "SM",
     category: ITEM_CATEGORIES.TIME,
     cost: 100,
     description: "Timer ticks at half speed for 20 seconds",
@@ -42,7 +42,7 @@ export const ITEMS = [
   {
     id: "doublePoints",
     name: "Double Points",
-    icon: "💰",
+    icon: "DP",
     category: ITEM_CATEGORIES.SCORE,
     cost: 60,
     description: "2x points for 15 seconds",
@@ -53,7 +53,7 @@ export const ITEMS = [
   {
     id: "megaBonus",
     name: "Mega Bonus",
-    icon: "🎁",
+    icon: "MB",
     category: ITEM_CATEGORIES.SCORE,
     cost: 120,
     description: "+250 points instantly",
@@ -63,7 +63,7 @@ export const ITEMS = [
   {
     id: "shield",
     name: "Shield",
-    icon: "🛡️",
+    icon: "SH",
     category: ITEM_CATEGORIES.SURVIVAL,
     cost: 80,
     description: "Block the next wrong-answer penalty",
@@ -73,7 +73,7 @@ export const ITEMS = [
   {
     id: "extraLife",
     name: "Extra Life",
-    icon: "❤️",
+    icon: "LIFE",
     category: ITEM_CATEGORIES.SURVIVAL,
     cost: 90,
     description: "+1 life (Endless only)",
@@ -84,7 +84,7 @@ export const ITEMS = [
   {
     id: "secondChance",
     name: "Second Chance",
-    icon: "🔄",
+    icon: "SC",
     category: ITEM_CATEGORIES.SURVIVAL,
     cost: 150,
     description: "Auto-revive with +30s when time runs out",
@@ -95,7 +95,7 @@ export const ITEMS = [
   {
     id: "noSubtraction",
     name: "No Subtraction",
-    icon: "➖🚫",
+    icon: "NS",
     category: ITEM_CATEGORIES.CHALLENGE,
     cost: 40,
     description: "Disable subtraction for 30 seconds",
@@ -106,7 +106,7 @@ export const ITEMS = [
   {
     id: "easyMode",
     name: "Easy Mode",
-    icon: "😊",
+    icon: "EASY",
     category: ITEM_CATEGORIES.CHALLENGE,
     cost: 100,
     description: "Addition-only problems for 30 seconds",
@@ -117,7 +117,7 @@ export const ITEMS = [
   {
     id: "scoreMultiplier",
     name: "Score Multiplier",
-    icon: "✖️",
+    icon: "X3",
     category: ITEM_CATEGORIES.SCORE,
     cost: 110,
     description: "3x points for 10 seconds",
@@ -128,7 +128,7 @@ export const ITEMS = [
   {
     id: "timeLapse",
     name: "Time Lapse",
-    icon: "⏱️",
+    icon: "TL",
     category: ITEM_CATEGORIES.TIME,
     cost: 85,
     description: "Add 25 seconds to the clock",
@@ -138,7 +138,7 @@ export const ITEMS = [
   {
     id: "quickReflex",
     name: "Quick Reflex",
-    icon: "⚡",
+    icon: "QR",
     category: ITEM_CATEGORIES.CHALLENGE,
     cost: 70,
     description: "Problems become easier for 20 seconds",
@@ -149,7 +149,7 @@ export const ITEMS = [
   {
     id: "criticalHit",
     name: "Critical Hit",
-    icon: "💥",
+    icon: "CH",
     category: ITEM_CATEGORIES.SCORE,
     cost: 130,
     description: "+500 points instantly (use wisely!)",
@@ -159,7 +159,7 @@ export const ITEMS = [
   {
     id: "lifeVest",
     name: "Life Vest",
-    icon: "🌊",
+    icon: "LV",
     category: ITEM_CATEGORIES.SURVIVAL,
     cost: 85,
     description: "+2 lives (Endless only)",
@@ -170,7 +170,7 @@ export const ITEMS = [
   {
     id: "safeZone",
     name: "Safe Zone",
-    icon: "🏰",
+    icon: "SZ",
     category: ITEM_CATEGORIES.SURVIVAL,
     cost: 95,
     description: "Block 2 wrong-answer penalties",
@@ -180,7 +180,7 @@ export const ITEMS = [
   {
     id: "focusMode",
     name: "Focus Mode",
-    icon: "🎯",
+    icon: "FOCUS",
     category: ITEM_CATEGORIES.CHALLENGE,
     cost: 65,
     description: "Only addition and subtraction for 25 seconds",
@@ -191,7 +191,7 @@ export const ITEMS = [
   {
     id: "resilience",
     name: "Resilience",
-    icon: "💪",
+    icon: "RES",
     category: ITEM_CATEGORIES.SURVIVAL,
     cost: 110,
     description: "Reduce penalty duration by 50%",
@@ -202,7 +202,7 @@ export const ITEMS = [
   {
     id: "perfectStrike",
     name: "Perfect Strike",
-    icon: "✨",
+    icon: "PERF",
     category: ITEM_CATEGORIES.SCORE,
     cost: 140,
     description: "10x multiplier for next correct answer only",

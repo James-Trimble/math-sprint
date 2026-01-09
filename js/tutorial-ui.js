@@ -30,7 +30,7 @@ export function displayTutorialPhase(phase, phaseIndex, totalPhases) {
     <h2 style="color: #4ecdc4; margin-top: 0;">${phase.title}</h2>
     <p style="font-size: 1.1rem; margin: 1rem 0;">${phase.description}</p>
     <div style="background: #1a1a2e; border-left: 4px solid #4ecdc4; padding: 1rem; margin: 1.5rem 0; border-radius: 4px;">
-      <p style="margin: 0; color: #4ecdc4; font-weight: 600;">💡 ${phase.callout}</p>
+      <p style="margin: 0; color: #4ecdc4; font-weight: 600;">${phase.callout}</p>
     </div>
   `;
   
@@ -61,7 +61,7 @@ export function displayTutorialPhase(phase, phaseIndex, totalPhases) {
   
   // Update button states
   prevBtn.classList.toggle('hidden', phaseIndex === 0);
-  nextBtn.textContent = phaseIndex === totalPhases - 1 ? 'Start Playing!' : 'Next →';
+  nextBtn.textContent = phaseIndex === totalPhases - 1 ? 'Start Playing!' : 'Next';
   
   // Disable next button for practice phases until target met
   if (phase.type === 'practice') {
@@ -86,7 +86,7 @@ function renderPracticeDemo(phase) {
   currentPracticeProblem = generateSimpleProblem();
   return `
     <div style="background: #0f3460; padding: 2rem; border-radius: 8px; margin: 1.5rem 0;">
-      <p id="tutorial-practice-progress" style="text-align: center; color: #999; margin-bottom: 1rem;">Progress: ${practiceCorrect}/${practiceTarget} ✓</p>
+          <p id="tutorial-practice-progress" style="text-align: center; color: #999; margin-bottom: 1rem;">Progress: ${practiceCorrect}/${practiceTarget} complete</p>
       <div id="tutorial-practice-problem" style="font-size: 2rem; text-align: center; margin: 1rem 0; color: #fff;">
         ${currentPracticeProblem.text}
       </div>
@@ -97,7 +97,7 @@ function renderPracticeDemo(phase) {
           autocomplete="off">
         <button id="tutorial-practice-submit" 
           style="padding: 0.75rem 1.5rem; font-size: 1.1rem; background: #4ecdc4; color: #0f3460; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">
-          Check ✓
+          Check
         </button>
       </div>
       <div id="tutorial-practice-feedback" style="text-align: center; margin-top: 1rem; font-size: 1.1rem; min-height: 30px;"></div>
@@ -107,10 +107,10 @@ function renderPracticeDemo(phase) {
 
 function renderModeDemo(phase) {
   const modeIcons = {
-    'sprint': '⏱️',
-    'endless': '♾️',
-    'survival': '💀',
-    'daily-challenge': '📅'
+    'sprint': 'Sprint',
+    'endless': 'Endless',
+    'survival': 'Survival',
+    'daily-challenge': 'Daily'
   };
   
   const modeDetails = {
@@ -124,16 +124,16 @@ function renderModeDemo(phase) {
   
   return `
     <div style="background: #0f3460; padding: 2rem; border-radius: 8px; margin: 1.5rem 0; border: 3px solid #4ecdc4;">
-      <div style="text-align: center; font-size: 4rem; margin-bottom: 1rem;">${modeIcons[phase.mode]}</div>
+      <div style="text-align: center; font-size: 1.6rem; margin-bottom: 1rem; font-weight: 700; letter-spacing: 0.5px;">${modeIcons[phase.mode] || ''}</div>
       <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 1.5rem 0;">
         <div style="background: #16213e; padding: 1rem; border-radius: 4px;">
-          <strong style="color: #4ecdc4;">⏰ Timer:</strong> ${details.time}
+          <strong style="color: #4ecdc4;">Timer:</strong> ${details.time}
         </div>
         <div style="background: #16213e; padding: 1rem; border-radius: 4px;">
-          <strong style="color: #4ecdc4;">🎯 Goal:</strong> ${details.goal}
+          <strong style="color: #4ecdc4;">Goal:</strong> ${details.goal}
         </div>
         <div style="background: #16213e; padding: 1rem; border-radius: 4px;">
-          <strong style="color: #4ecdc4;">⚠️ Penalty:</strong> ${details.penalty}
+          <strong style="color: #4ecdc4;">Penalty:</strong> ${details.penalty}
         </div>
       </div>
       <p style="text-align: center; color: #999; margin-top: 1.5rem;">You can try this mode from the main menu!</p>
@@ -148,17 +148,17 @@ function renderShopDemo() {
   return `
     <div style="background: #0f3460; padding: 2rem; border-radius: 8px; margin: 1.5rem 0;">
       <div style="background: #4ecdc4; color: #0f3460; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; text-align: center;">
-        <p style="margin: 0; font-weight: 600;">🎁 Tutorial Bonus: <strong>+150 Sparks</strong> to try the shop!</p>
+        <p style="margin: 0; font-weight: 600;">Tutorial Bonus: <strong>+150 Sparks</strong> to try the shop!</p>
       </div>
       <p style="text-align: center; color: #4ecdc4; font-size: 1.3rem; margin-bottom: 1.5rem;">
-        💰 Your Sparks: <strong id="tutorial-sparks-display">${state.sparksWallet}</strong>
+        Sparks Available: <strong id="tutorial-sparks-display">${state.sparksWallet}</strong>
       </p>
       <p style="text-align: center; color: #999; margin-bottom: 1.5rem;">
         Try purchasing an item to see how the shop works! Your purchase will be kept.
       </p>
       <button id="tutorial-visit-shop-btn" 
         style="width: 100%; margin-top: 1rem; padding: 1.25rem; background: #4ecdc4; color: #0f3460; border: none; border-radius: 6px; font-size: 1.2rem; font-weight: 600; cursor: pointer;">
-        🛍️ Open Shop & Try Buying Something
+        Open Shop & Try Buying Something
       </button>
     </div>
   `;
@@ -166,10 +166,10 @@ function renderShopDemo() {
 
 function renderAchievementsDemo() {
   const sampleAchievements = [
-    { icon: '🎓', title: 'Tutorial Master', desc: 'Complete the tutorial', unlocked: false },
-    { icon: '🔥', title: 'First Strike', desc: 'Answer your first problem correctly', unlocked: true },
-    { icon: '💯', title: 'Century', desc: 'Score 100 points in a single game', unlocked: false },
-    { icon: '⚡', title: 'Speed Demon', desc: 'Answer 3 questions in under 5 seconds', unlocked: false }
+    { icon: 'Tutorial', title: 'Tutorial Master', desc: 'Complete the tutorial', unlocked: false },
+    { icon: 'First', title: 'First Strike', desc: 'Answer your first problem correctly', unlocked: true },
+    { icon: 'Century', title: 'Century', desc: 'Score 100 points in a single game', unlocked: false },
+    { icon: 'Speed', title: 'Speed Demon', desc: 'Answer 3 questions in under 5 seconds', unlocked: false }
   ];
   
   return `
@@ -183,16 +183,16 @@ function renderAchievementsDemo() {
                 <strong style="font-size: 1.1rem; color: ${ach.unlocked ? '#4ecdc4' : '#fff'};">${ach.title}</strong>
                 <p style="color: #999; margin: 0.25rem 0 0 0; font-size: 0.9rem;">${ach.desc}</p>
               </div>
-              ${ach.unlocked ? '<span style="color: #4ecdc4; font-size: 1.5rem;">✓</span>' : '<span style="color: #666;">🔒</span>'}
+              ${ach.unlocked ? '<span style="color: #4ecdc4; font-weight: 700;">Unlocked</span>' : '<span style="color: #666; font-weight: 700;">Locked</span>'}
             </div>
           </div>
         `).join('')}
       </div>
       <button id="tutorial-view-achievements-btn" 
         style="width: 100%; margin-top: 1.5rem; padding: 1rem; background: #4ecdc4; color: #0f3460; border: none; border-radius: 6px; font-size: 1.1rem; font-weight: 600; cursor: pointer;">
-        🏆 View All Achievements
+        View All Achievements
       </button>
-      <p style="text-align: center; color: #999; margin-top: 1rem; font-size: 0.95rem;">30+ achievements to unlock! Some are hidden 🤫</p>
+      <p style="text-align: center; color: #999; margin-top: 1rem; font-size: 0.95rem;">30+ achievements to unlock! Some are hidden secrets.</p>
     </div>
   `;
 }
@@ -220,10 +220,10 @@ function attachPracticeListeners() {
     
     if (userAnswer === currentPracticeProblem.answer) {
       practiceCorrect++;
-      feedbackEl.innerHTML = '<span style="color: #4ecdc4; font-weight: 600;">✓ Correct!</span>';
+      feedbackEl.innerHTML = '<span style="color: #4ecdc4; font-weight: 600;">Correct!</span>';
       
       if (practiceCorrect >= practiceTarget) {
-        feedbackEl.innerHTML = '<span style="color: #4ecdc4; font-weight: 600;">🎉 Great job! Click Next to continue.</span>';
+        feedbackEl.innerHTML = '<span style="color: #4ecdc4; font-weight: 600;">Great job! Click Next to continue.</span>';
         const nextBtn = document.getElementById('tutorial-next-btn');
         if (nextBtn) {
           nextBtn.disabled = false;
@@ -242,12 +242,12 @@ function attachPracticeListeners() {
           // Update progress display
           const progressEl = document.getElementById('tutorial-practice-progress');
           if (progressEl) {
-            progressEl.textContent = `Progress: ${practiceCorrect}/${practiceTarget} ✓`;
+            progressEl.textContent = `Progress: ${practiceCorrect}/${practiceTarget} complete`;
           }
         }, 1000);
       }
     } else {
-      feedbackEl.innerHTML = '<span style="color: #ff6b6b; font-weight: 600;">✗ Try again!</span>';
+      feedbackEl.innerHTML = '<span style="color: #ff6b6b; font-weight: 600;">Try again!</span>';
       input.value = '';
       input.focus();
     }
@@ -286,7 +286,7 @@ function attachShopDemoListeners() {
         z-index: 10000;
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       `;
-      toast.textContent = `🎁 +${bonusSparks} Sparks added! Try buying something.`;
+      toast.textContent = `+${bonusSparks} Sparks added! Try buying something.`;
       document.body.appendChild(toast);
       setTimeout(() => toast.remove(), 3000);
       
@@ -303,7 +303,7 @@ function attachShopDemoListeners() {
         // Create and configure the tutorial back button
         const tutorialBackBtn = document.createElement('button');
         tutorialBackBtn.id = 'tutorial-back-from-shop-btn';
-        tutorialBackBtn.textContent = '← Back to Tutorial';
+        tutorialBackBtn.textContent = 'Back to Tutorial';
         tutorialBackBtn.style.cssText = backBtn.style.cssText; // Keep same styling
         tutorialBackBtn.className = backBtn.className;
         
@@ -328,7 +328,7 @@ function attachShopDemoListeners() {
               z-index: 10000;
               box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             `;
-            congrats.textContent = `✓ Great! You spent ${sparksSpent} Sparks. Now let's try using your item!`;
+            congrats.textContent = `Great! You spent ${sparksSpent} Sparks. Now let's try using your item!`;
             document.body.appendChild(congrats);
             setTimeout(() => congrats.remove(), 4000);
             
@@ -371,10 +371,10 @@ function showItemPracticePhase() {
   nextBtn.style.cursor = 'not-allowed';
   
   contentEl.innerHTML = `
-    <h2 style="color: #4ecdc4; margin-top: 0;">Try Your New Item! 🎮</h2>
+    <h2 style="color: #4ecdc4; margin-top: 0;">Try Your New Item!</h2>
     <p style="font-size: 1.1rem; margin: 1rem 0;">Let's practice using the item you just bought</p>
     <div style="background: #1a1a2e; border-left: 4px solid #4ecdc4; padding: 1rem; margin: 1.5rem 0; border-radius: 4px;">
-      <p style="margin: 0; color: #4ecdc4; font-weight: 600;">💡 Your items appear at the bottom during gameplay. Click them to activate!</p>
+      <p style="margin: 0; color: #4ecdc4; font-weight: 600;">Your items appear at the bottom during gameplay. Click them to activate.</p>
     </div>
     
     <div style="background: #0f3460; padding: 2rem; border-radius: 8px; margin: 1.5rem 0;">
@@ -400,7 +400,7 @@ function showItemPracticePhase() {
       <div id="tutorial-item-feedback" style="text-align: center; margin-top: 1.5rem; font-size: 1.1rem; min-height: 30px; color: #4ecdc4;"></div>
       
       <div id="tutorial-item-prompt" style="background: #4ecdc4; color: #0f3460; padding: 1rem; border-radius: 6px; margin-top: 1.5rem; text-align: center; font-weight: 600;">
-        👆 Click your item above to activate it and see what it does!
+          Click your item above to activate it and see what it does!
       </div>
     </div>
   `;
@@ -438,7 +438,7 @@ function renderTutorialItemInventory() {
         transition: transform 0.2s;
       `;
       btn.innerHTML = `
-        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">${item.icon || '✨'}</div>
+        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">${item.icon || 'Item'}</div>
         <div style="font-size: 0.9rem; color: #fff; font-weight: 600;">${item.name}</div>
         <div style="font-size: 0.8rem; color: #4ecdc4; margin-top: 0.25rem;">x${count}</div>
       `;
@@ -459,10 +459,10 @@ function renderTutorialItemInventory() {
         
         if (result.success) {
           if (feedbackEl) {
-            feedbackEl.innerHTML = `<span style="color: #4ecdc4;">✓ ${result.message}</span>`;
+            feedbackEl.innerHTML = `<span style="color: #4ecdc4;">${result.message}</span>`;
           }
           if (promptEl) {
-            promptEl.innerHTML = `🎉 Great! Now answer a few problems to see the effect in action!`;
+            promptEl.innerHTML = `Great! Now answer a few problems to see the effect in action!`;
           }
           
           // Update count
@@ -479,7 +479,7 @@ function renderTutorialItemInventory() {
           }, 2000);
         } else {
           if (feedbackEl) {
-            feedbackEl.innerHTML = `<span style="color: #ff6b6b;">✗ ${result.message}</span>`;
+            feedbackEl.innerHTML = `<span style="color: #ff6b6b;">${result.message}</span>`;
           }
         }
       });
@@ -505,7 +505,7 @@ function attachItemPracticeListeners() {
     if (isNaN(userAnswer)) return;
     
     if (userAnswer === currentProblem.answer) {
-      feedbackEl.innerHTML = '<span style="color: #4ecdc4; font-weight: 600;">✓ Correct!</span>';
+      feedbackEl.innerHTML = '<span style="color: #4ecdc4; font-weight: 600;">Correct!</span>';
       
       setTimeout(() => {
         currentProblem = generateSimpleProblem();
@@ -515,7 +515,7 @@ function attachItemPracticeListeners() {
         feedbackEl.innerHTML = '';
       }, 1000);
     } else {
-      feedbackEl.innerHTML = '<span style="color: #ff6b6b; font-weight: 600;">✗ Try again!</span>';
+      feedbackEl.innerHTML = '<span style="color: #ff6b6b; font-weight: 600;">Try again!</span>';
       input.value = '';
       input.focus();
     }
@@ -544,7 +544,7 @@ function attachAchievementsDemoListeners() {
           // Create and configure the tutorial back button
           const tutorialBackBtn = document.createElement('button');
           tutorialBackBtn.id = 'tutorial-back-from-achievements-btn';
-          tutorialBackBtn.textContent = '← Back to Tutorial';
+          tutorialBackBtn.textContent = 'Back to Tutorial';
           tutorialBackBtn.style.cssText = backBtn.style.cssText;
           tutorialBackBtn.className = backBtn.className;
           
