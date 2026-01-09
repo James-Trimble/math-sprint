@@ -166,10 +166,8 @@ const tutorialModule = (() => {
     // Unlock tutorial achievement and award sparks via state
     try {
       if (typeof window.achievementsModule !== 'undefined') {
-        const unlocked = window.achievementsModule.unlock('tutorialComplete');
-        const ach = window.achievementsModule.getAchievement('tutorialComplete');
-        const reward = ach && ach.reward ? ach.reward : 0;
-        if (reward) state.addSparks(reward);
+        // Suppress the generic achievement popup here; we'll show the tutorial-specific popup instead
+        window.achievementsModule.unlock('tutorialComplete', { suppressPopup: true });
       }
     } catch (e) {
       // Fail-safe: do not block flow on achievement errors

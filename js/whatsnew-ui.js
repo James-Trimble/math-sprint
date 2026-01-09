@@ -12,7 +12,16 @@ export function populateWhatsNew() {
     listContainer.innerHTML = '';
     VERSION_INFO.notes.forEach(note => {
       const li = document.createElement('li');
-      li.textContent = note;
+      // Replace default '40+' token in notes with dynamic marketing label
+      const label = (window.achievementsModule && typeof window.achievementsModule.getTotalCount === 'function') ?
+        (() => {
+          const total = window.achievementsModule.getTotalCount();
+          const thresholds = [40,50,60,75,100,200,500];
+          let l = '40+';
+          for (let i = 0; i < thresholds.length; i++) { if (total >= thresholds[i]) l = `${thresholds[i]}+`; }
+          return l;
+        })() : '40+';
+      li.textContent = note.replace(/40\+/, label);
       listContainer.appendChild(li);
     });
   }

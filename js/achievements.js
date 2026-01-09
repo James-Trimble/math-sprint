@@ -208,10 +208,17 @@ const achievementsModule = (() => {
     jsCodebase: {
       id: 'jsCodebase',
       title: 'JS === Sparks',
-      description: 'Our JavaScript has 6,363 lines of code, and you have 6,363 sparks! That\'s worth celebrating!',
+      description: 'Our JavaScript has 5,435 lines of code, and you have 5,435 sparks! That\'s worth celebrating!',
       reward: 100,
       category: 'milestone',
-      threshold: 6363
+      threshold: 5435
+    },
+    sparksEqualsCodebase: {
+      id: 'sparksEqualsCodebase',
+      title: 'Perfect Parity',
+      description: 'Your sparks exactly match the codebase: 8,403 lines — perfect parity!',
+      reward: 500,
+      category: 'hidden'
     },
 
     // Hidden/Fun Easter Eggs
@@ -256,6 +263,62 @@ const achievementsModule = (() => {
       description: 'Recovered from 1 life remaining to win with all 3 lives',
       reward: 25,
       category: 'hidden'
+    },
+
+    // Spark thresholds & fun API/Random achievements
+    piSparks314: {
+      id: 'piSparks314',
+      title: 'Pi Collector',
+      description: 'Collected exactly 314 Sparks — a nod to π (3.14 × 100)!',
+      reward: 314,
+      category: 'secret'
+    },
+    sparks1000: {
+      id: 'sparks1000',
+      title: 'Grand Mill',
+      description: 'Accumulated 1,000 Sparks in your wallet',
+      reward: 100,
+      category: 'milestone',
+      threshold: 1000
+    },
+    sparks5000: {
+      id: 'sparks5000',
+      title: 'High Roller',
+      description: 'Accumulated 5,000 Sparks in your wallet',
+      reward: 500,
+      category: 'milestone',
+      threshold: 5000
+    },
+    sparks10000: {
+      id: 'sparks10000',
+      title: 'Legendary Wallet',
+      description: 'Accumulated 10,000 Sparks — you are legendary!',
+      reward: 2000,
+      category: 'milestone',
+      threshold: 10000
+    },
+
+    // Random-trigger achievements (small chance to unlock during gameplay)
+    luckyStrike: {
+      id: 'luckyStrike',
+      title: 'Lucky Strike',
+      description: 'A random twist of fate granted you an achievement',
+      reward: 50,
+      category: 'hidden'
+    },
+    cosmicCoincidence: {
+      id: 'cosmicCoincidence',
+      title: 'Cosmic Coincidence',
+      description: 'Everything aligned for a moment. How poetic.',
+      reward: 75,
+      category: 'hidden'
+    },
+    glitchInTheMatrix: {
+      id: 'glitchInTheMatrix',
+      title: 'Glitch in the Matrix',
+      description: 'You encountered a rare system quirk. Enjoy the bonus.',
+      reward: 100,
+      category: 'hidden'
     }
   };
 
@@ -291,7 +354,7 @@ const achievementsModule = (() => {
    * @param {string} achievementId - Achievement ID
    * @returns {boolean} True if newly unlocked, false if already unlocked
    */
-  function unlock(achievementId) {
+  function unlock(achievementId, options = {}) {
     if (!achievements[achievementId]) {
       console.warn(`Achievement not found: ${achievementId}`);
       return false;
@@ -304,6 +367,18 @@ const achievementsModule = (() => {
 
     achieved[achievementId] = true;
     saveAchievements(achieved);
+
+    // Dispatch a global event so other modules can react (UI updates, reward awarding, queues)
+    try {
+      if (typeof window !== 'undefined' && window.document) {
+        const evt = new CustomEvent('mathSprintAchievementUnlocked', { detail: { achievementId, options } });
+        window.document.dispatchEvent(evt);
+      }
+    } catch (e) {
+      // Non-fatal: continue even if events fail
+      console.warn('Could not dispatch achievement unlocked event:', e);
+    }
+
     return true; // Newly unlocked
   }
 

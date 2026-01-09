@@ -7,6 +7,8 @@ export const GAME_DURATION = 60;
 export const SURVIVAL_START_TIME = 30; 
 export const STARTING_LIVES = 3; 
 export const GAME_VERSION = "v1.0"; 
+export const CODEBASE_LINES = 8403; // Number of lines across the counted repository (JS/HTML/CSS/JSON/MD/TXT) (updated)
+
 
 // --- Session Validation ---
 export let isSessionValid = true;
@@ -185,6 +187,21 @@ export function getHighScore() {
   return highScoreSurvival;
 }
 
+/**
+ * Check and unlock achievements based on current sparks wallet value
+ */
+export function checkSparkAchievements() {
+  // Exact matches
+  if (sparksWallet === 314) checkAndUnlockAchievement('piSparks314');
+  if (sparksWallet === CODEBASE_LINES) checkAndUnlockAchievement('sparksEqualsCodebase');
+
+  // Threshold achievements (>=)
+  if (sparksWallet >= 1000) checkAndUnlockAchievement('sparks1000');
+  if (sparksWallet >= 5435) checkAndUnlockAchievement('jsCodebase');
+  if (sparksWallet >= 5000) checkAndUnlockAchievement('sparks5000');
+  if (sparksWallet >= 10000) checkAndUnlockAchievement('sparks10000');
+}
+
 export function addSparks(amount) {
     if (!amount || amount <= 0) return;
     if (amount > 10000) {
@@ -194,10 +211,15 @@ export function addSparks(amount) {
     sparksWallet += amount;
     sessionSparks += amount; 
     localStorage.setItem("mathSprintSparks", encodeValue(sparksWallet.toString()));
-    
-    // Check for JS codebase milestone
-    if (sparksWallet >= 4340) {
-      checkAndUnlockAchievement('jsCodebase');
+
+    // Run spark-based achievement checks
+    checkSparkAchievements();
+
+    // Small chance to unlock a random hidden achievement (0.5% per call)
+    if (Math.random() < 0.005) {
+      const randomIds = ['luckyStrike', 'cosmicCoincidence', 'glitchInTheMatrix'];
+      const chosen = randomIds[Math.floor(Math.random() * randomIds.length)];
+      checkAndUnlockAchievement(chosen);
     }
 }
 
@@ -206,6 +228,17 @@ export function deductSparks(amount) {
     if (sparksWallet < amount) return false;
     sparksWallet -= amount;
     localStorage.setItem("mathSprintSparks", encodeValue(sparksWallet.toString()));
+
+    // Run spark-based achievement checks (spending may hit thresholds or parity)
+    checkSparkAchievements();
+
+    // Small chance to unlock a random hidden achievement (0.5% per call)
+    if (Math.random() < 0.005) {
+      const randomIds = ['luckyStrike', 'cosmicCoincidence', 'glitchInTheMatrix'];
+      const chosen = randomIds[Math.floor(Math.random() * randomIds.length)];
+      checkAndUnlockAchievement(chosen);
+    }
+
     return true;
 }
 

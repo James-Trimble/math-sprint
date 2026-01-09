@@ -7,6 +7,7 @@ import * as state from './state.js';
 import * as ui from './ui.js';
 import * as audio from './audio-hub.js';
 import * as inventory from './inventory.js';
+import { renderAchievementsScreen } from './achievements-ui.js';
 
 // Achievement queue to display after game ends
 let pendingAchievements = [];
@@ -18,27 +19,48 @@ window.pendingAchievements = pendingAchievements;
 export function checkAndUnlockAchievement(achievementId) {
   if (!window.achievementsModule) return;
 
-  const isNewUnlock = window.achievementsModule.unlock(achievementId);
-  if (isNewUnlock) {
-    const achievement = window.achievementsModule.getAchievement(achievementId);
-    if (achievement) {
-      pendingAchievements.push(achievement);
-      window.pendingAchievements = pendingAchievements;
-      
-      // Do not play sound immediately; sound will play when user views popups
-
-      // Announce via screen reader
-      if (state.gameMode) {
-        ui.announceAchievementDuringGameplay(`Achievement unlocked: ${achievement.title}`);
-      }
-
-      // Award sparks
-        if (achievement.reward) {
-          state.addSparks(achievement.reward);
-      }
-    }
-  }
+  // Rely on the achievements module to dispatch an event when unlocking.
+  // The global event listener will handle queuing, announcing, rewarding, and UI updates.
+  return window.achievementsModule.unlock(achievementId);
 }
+
+// Global listener for achievement unlocks (handles direct unlocks too)
+window.document.addEventListener('mathSprintAchievementUnlocked', (e) => {
+  const { achievementId, options = {} } = e.detail || {};
+  if (!achievementId || !window.achievementsModule) return;
+
+  const achievement = window.achievementsModule.getAchievement(achievementId);
+  if (!achievement) return;
+
+  // If another path already queued this achievement, avoid duplicate
+  if (pendingAchievements.find(a => a.id === achievementId)) {
+    if (typeof renderAchievementsScreen === 'function') renderAchievementsScreen();
+    return;
+  }
+
+  const suppressPopup = !!options.suppressPopup;
+
+  // Announce via screen reader unless suppressed
+  if (!suppressPopup && state.gameMode) {
+    ui.announceAchievementDuringGameplay(`Achievement unlocked: ${achievement.title}`);
+  }
+
+  // Award sparks (state.addSparks is idempotent enough for our use)
+  if (achievement.reward) {
+    state.addSparks(achievement.reward);
+  }
+
+  // Queue for display unless suppressed
+  if (!suppressPopup) {
+    pendingAchievements.push(achievement);
+    window.pendingAchievements = pendingAchievements;
+  }
+
+  // Update achievements UI
+  if (typeof renderAchievementsScreen === 'function') renderAchievementsScreen();
+  // Update marketing labels (homepage/stat elements) in case the total achievement count changed
+  if (typeof updateMarketingAchievementLabels === 'function') updateMarketingAchievementLabels();
+});
 
 /**
  * Display the next pending achievement popup

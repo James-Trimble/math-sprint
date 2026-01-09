@@ -22,6 +22,10 @@ export function initializeListeners() {
   setupGameplayListeners();
   setupSettingsListeners();
   setupPopupListeners();
+
+  // Ensure achievements button and marketing labels show current counts on load
+  renderAchievementsScreen();
+  updateMarketingAchievementLabels();
 }
 
 /**

@@ -3,7 +3,7 @@ export const VERSION_INFO = {
     heading: "v1.0: Official Launch 🚀",
     tagline: "Achievements, daily challenges, strategic shop, and full accessibility. The complete MathSprint experience!",
     notes: [
-        "🏆 Achievement System: Unlock 15+ achievements across gameplay, tutorials, and milestones",
+        "🏆 Achievement System: Unlock 40+ achievements across gameplay, tutorials, and milestones",
         "🎯 Daily Challenge: Brand new mode with global daily seeding - compete with players worldwide on the same problems",
         "📊 Personal Best Tracking: Track your best score for every daily challenge",
         "👋 Onboarding Experience: Welcome new players with guided setup and name entry",
