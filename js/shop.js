@@ -2,7 +2,7 @@ import * as state from './state.js';
 import * as ui from './ui.js';
 import * as audio from './audio-hub.js';
 import * as inventory from './inventory.js';
-import { getItemsList, getItemById, ITEM_CATEGORIES } from './items.js';
+import { getItemsList, getItemById, ITEM_CATEGORIES, getItemIconSvg } from './items.js';
 import { checkAndUnlockAchievement } from './game-achievements.js';
 
 // 10 Points = 1 Spark
@@ -165,7 +165,7 @@ export function renderShopItems() {
         card.className = 'shop-item';
         card.setAttribute('role', 'article');
         card.innerHTML = `
-            <div class="item-icon" aria-hidden="true">${item.icon}</div>
+            <div class="item-icon" aria-hidden="true">${getItemIconSvg(item)}</div>
             <strong>${item.name}</strong>
             <p class="item-description">${item.description}</p>
             <div class="item-footer">

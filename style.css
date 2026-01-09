@@ -783,8 +783,33 @@ body.overdrive-active {
   gap: 0.5rem;
 }
 
-.shop-item .item-icon {
-  font-size: 2rem;
+.shop-item .item-icon,
+.item-badge,
+.achievement-icon {
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  background: radial-gradient(circle at 30% 30%, rgba(78, 205, 196, 0.12), rgba(0, 0, 0, 0.2));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  margin-bottom: 0.35rem;
+}
+
+.shop-item .item-icon svg,
+.item-badge svg,
+.achievement-icon svg {
+  width: 26px;
+  height: 26px;
+  color: var(--primary-color);
+  stroke-width: 2;
+}
+
+.item-button {
+  gap: 0.45rem;
+  align-items: center;
 }
 
 .shop-item .item-footer {
@@ -1012,7 +1037,6 @@ body.high-contrast .shop-tab-btn[aria-selected="true"] {
 }
 
 .achievement-icon {
-  font-size: 2rem;
   margin-bottom: 0.5rem;
 }
 

@@ -7,11 +7,56 @@ export const ITEM_CATEGORIES = {
   CHALLENGE: "challenge"
 };
 
+const ITEM_CATEGORY_SVGS = {
+  time: `
+    <svg viewBox="0 0 24 24" role="presentation" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="13" r="7" />
+      <path d="M12 10v4l2 2" />
+      <path d="M12 2v2" />
+      <path d="m4.9 4.9 1.4 1.4" />
+      <path d="m19.1 4.9-1.4 1.4" />
+    </svg>
+  `,
+  score: `
+    <svg viewBox="0 0 24 24" role="presentation" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="5" />
+      <circle cx="12" cy="12" r="1.5" />
+      <path d="M12 3v3" />
+      <path d="m19.5 12-3 0" />
+      <path d="M12 18v3" />
+      <path d="m4.5 12 3 0" />
+    </svg>
+  `,
+  survival: `
+    <svg viewBox="0 0 24 24" role="presentation" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2 5 5v6c0 4.4 3 8.4 7 9 4-0.6 7-4.6 7-9V5l-7-3Z" />
+      <path d="M9.5 12.5 12 15l2.5-2.5" />
+    </svg>
+  `,
+  challenge: `
+    <svg viewBox="0 0 24 24" role="presentation" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 3h6" />
+      <path d="m8 8 1.5 1.5" />
+      <path d="m16 8-1.5 1.5" />
+      <path d="M9 21h6" />
+      <rect x="4" y="10" width="16" height="9" rx="2" />
+      <path d="M12 6v4" />
+    </svg>
+  `,
+  default: `
+    <svg viewBox="0 0 24 24" role="presentation" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2 3 7l9 5 9-5-9-5Z" />
+      <path d="M3 17l9 5 9-5" />
+      <path d="M3 12l9 5 9-5" />
+    </svg>
+  `
+};
+
 export const ITEMS = [
   {
     id: "timeFreeze",
     name: "Time Freeze",
-    icon: "TF",
     category: ITEM_CATEGORIES.TIME,
     cost: 50,
     description: "Pause the timer for 10 seconds",
@@ -21,7 +66,6 @@ export const ITEMS = [
   {
     id: "timeRewind",
     name: "+15 Seconds",
-    icon: "RW",
     category: ITEM_CATEGORIES.TIME,
     cost: 75,
     description: "Add 15 seconds to the clock",
@@ -31,7 +75,6 @@ export const ITEMS = [
   {
     id: "slowMotion",
     name: "Slow Motion",
-    icon: "SM",
     category: ITEM_CATEGORIES.TIME,
     cost: 100,
     description: "Timer ticks at half speed for 20 seconds",
@@ -42,7 +85,6 @@ export const ITEMS = [
   {
     id: "doublePoints",
     name: "Double Points",
-    icon: "DP",
     category: ITEM_CATEGORIES.SCORE,
     cost: 60,
     description: "2x points for 15 seconds",
@@ -53,7 +95,6 @@ export const ITEMS = [
   {
     id: "megaBonus",
     name: "Mega Bonus",
-    icon: "MB",
     category: ITEM_CATEGORIES.SCORE,
     cost: 120,
     description: "+250 points instantly",
@@ -63,7 +104,6 @@ export const ITEMS = [
   {
     id: "shield",
     name: "Shield",
-    icon: "SH",
     category: ITEM_CATEGORIES.SURVIVAL,
     cost: 80,
     description: "Block the next wrong-answer penalty",
@@ -73,7 +113,6 @@ export const ITEMS = [
   {
     id: "extraLife",
     name: "Extra Life",
-    icon: "LIFE",
     category: ITEM_CATEGORIES.SURVIVAL,
     cost: 90,
     description: "+1 life (Endless only)",
@@ -84,7 +123,6 @@ export const ITEMS = [
   {
     id: "secondChance",
     name: "Second Chance",
-    icon: "SC",
     category: ITEM_CATEGORIES.SURVIVAL,
     cost: 150,
     description: "Auto-revive with +30s when time runs out",
@@ -95,7 +133,6 @@ export const ITEMS = [
   {
     id: "noSubtraction",
     name: "No Subtraction",
-    icon: "NS",
     category: ITEM_CATEGORIES.CHALLENGE,
     cost: 40,
     description: "Disable subtraction for 30 seconds",
@@ -106,7 +143,6 @@ export const ITEMS = [
   {
     id: "easyMode",
     name: "Easy Mode",
-    icon: "EASY",
     category: ITEM_CATEGORIES.CHALLENGE,
     cost: 100,
     description: "Addition-only problems for 30 seconds",
@@ -117,7 +153,6 @@ export const ITEMS = [
   {
     id: "scoreMultiplier",
     name: "Score Multiplier",
-    icon: "X3",
     category: ITEM_CATEGORIES.SCORE,
     cost: 110,
     description: "3x points for 10 seconds",
@@ -128,7 +163,6 @@ export const ITEMS = [
   {
     id: "timeLapse",
     name: "Time Lapse",
-    icon: "TL",
     category: ITEM_CATEGORIES.TIME,
     cost: 85,
     description: "Add 25 seconds to the clock",
@@ -138,7 +172,6 @@ export const ITEMS = [
   {
     id: "quickReflex",
     name: "Quick Reflex",
-    icon: "QR",
     category: ITEM_CATEGORIES.CHALLENGE,
     cost: 70,
     description: "Problems become easier for 20 seconds",
@@ -149,7 +182,6 @@ export const ITEMS = [
   {
     id: "criticalHit",
     name: "Critical Hit",
-    icon: "CH",
     category: ITEM_CATEGORIES.SCORE,
     cost: 130,
     description: "+500 points instantly (use wisely!)",
@@ -159,7 +191,6 @@ export const ITEMS = [
   {
     id: "lifeVest",
     name: "Life Vest",
-    icon: "LV",
     category: ITEM_CATEGORIES.SURVIVAL,
     cost: 85,
     description: "+2 lives (Endless only)",
@@ -170,7 +201,6 @@ export const ITEMS = [
   {
     id: "safeZone",
     name: "Safe Zone",
-    icon: "SZ",
     category: ITEM_CATEGORIES.SURVIVAL,
     cost: 95,
     description: "Block 2 wrong-answer penalties",
@@ -180,7 +210,6 @@ export const ITEMS = [
   {
     id: "focusMode",
     name: "Focus Mode",
-    icon: "FOCUS",
     category: ITEM_CATEGORIES.CHALLENGE,
     cost: 65,
     description: "Only addition and subtraction for 25 seconds",
@@ -191,7 +220,6 @@ export const ITEMS = [
   {
     id: "resilience",
     name: "Resilience",
-    icon: "RES",
     category: ITEM_CATEGORIES.SURVIVAL,
     cost: 110,
     description: "Reduce penalty duration by 50%",
@@ -202,7 +230,6 @@ export const ITEMS = [
   {
     id: "perfectStrike",
     name: "Perfect Strike",
-    icon: "PERF",
     category: ITEM_CATEGORIES.SCORE,
     cost: 140,
     description: "10x multiplier for next correct answer only",
@@ -217,4 +244,9 @@ export function getItemById(id) {
 
 export function getItemsList() {
   return [...ITEMS];
+}
+
+export function getItemIconSvg(item) {
+  if (!item) return ITEM_CATEGORY_SVGS.default;
+  return ITEM_CATEGORY_SVGS[item.category] || ITEM_CATEGORY_SVGS.default;
 }

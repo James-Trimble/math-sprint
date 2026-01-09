@@ -6,6 +6,7 @@
 import * as ui from './ui.js';
 import * as state from './state.js';
 import * as shop from './shop.js';
+import { getItemIconSvg } from './items.js';
 
 let practiceCorrect = 0;
 let practiceTarget = 0;
@@ -165,11 +166,20 @@ function renderShopDemo() {
 }
 
 function renderAchievementsDemo() {
+  const trophySvg = `
+    <svg viewBox="0 0 24 24" role="presentation" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="width: 28px; height: 28px;">
+      <path d="M8 21h8" />
+      <path d="M12 17a4 4 0 0 1-4-4V5h8v8a4 4 0 0 1-4 4Z" />
+      <path d="M12 17v4" />
+      <path d="M7 5H5a2 2 0 0 0-2 2v1a4 4 0 0 0 4 4" />
+      <path d="M17 5h2a2 2 0 0 1 2 2v1a4 4 0 0 1-4 4" />
+    </svg>
+  `;
   const sampleAchievements = [
-    { icon: 'Tutorial', title: 'Tutorial Master', desc: 'Complete the tutorial', unlocked: false },
-    { icon: 'First', title: 'First Strike', desc: 'Answer your first problem correctly', unlocked: true },
-    { icon: 'Century', title: 'Century', desc: 'Score 100 points in a single game', unlocked: false },
-    { icon: 'Speed', title: 'Speed Demon', desc: 'Answer 3 questions in under 5 seconds', unlocked: false }
+    { title: 'Tutorial Master', desc: 'Complete the tutorial', unlocked: false },
+    { title: 'First Strike', desc: 'Answer your first problem correctly', unlocked: true },
+    { title: 'Century', desc: 'Score 100 points in a single game', unlocked: false },
+    { title: 'Speed Demon', desc: 'Answer 3 questions in under 5 seconds', unlocked: false }
   ];
   
   return `
@@ -178,7 +188,7 @@ function renderAchievementsDemo() {
         ${sampleAchievements.map(ach => `
           <div style="background: #16213e; padding: 1.5rem; border-radius: 6px; border: 2px solid ${ach.unlocked ? '#4ecdc4' : '#1a1a2e'}; opacity: ${ach.unlocked ? '1' : '0.6'};">
             <div style="display: flex; align-items: center; gap: 1rem;">
-              <span style="font-size: 2.5rem;">${ach.icon}</span>
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border: 1px solid rgba(78, 205, 196, 0.4); border-radius: 12px; background: radial-gradient(circle at 30% 30%, rgba(78, 205, 196, 0.15), rgba(0, 0, 0, 0.25)); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25); color: #4ecdc4;">${trophySvg}</span>
               <div style="flex: 1;">
                 <strong style="font-size: 1.1rem; color: ${ach.unlocked ? '#4ecdc4' : '#fff'};">${ach.title}</strong>
                 <p style="color: #999; margin: 0.25rem 0 0 0; font-size: 0.9rem;">${ach.desc}</p>
@@ -438,7 +448,7 @@ function renderTutorialItemInventory() {
         transition: transform 0.2s;
       `;
       btn.innerHTML = `
-        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">${item.icon || 'Item'}</div>
+        <div class="item-badge" style="margin: 0 auto 0.5rem auto;">${getItemIconSvg(item)}</div>
         <div style="font-size: 0.9rem; color: #fff; font-weight: 600;">${item.name}</div>
         <div style="font-size: 0.8rem; color: #4ecdc4; margin-top: 0.25rem;">x${count}</div>
       `;

@@ -1,6 +1,16 @@
 export function renderAchievementsScreen() {
   if (typeof window.achievementsModule === 'undefined') return;
 
+  const trophySvg = `
+    <svg viewBox="0 0 24 24" role="presentation" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 21h8" />
+      <path d="M12 17a4 4 0 0 1-4-4V5h8v8a4 4 0 0 1-4 4Z" />
+      <path d="M12 17v4" />
+      <path d="M7 5H5a2 2 0 0 0-2 2v1a4 4 0 0 0 4 4" />
+      <path d="M17 5h2a2 2 0 0 1 2 2v1a4 4 0 0 1-4 4" />
+    </svg>
+  `;
+
   const unlockedAchievements = window.achievementsModule.getUnlocked();
   const totalCount = window.achievementsModule.getTotalCount();
   const unlockedCount = window.achievementsModule.getUnlockedCount();
@@ -37,7 +47,7 @@ export function renderAchievementsScreen() {
     }
 
     card.innerHTML = `
-      <div class="achievement-icon">ACH</div>
+      <div class="achievement-icon" aria-hidden="true">${trophySvg}</div>
       <h3>${achievement.title}</h3>
       <p class="achievement-description">${achievement.description}</p>
       ${rewardHTML}

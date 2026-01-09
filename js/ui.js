@@ -1,5 +1,6 @@
 // js/ui.js
 import { setCurrentModalId } from './state.js';
+import { getItemIconSvg } from './items.js';
 
 // --- HTML Element References ---
 export const allScreens = document.querySelectorAll(".screen");
@@ -282,7 +283,7 @@ export function renderQuickUseButtons(items, inventoryLookup, onClick) {
     btn.dataset.itemId = item.id;
     btn.type = "button";
     btn.setAttribute("aria-label", `${item.name}, ${count} available`);
-    btn.innerHTML = `<span class="icon">${item.icon}</span><span class="label">${item.name}</span><span class="count">(${count})</span>`;
+    btn.innerHTML = `<span class="item-badge" aria-hidden="true">${getItemIconSvg(item)}</span><span class="label">${item.name}</span><span class="count">(${count})</span>`;
     btn.addEventListener("click", () => onClick && onClick(item.id));
     quickUseBar.appendChild(btn);
   });
