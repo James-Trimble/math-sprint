@@ -95,8 +95,9 @@ export const onboardingOpDivision = document.getElementById("onboarding-op-divis
 // --- UI Functions ---
 
 export function showScreen(screenId, isModal = false) {
-  // Blur any focused element to avoid aria-hidden warnings
-  if (document.activeElement && typeof document.activeElement.blur === 'function') {
+  // Blur any focused element to avoid aria-hidden warnings (skip on mobile to prevent keyboard suppression)
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if (!isMobile && document.activeElement && typeof document.activeElement.blur === 'function') {
     try { document.activeElement.blur(); } catch {}
   }
 

@@ -22,7 +22,9 @@ export function startOnboardingFlow() {
 
 export function showOnboardingStep1() {
   ui.showScreen('onboarding-step1', true);
-  if (ui.onboardingNameInput) ui.onboardingNameInput.focus();
+  // Skip auto-focus on mobile; let user tap the input to trigger keyboard (prevents focus policy conflicts)
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if (!isMobile && ui.onboardingNameInput) ui.onboardingNameInput.focus();
 
   const handleStep1Submit = (e) => {
     e.preventDefault();
