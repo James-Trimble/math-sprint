@@ -25,6 +25,25 @@ const onboardingModule = (() => {
    */
   function markOnboardingComplete() {
     localStorage.setItem('mathSprintOnboardingComplete', 'true');
+    localStorage.removeItem('mathSprintOnboardingCurrentStep'); // Clear saved step
+  }
+
+  /**
+   * Save current step to localStorage
+   */
+  function saveCurrentStep() {
+    if (currentStep !== 'complete') {
+      localStorage.setItem('mathSprintOnboardingCurrentStep', currentStep.toString());
+    }
+  }
+
+  /**
+   * Load saved step from localStorage
+   * @returns {number} saved step or 1 if none
+   */
+  function loadSavedStep() {
+    const saved = localStorage.getItem('mathSprintOnboardingCurrentStep');
+    return saved ? parseInt(saved, 10) : 1;
   }
 
   /**
@@ -32,7 +51,7 @@ const onboardingModule = (() => {
    * Full 3-step flow for all new players
    */
   function start() {
-    currentStep = 1;
+    currentStep = loadSavedStep();
     onboardingData.playerName = '';
   }
 
@@ -42,6 +61,7 @@ const onboardingModule = (() => {
   function nextStep() {
     if (currentStep < 3) {
       currentStep++;
+      saveCurrentStep();
     } else if (currentStep === 3) {
       currentStep = 'complete';
     }

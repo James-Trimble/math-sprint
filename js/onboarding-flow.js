@@ -17,7 +17,23 @@ export function startOnboardingFlow() {
   }
   window.onboardingModule.start();
   audio.playOnboardingMusic();
-  showOnboardingStep1();
+  
+  const currentStep = window.onboardingModule.getCurrentStep();
+  switch (currentStep) {
+    case 1:
+      showOnboardingStep1();
+      break;
+    case 2:
+      showOnboardingStep2();
+      break;
+    case 3:
+      showOnboardingStep3();
+      break;
+    default:
+      // Fallback to step 1 if something goes wrong
+      showOnboardingStep1();
+      break;
+  }
 }
 
 export function showOnboardingStep1() {
