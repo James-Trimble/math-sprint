@@ -1,8 +1,8 @@
 {
-  "id": "update-1-0-1",
-  "title": "v1.0.1 Update Available!",
-  "message": "Thanks for playing Math Sprint! We've just released v1.0.1 with some important updates:\n\n**Bug Fixes**: The tutorial step 8 \"View All Achievements\" button now works correctly, along with several other fixes.\n\n**New Features**: Redesigned Settings with new accessibility options and quality-of-life improvements.\n\nCheck out the full list of changes in **What's New** after dismissing this message!\n\nHave feedback? [Share your thoughts with us](/feedback/) - we'd love to hear from you!\n\nHappy sprinting!",
+  "id": "zero-mode-quest-25",
+  "title": "Community Quest: ZERO",
+  "message": "We have launched **Math Sprint: Zero** on PageDrop!\n\nIt is a sudden-death prototype. One life. No mercy.\n\n**THE QUEST:**\nIf this experiment hits **25 LIKES**, we will add it to the game permanently.\n\nPlay it, break it, and click the Like button if you want it to stay.\n\n[Play Zero Mode](https://mathsprint-zero.pagedrop.io)",
   "type": "info",
-  "startDate": "2026-01-09",
+  "startDate": "2026-01-16",
   "endDate": null
 }
